@@ -1,0 +1,24 @@
+{
+    "name": "giildo/jojotique",
+    "description": "Création d'un blog solo",
+    "authors": [
+        {
+            "name": "Giildo",
+            "email": "giildo.jm@gmail.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "App\\": "src/App",
+        "Core\\": "src/Core",
+        "Tests\\": "tests"
+      }
+    },
+    "require": {
+        "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.2",
+        "phpunit/phpunit": "^7.0"
+    }
+}
