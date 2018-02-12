@@ -21,7 +21,7 @@ try {
 
 
 try {
-    var_dump($router->getRoute($_SERVER['REQUEST_URI']));
+    var_dump($router);
 } catch (Exception $e) {
     echo $e->getMessage(); //Envoyer message sous système de flash
 }
