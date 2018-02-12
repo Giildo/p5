@@ -16,7 +16,8 @@
     },
     "require": {
         "psr/http-message": "^1.0",
-        "twig/twig": "^2.4"
+        "twig/twig": "^2.4",
+        "php-di/php-di": "^5.4"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.2",

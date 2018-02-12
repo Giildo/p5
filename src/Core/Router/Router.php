@@ -40,11 +40,11 @@ class Router
      */
     public function addRoute(string $name, string $path, ControllerInterface $controller, string $method)
     {
-        if (!isset($this->route[$name])) {
-            $this->routes = new Route($name, $path, $controller, $method);
+        if (!isset($this->routes[$name])) {
+            $this->routes[$name] = new Route($name, $path, $controller, $method);
+        } else {
+            throw new \Exception('The Route already exists');
         }
-
-        throw new \Exception('The Route already exists');
     }
 
     /**

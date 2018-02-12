@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes>
+    <route name="blog_index" path="/" controller="blog" method="index" />
+    <route name="blog_show" path="/post/{id: \d+}" controller="blog" method="show" />
+</routes>
