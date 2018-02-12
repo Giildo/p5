@@ -9,6 +9,11 @@ class Route
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $path;
 
     /**
@@ -21,8 +26,9 @@ class Route
      */
     private $nameMethod;
 
-    public function __construct(string $path, ControllerInterface $controller, string $nameMethod)
+    public function __construct(string $name, string $path, ControllerInterface $controller, string $nameMethod)
     {
+        $this->name = $name;
         $this->path = $path;
         $this->controller = $controller;
         $this->nameMethod = $nameMethod;

@@ -20,6 +20,7 @@ class Router
      * Router constructor.
      * @param string $namespace
      * @param null|string $configFile
+     * @throws \Exception
      */
     public function __construct(string $namespace, ?string $configFile = null)
     {
@@ -40,7 +41,7 @@ class Router
     public function addRoute(string $name, string $path, ControllerInterface $controller, string $method)
     {
         if (!isset($this->route[$name])) {
-            $this->routes = new Route($path, $controller, $method);
+            $this->routes = new Route($name, $path, $controller, $method);
         }
 
         throw new \Exception('The Route already exists');
@@ -48,6 +49,7 @@ class Router
 
     /**
      * @param string $configFile
+     * @throws \Exception
      */
     public function addRoutesWithConfigFiles(string $configFile): void
     {
@@ -65,12 +67,12 @@ class Router
 
             $calledController = new $controller;
 
-            $this->routes[] =
-                new Route(
-                    $route->getAttribute('path'),
-                    $calledController,
-                    $route->getAttribute('method')
-                );
+            $this->addRoute(
+                $route->getAttribute('name'),
+                $route->getAttribute('path'),
+                $calledController,
+                $route->getAttribute('method')
+            );
         }
     }
 
