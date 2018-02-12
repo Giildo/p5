@@ -12,6 +12,10 @@ $router = new Router(
     dirname(__DIR__) . '/src/App/config/config.xml'
 );
 
+$loader = new Twig_Loader_Filesystem(dirname(__DIR__) . '/views');
+$twig = new Twig_Environment($loader, []);
+echo $twig->render('layout.twig');
+
 try {
     var_dump($router->getRoute($_SERVER['REQUEST_URI']));
 } catch (Exception $e) {
