@@ -4,6 +4,8 @@
     <arg value="p"/>
 
     <file>public</file>
+    <file>src</file>
+    <file>views</file>
 
     <rule ref="PSR2"/>
 </ruleset>

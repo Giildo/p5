@@ -41,4 +41,20 @@ class Route
     {
         return $this->path;
     }
+
+    /**
+     * @return ControllerInterface
+     */
+    public function getController(): ControllerInterface
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameMethod(): string
+    {
+        return $this->nameMethod;
+    }
 }

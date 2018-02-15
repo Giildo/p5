@@ -1,32 +1,25 @@
 <?php
 
-use App\JojotiqueApp;
-use Core\Router\Router;
+use Core\App;
 use DI\ContainerBuilder;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 require_once(dirname(__DIR__) . '/vendor/autoload.php');
 
-
+// Container initiation
 $builder = new ContainerBuilder();
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $container = $builder->build();
 
-$app = JojotiqueApp::init($container);
-
+// Twig initiation
 $loader = new Twig_Loader_Filesystem(dirname(__DIR__) . '/views');
 $twig = new Twig_Environment($loader, []);
 
 try {
-    $router = new Router(
-        '\App',
-        dirname(__DIR__) . '/src/App/config/routes.xml'
-    );
-} catch (Exception $e) {
-    echo $twig->render('error.twig', ['e' => $e]);
-}
+    $app = $container->get(App::class);
 
-try {
-    var_dump($router->getRoute('/'));
-} catch (Exception $e) {
-    echo $e->getMessage(); //Envoyer message sous système de flash
+    $app->run();
+} catch (Exception | NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+    echo $twig->render('error.twig', ['e' => $e]);//Envoyer message sous système de flash
 }

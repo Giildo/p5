@@ -5,20 +5,21 @@ namespace Core\PSR7;
 class HTTPRequest
 {
     /**
-     * @return array|null
-     */
-    public function getRequestParams(): ?array
-    {
-        return (!empty($_REQUEST)) ? $_REQUEST : null;
-    }
-
-    /**
      * @param null|string $nameParam
-     * @return null|string
+     * @return null|string|string[]
      */
-    public function getRequestParam(?string $nameParam = null): ?string
+    public function getRequestParam(?string $nameParam = null)
     {
-        return (!empty($_REQUEST) && isset($_REQUEST[$nameParam])) ? $_REQUEST[$nameParam] : null;
+        if (!empty($_REQUEST)) {
+            if ($nameParam === null) {
+                return $_REQUEST;
+            } elseif (isset($_REQUEST[$nameParam])) {
+                return $_REQUEST[$nameParam];
+            } else {
+                return null;
+            }
+        }
+        return null;
     }
 
     /**

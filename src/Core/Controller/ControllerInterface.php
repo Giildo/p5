@@ -2,8 +2,12 @@
 
 namespace Core\Controller;
 
-Interface ControllerInterface
+interface ControllerInterface
 {
-    public function index();
-    public function show();
+    /**
+     * @param string $nameMethod
+     * @return string
+     * @throws \Exception
+     */
+    public function run(string $nameMethod);
 }

@@ -2,9 +2,9 @@
 
 namespace Core;
 
+use Core\Database\Database;
 use Core\PSR7\HTTPRequest;
 use Core\Router\Router;
-use Psr\Container\ContainerInterface;
 
 /**
  * Class App
@@ -12,11 +12,6 @@ use Psr\Container\ContainerInterface;
  */
 class App
 {
-    /**
-     * @var App
-     */
-    private static $app = null;
-
     /**
      * @var HTTPRequest
      */
@@ -28,32 +23,21 @@ class App
     private $router;
 
     /**
+     * @var Database
+     */
+    private $database;
+
+    /**
      * App constructor.
      * @param Router $router
      * @param HTTPRequest $request
+     * @param Database $database
      */
-    public function __construct(Router $router, HTTPRequest $request)
+    public function __construct(Router $router, HTTPRequest $request, Database $database)
     {
         $this->request = $request;
         $this->router = $router;
-    }
-
-    /**
-     * @param ContainerInterface $container
-     * @return App
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    public static function init(ContainerInterface $container): App
-    {
-        if (self::$app === null) {
-            self::$app = new App(
-                $container->get(Router::class),
-                $container->get(HTTPRequest::class)
-            );
-        }
-
-        return self::$app;
+        $this->database = $database;
     }
 
     /**
@@ -67,9 +51,21 @@ class App
     /**
      * Lance l'application
      * Récupère le Router lui fait trouver le bon controlleur et lance la vue
+     * @throws \Exception
      */
-    public function run()
+    public function run(): void
     {
+        $uri = $this->request->getServerParam('REQUEST_URI');
 
+        $route = $this->router->getRoute($uri);
+
+        $controller = $route->getController();
+
+        $controller->run($route->getNameMethod());
+    }
+
+    public function getRouter()
+    {
+        return $this->router;
     }
 }

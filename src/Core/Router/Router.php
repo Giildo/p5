@@ -2,8 +2,15 @@
 
 namespace Core\Router;
 
+use App\Blog\Controller\BlogController;
+use App\Blog\Model\PostModel;
 use Core\Controller\ControllerInterface;
+use Psr\Container\ContainerInterface;
 
+/**
+ * Class Router
+ * @package Core\Router
+ */
 class Router
 {
     /**
@@ -17,14 +24,23 @@ class Router
     private $namespace;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
      * Router constructor.
      * @param string $namespace
      * @param null|string $configFile
+     * @param ContainerInterface $container
      * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(string $namespace, ?string $configFile = null)
+    public function __construct(string $namespace, ?string $configFile = null, ContainerInterface $container)
     {
         $this->namespace = $namespace;
+        $this->container = $container;
 
         if ($configFile !== null) {
             $this->addRoutesWithConfigFiles($configFile);
@@ -50,6 +66,8 @@ class Router
     /**
      * @param string $configFile
      * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function addRoutesWithConfigFiles(string $configFile): void
     {
@@ -63,9 +81,9 @@ class Router
         foreach ($routes as $route) {
             $controllerType = ucfirst($route->getAttribute('controller'));
 
-            $controller = $this->namespace . '\\' . $controllerType . '\\' . $controllerType . 'Controller';
+            $controller = $this->namespace . '\\' . $controllerType . '\\Controller\\' . $controllerType . 'Controller';
 
-            $calledController = new $controller;
+            $calledController = new $controller($this->container->get(PostModel::class));
 
             $this->addRoute(
                 $route->getAttribute('name'),
