@@ -13,8 +13,7 @@ $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $container = $builder->build();
 
 // Twig initiation
-$loader = new Twig_Loader_Filesystem(dirname(__DIR__) . '/views');
-$twig = new Twig_Environment($loader, []);
+$twig = $container->get(Twig_Environment::class);
 
 try {
     $app = $container->get(App::class);

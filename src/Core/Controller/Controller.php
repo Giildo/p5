@@ -3,7 +3,6 @@
 namespace Core\Controller;
 
 use Twig_Environment;
-use Twig_Loader_Filesystem;
 
 /**
  * Class Controller
@@ -12,14 +11,19 @@ use Twig_Loader_Filesystem;
 class Controller implements ControllerInterface
 {
     /**
-     * @var string|null
-     */
-    protected $pathView = null;
-
-    /**
      * @var array
      */
     protected $twigOptions = [];
+
+    /**
+     * @var Twig_Environment
+     */
+    private $twig;
+
+    public function __construct(Twig_Environment $twig)
+    {
+        $this->twig = $twig;
+    }
 
     /**
      * @param string $nameMethod
@@ -37,16 +41,13 @@ class Controller implements ControllerInterface
 
     /**
      * @param string $nameView
-     * @param array $twigVariable
+     * @param array|null $twigVariable
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    protected function render(string $nameView, array $twigVariable)
+    protected function render(string $nameView, ?array $twigVariable = null)
     {
-        $loader = new Twig_Loader_Filesystem($this->pathView);
-        $twig = new Twig_Environment($loader, $this->twigOptions);
-
-        echo $twig->render($nameView, $twigVariable);
+        echo $this->twig->render($nameView, $twigVariable);
     }
 }

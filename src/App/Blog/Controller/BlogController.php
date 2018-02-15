@@ -5,6 +5,7 @@ namespace App\Blog\Controller;
 use App\Blog\Model\PostModel;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
+use Twig_Environment;
 
 class BlogController extends Controller implements ControllerInterface
 {
@@ -15,13 +16,14 @@ class BlogController extends Controller implements ControllerInterface
 
     /**
      * BlogController constructor.
+     * @param Twig_Environment $twig
      * @param PostModel $postModel
      */
-    public function __construct(PostModel $postModel)
+    public function __construct(Twig_Environment $twig, PostModel $postModel)
     {
-        $this->postModel = $postModel;
+        parent::__construct($twig);
 
-        $this->pathView = dirname(__DIR__) . '/views';
+        $this->postModel = $postModel;
     }
 
     /**
@@ -43,7 +45,7 @@ class BlogController extends Controller implements ControllerInterface
     {
         $posts = $this->postModel->findAll();
 
-        $this->render('index.twig', compact('posts'));
+        $this->render('blog/index.twig', compact('posts'));
     }
 
     /**

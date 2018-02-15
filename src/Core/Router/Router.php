@@ -83,7 +83,10 @@ class Router
 
             $controller = $this->namespace . '\\' . $controllerType . '\\Controller\\' . $controllerType . 'Controller';
 
-            $calledController = new $controller($this->container->get(PostModel::class));
+            $calledController = new $controller(
+                $this->container->get(\Twig_Environment::class),
+                $this->container->get(PostModel::class)
+            );
 
             $this->addRoute(
                 $route->getAttribute('name'),
