@@ -1,6 +1,7 @@
 <?php
 
 use Core\App;
+use Core\Twig\TextExtension;
 use DI\ContainerBuilder;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -15,6 +16,7 @@ $container = $builder->build();
 try {
     // Initialisation de Twig via le Container
     $twig = $container->get(Twig_Environment::class);
+    $twig->addExtension($container->get(TextExtension::class));
 
     // Initialisation de l'App via le Container
     $app = $container->get(App::class);

@@ -24,7 +24,7 @@ class BlogController extends Controller implements ControllerInterface
      * Limite d'affichage du nombre d'article par page
      * @var int
      */
-    protected const LIMIT = 10;
+    protected const LIMIT = 8;
 
     /**
      * BlogController constructor.
