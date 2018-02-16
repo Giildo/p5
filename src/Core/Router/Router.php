@@ -54,8 +54,13 @@ class Router
      * @param bool|null $hasVars
      * @throws \Exception
      */
-    public function addRoute(string $name, string $path, ControllerInterface $controller, string $method, ?bool $hasVars = false): void
-    {
+    public function addRoute(
+        string $name,
+        string $path,
+        ControllerInterface $controller,
+        string $method,
+        ?bool $hasVars = false
+    ): void {
         if (!isset($this->routes[$name])) {
             $this->routes[$name] = new Route($name, $path, $controller, $method, $hasVars);
         } else {

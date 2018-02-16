@@ -50,15 +50,12 @@ class Route
         ControllerInterface $controller,
         string $nameMethod,
         bool $hasVar
-    )
-    {
+    ) {
         $this->name = $name;
         $this->path = $path;
         $this->controller = $controller;
         $this->nameMethod = $nameMethod;
         $this->hasVar = $hasVar;
-
-
     }
 
     /**
@@ -75,7 +72,7 @@ class Route
 
         $vars = [];
 
-        for ($i = 0 ; $i < count($matches) ; $i++) {
+        for ($i = 0; $i < count($matches); $i++) {
             $key = $this->vars[$i];
             $value = $matches[$i+1];
 
@@ -113,8 +110,7 @@ class Route
 
         preg_match_all('#{([a-z]+): \\\\{1}[a-z]{1}\\+?}#', $routePath, $matches);
 
-        foreach ($matches[1] as $match)
-        {
+        foreach ($matches[1] as $match) {
             $this->vars[] = $match;
         }
 
