@@ -4,26 +4,40 @@
 
 {% block body %}
 
-    <ul>
-        {% for post in posts %}
-            <li>
-                <a href="/post/{{ post.id }}">{{ post.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <h1>Liste des articles</h1>
 
-    <div class="btn-group">
-        {% if previous != null %}
-            <a href="/blog/{{ previous }}" class="btn btn-warning"><</a>
-        {% endif %}
+    <div class="row">
+        <ul class="col-xs-12">
+            {% for post in posts %}
+                <li>
+                    <a href="/post/{{ post.id }}">{{ post.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-        {% for i in 1..pageNb %}
-            <a href="/blog/{{ i }}" class="btn btn-warning">{{ i }}</a>
-        {% endfor %}
+    <div class="row">
+        <div class="btn-group">
+            {% if previous != null %}
+                <a href="/blog/{{ previous }}" class="btn btn-warning"><</a>
+            {% else %}
+                <button class="btn btn-warning" disabled><</button>
+            {% endif %}
 
-        {% if next != null %}
-            <a href="/blog/{{ next }}" class="btn btn-warning">></a>
-        {% endif %}
+            {% for i in 1..pageNb %}
+                {% if i != id %}
+                    <a href="/blog/{{ i }}" class="btn btn-warning">{{ i }}</a>
+                {% else %}
+                    <button class="btn btn-warning" disabled>{{ i }}</button>
+                {% endif %}
+            {% endfor %}
+
+            {% if next != null %}
+                <a href="/blog/{{ next }}" class="btn btn-warning">></a>
+            {% else %}
+                <button class="btn btn-warning" disabled>></button>
+            {% endif %}
+        </div>
     </div>
 
 {% endblock %}

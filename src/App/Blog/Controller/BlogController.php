@@ -52,7 +52,7 @@ class BlogController extends Controller implements ControllerInterface
         $previous = ($id - 1 >= 1) ? $id - 1 : null;
 
         if ($id <= $pageNb) {
-            $this->render('blog/index.twig', compact('posts', 'pageNb', 'next', 'previous'));
+            $this->render('blog/index.twig', compact('posts', 'pageNb', 'next', 'previous', 'id'));
         } else {
             $this->render('404.twig', ['erreur' => 'La page demandée n\'existe pas']);
         }
