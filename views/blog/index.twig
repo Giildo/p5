@@ -12,4 +12,18 @@
         {% endfor %}
     </ul>
 
+    <div class="btn-group">
+        {% if previous != null %}
+            <a href="/blog/{{ previous }}" class="btn btn-warning"><</a>
+        {% endif %}
+
+        {% for i in 1..pageNb %}
+            <a href="/blog/{{ i }}" class="btn btn-warning">{{ i }}</a>
+        {% endfor %}
+
+        {% if next != null %}
+            <a href="/blog/{{ next }}" class="btn btn-warning">></a>
+        {% endif %}
+    </div>
+
 {% endblock %}

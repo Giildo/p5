@@ -15,6 +15,11 @@ class BlogController extends Controller implements ControllerInterface
     private $postModel;
 
     /**
+     * @var int
+     */
+    protected const LIMIT = 10;
+
+    /**
      * BlogController constructor.
      * @param Twig_Environment $twig
      * @param PostModel $postModel
@@ -27,15 +32,30 @@ class BlogController extends Controller implements ControllerInterface
     }
 
     /**
+     * @param array $vars
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function index()
+    public function index(array $vars)
     {
-        $posts = $this->postModel->findAll();
+        $postNb = $this->postModel->count();
 
-        $this->render('blog/index.twig', compact('posts'));
+        $id = $vars['id'];
+
+        $pageNb = ceil($postNb / self::LIMIT);
+        $start = (self::LIMIT * ($id - 1));
+
+        $posts = $this->postModel->findAll($start, self::LIMIT);
+
+        $next = ($id + 1 <= $pageNb) ? $id + 1 : null;
+        $previous = ($id - 1 >= 1) ? $id - 1 : null;
+
+        if ($id <= $pageNb) {
+            $this->render('blog/index.twig', compact('posts', 'pageNb', 'next', 'previous'));
+        } else {
+            $this->render('404.twig', ['erreur' => 'La page demandée n\'existe pas']);
+        }
     }
 
     /**
@@ -52,7 +72,7 @@ class BlogController extends Controller implements ControllerInterface
         if ($post) {
             $this->render('blog/show.twig', compact('post'));
         } else {
-            throw new \Exception('The post\'s ID isn\'t true');
+            $this->render('404.twig', ['erreur' => 'La page demandée n\'existe pas']);
         }
     }
 }

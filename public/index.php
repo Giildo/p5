@@ -12,7 +12,6 @@ $builder = new ContainerBuilder();
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $container = $builder->build();
 
-
 try {
     // Twig initiation
     $twig = $container->get(Twig_Environment::class);
