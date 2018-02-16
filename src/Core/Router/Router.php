@@ -2,7 +2,6 @@
 
 namespace Core\Router;
 
-use App\Blog\Controller\BlogController;
 use App\Blog\Model\PostModel;
 use Core\Controller\ControllerInterface;
 use Psr\Container\ContainerInterface;
@@ -16,7 +15,7 @@ class Router
     /**
      * @var Route[]
      */
-    private $routes;
+    public $routes;
 
     /**
      * @var string
@@ -52,12 +51,13 @@ class Router
      * @param string $path
      * @param ControllerInterface $controller
      * @param string $method
+     * @param bool|null $hasVars
      * @throws \Exception
      */
-    public function addRoute(string $name, string $path, ControllerInterface $controller, string $method)
+    public function addRoute(string $name, string $path, ControllerInterface $controller, string $method, ?bool $hasVars = false): void
     {
         if (!isset($this->routes[$name])) {
-            $this->routes[$name] = new Route($name, $path, $controller, $method);
+            $this->routes[$name] = new Route($name, $path, $controller, $method, $hasVars);
         } else {
             throw new \Exception('The Route already exists');
         }
@@ -88,11 +88,14 @@ class Router
                 $this->container->get(PostModel::class)
             );
 
+            $hasVar = ($route->getAttribute('var') !== '') ? true : false;
+
             $this->addRoute(
                 $route->getAttribute('name'),
                 $route->getAttribute('path'),
                 $calledController,
-                $route->getAttribute('method')
+                $route->getAttribute('method'),
+                $hasVar
             );
         }
     }
@@ -104,8 +107,12 @@ class Router
      */
     public function getRoute(string $uri): Route
     {
+        if ($uri === '' || $uri === '/') {
+            return $this->routes['blog_show'];
+        }
+
         foreach ($this->routes as $route) {
-            if ($route->getPath() === $uri) {
+            if ($route->comparePath($uri)) {
                 return $route;
             }
         }

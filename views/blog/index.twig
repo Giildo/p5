@@ -6,7 +6,9 @@
 
     <ul>
         {% for post in posts %}
-            <li>{{ post.getName }}</li>
+            <li>
+                <a href="/post/{{ post.id }}">{{ post.name }}</a>
+            </li>
         {% endfor %}
     </ul>
 

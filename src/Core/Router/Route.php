@@ -26,20 +26,65 @@ class Route
      */
     private $nameMethod;
 
-    public function __construct(string $name, string $path, ControllerInterface $controller, string $nameMethod)
+    /**
+     * @var bool
+     */
+    private $hasVar = false;
+
+    /**
+     * @var array
+     */
+    private $vars = [];
+
+    /**
+     * Route constructor.
+     * @param string $name
+     * @param string $path
+     * @param ControllerInterface $controller
+     * @param string $nameMethod
+     * @param bool $hasVar
+     */
+    public function __construct(
+        string $name,
+        string $path,
+        ControllerInterface $controller,
+        string $nameMethod,
+        bool $hasVar
+    )
     {
         $this->name = $name;
         $this->path = $path;
         $this->controller = $controller;
         $this->nameMethod = $nameMethod;
+        $this->hasVar = $hasVar;
+
+
     }
 
     /**
-     * @return string
+     * @param string $path
+     * @return bool
      */
-    public function getPath(): string
+    public function comparePath(string $path): bool
     {
-        return $this->path;
+        $routePath = $this->shortPath($this->path);
+        $matches = [];
+        $result = preg_match_all("#{$routePath}#", $path, $matches);
+
+        unset($matches[0]);
+
+        $vars = [];
+
+        for ($i = 0 ; $i < count($matches) ; $i++) {
+            $key = $this->vars[$i];
+            $value = $matches[$i+1];
+
+            $vars[$key] = $value[0];
+        }
+
+        $this->vars = $vars;
+
+        return $result;
     }
 
     /**
@@ -56,5 +101,28 @@ class Route
     public function getNameMethod(): string
     {
         return $this->nameMethod;
+    }
+
+    /**
+     * @param string $routePath
+     * @return string
+     */
+    private function shortPath(string $routePath): string
+    {
+        $matches = [];
+
+        preg_match_all('#{([a-z]+): \\\\{1}[a-z]{1}\\+?}#', $routePath, $matches);
+
+        foreach ($matches[1] as $match)
+        {
+            $this->vars[] = $match;
+        }
+
+        return preg_replace('#{[a-z]+: (\\\\{1}[a-z]{1}\\+?)}#', '($1)', $routePath);
+    }
+
+    public function getVars()
+    {
+        return $this->vars;
     }
 }

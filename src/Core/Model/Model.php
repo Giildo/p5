@@ -3,13 +3,15 @@
 namespace Core\Model;
 
 use Core\Database\Database;
+use PDO;
+use PDOStatement;
 
 class Model
 {
     /**
-     * @var Database
+     * @var \PDO
      */
-    protected $database;
+    protected $pdo;
 
     /**
      * Model constructor.
@@ -17,14 +19,17 @@ class Model
      */
     public function __construct(Database $database)
     {
-        $this->database = $database;
+        $this->pdo = $database->getPDO();
     }
 
     /**
-     * @return Database
+     * @param PDOStatement $result
+     * @param $class
+     * @return PDOStatement
      */
-    public function getDatabase(): Database
+    public function setFetchMode(PDOStatement $result, $class): PDOStatement
     {
-        return $this->database;
+        $result->setFetchMode(PDO::FETCH_CLASS, $class);
+        return $result;
     }
 }

@@ -45,12 +45,6 @@ class Post
         $this->date();
     }
 
-    private function date()
-    {
-        $this->createdAt = new DateTime($this->createdAt);
-        $this->updatedAt = new DateTime($this->updatedAt);
-    }
-
     /**
      * @return int
      */
@@ -97,5 +91,11 @@ class Post
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
+    }
+
+    private function date()
+    {
+        $this->createdAt = new DateTime($this->createdAt);
+        $this->updatedAt = new DateTime($this->updatedAt);
     }
 }

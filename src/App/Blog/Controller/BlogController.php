@@ -27,16 +27,6 @@ class BlogController extends Controller implements ControllerInterface
     }
 
     /**
-     * @param string $nameMethod
-     * @return string|void
-     * @throws \Exception
-     */
-    public function run(string $nameMethod)
-    {
-        parent::run($nameMethod);
-    }
-
-    /**
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -49,10 +39,20 @@ class BlogController extends Controller implements ControllerInterface
     }
 
     /**
-     *
+     * @param array $vars
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     * @throws \Exception
      */
-    public function show()
+    public function show(array $vars)
     {
-        // TODO: Implement show() method.
+        $post = $this->postModel->find($vars['id']);
+
+        if ($post) {
+            $this->render('blog/show.twig', compact('post'));
+        } else {
+            throw new \Exception('The post\'s ID isn\'t true');
+        }
     }
 }

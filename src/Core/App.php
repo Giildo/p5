@@ -61,7 +61,7 @@ class App
 
         $controller = $route->getController();
 
-        $controller->run($route->getNameMethod());
+        $controller->run($route->getNameMethod(), $route->getVars());
     }
 
     public function getRouter()

@@ -12,10 +12,11 @@ $builder = new ContainerBuilder();
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $container = $builder->build();
 
-// Twig initiation
-$twig = $container->get(Twig_Environment::class);
 
 try {
+    // Twig initiation
+    $twig = $container->get(Twig_Environment::class);
+
     $app = $container->get(App::class);
 
     $app->run();

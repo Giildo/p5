@@ -4,17 +4,35 @@ namespace App\Blog\Model;
 
 use App\Entity\Post;
 use Core\Model\Model;
-use PDO;
 
+/**
+ * Class PostModel
+ * @package App\Blog\Model
+ */
 class PostModel extends Model
 {
-    public function findAll()
+    /**
+     * @return array
+     */
+    public function findAll(): array
     {
-        $pdo = $this->database->getPDO();
-
-        $result = $pdo->query('SELECT * FROM `posts` LIMIT 10');
-        $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
+        $result = $this->pdo->query('SELECT * FROM `posts` LIMIT 10');
+        $this->setFetchMode($result, Post::class);
 
         return $result->fetchAll();
+    }
+
+    /**
+     * @param string $id
+     * @return Post|bool
+     */
+    public function find(string $id)
+    {
+        $result = $this->pdo->prepare('SELECT * FROM `posts` WHERE id=:id');
+        $result->bindParam(':id', $id);
+        $this->setFetchMode($result, Post::class);
+        $result->execute();
+
+        return $result->fetch();
     }
 }
