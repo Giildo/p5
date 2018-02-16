@@ -2,10 +2,15 @@
 
 namespace Core\Model;
 
+use App\Entity\Post;
 use Core\Database\Database;
 use PDO;
 use PDOStatement;
 
+/**
+ * Class Model
+ * @package Core\Model
+ */
 class Model
 {
     /**
@@ -30,12 +35,11 @@ class Model
     /**
      * @param PDOStatement $result
      * @param $class
-     * @return PDOStatement
+     * @return void
      */
-    public function setFetchMode(PDOStatement $result, $class): PDOStatement
+    public function setFetchMode(PDOStatement $result, $class): void
     {
         $result->setFetchMode(PDO::FETCH_CLASS, $class);
-        return $result;
     }
 
     /**

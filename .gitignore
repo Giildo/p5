@@ -1,5 +1,3 @@
-.idea/*
 vendor/*
-tests/*
 
 composer.lock

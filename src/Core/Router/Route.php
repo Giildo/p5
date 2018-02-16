@@ -9,11 +9,6 @@ class Route
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
     private $path;
 
     /**
@@ -27,35 +22,24 @@ class Route
     private $nameMethod;
 
     /**
-     * @var bool
-     */
-    private $hasVar = false;
-
-    /**
      * @var array
      */
     private $vars = [];
 
     /**
      * Route constructor.
-     * @param string $name
      * @param string $path
      * @param ControllerInterface $controller
      * @param string $nameMethod
-     * @param bool $hasVar
      */
     public function __construct(
-        string $name,
         string $path,
         ControllerInterface $controller,
-        string $nameMethod,
-        bool $hasVar
+        string $nameMethod
     ) {
-        $this->name = $name;
         $this->path = $path;
         $this->controller = $controller;
         $this->nameMethod = $nameMethod;
-        $this->hasVar = $hasVar;
     }
 
     /**
@@ -72,7 +56,9 @@ class Route
 
         $vars = [];
 
-        for ($i = 0; $i < count($matches); $i++) {
+        $matchNb = count($matches);
+
+        for ($i = 0; $i < $matchNb; $i++) {
             $key = $this->vars[$i];
             $value = $matches[$i+1];
 

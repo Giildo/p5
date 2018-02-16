@@ -40,6 +40,9 @@ class Post
      */
     private $updatedAt;
 
+    /**
+     * Post constructor.
+     */
     public function __construct()
     {
         $this->date();
@@ -93,7 +96,10 @@ class Post
         return $this->updatedAt;
     }
 
-    private function date()
+    /**
+     * Génère les dates avec l'objet DateTime
+     */
+    private function date(): void
     {
         $this->createdAt = new DateTime($this->createdAt);
         $this->updatedAt = new DateTime($this->updatedAt);

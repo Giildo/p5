@@ -7,6 +7,12 @@ use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Twig_Environment;
 
+/**
+ * Gère l'affichage des Posts
+ *
+ * Class BlogController
+ * @package App\Blog\Controller
+ */
 class BlogController extends Controller implements ControllerInterface
 {
     /**
@@ -15,12 +21,14 @@ class BlogController extends Controller implements ControllerInterface
     private $postModel;
 
     /**
+     * Limite d'affichage du nombre d'article par page
      * @var int
      */
     protected const LIMIT = 10;
 
     /**
      * BlogController constructor.
+     *
      * @param Twig_Environment $twig
      * @param PostModel $postModel
      */
@@ -32,12 +40,15 @@ class BlogController extends Controller implements ControllerInterface
     }
 
     /**
+     * Affiche l'ensemble des Posts selon la LIMIT
+     *
      * @param array $vars
+     * @return void
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function index(array $vars)
+    public function index(array $vars): void
     {
         $postNb = $this->postModel->count();
 
@@ -59,13 +70,16 @@ class BlogController extends Controller implements ControllerInterface
     }
 
     /**
+     * Affiche un Post particulier
+     *
      * @param array $vars
+     * @return void
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      * @throws \Exception
      */
-    public function show(array $vars)
+    public function show(array $vars): void
     {
         $post = $this->postModel->find($vars['id']);
 

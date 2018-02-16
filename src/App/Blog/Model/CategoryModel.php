@@ -3,9 +3,17 @@
 namespace App\Blog\Model;
 
 use Core\Model\Model;
-use Core\Model\ModelInterface;
 
-class CategoryModel extends Model implements ModelInterface
+/**
+ * Fait le lien pour les Posts
+ *
+ * Class CategoryModel
+ * @package App\Blog\Model
+ */
+class CategoryModel extends Model
 {
-
+    /**
+     * @var string
+     */
+    protected $table = 'category';
 }

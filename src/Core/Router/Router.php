@@ -51,18 +51,16 @@ class Router
      * @param string $path
      * @param ControllerInterface $controller
      * @param string $method
-     * @param bool|null $hasVars
      * @throws \Exception
      */
     public function addRoute(
         string $name,
         string $path,
         ControllerInterface $controller,
-        string $method,
-        ?bool $hasVars = false
+        string $method
     ): void {
         if (!isset($this->routes[$name])) {
-            $this->routes[$name] = new Route($name, $path, $controller, $method, $hasVars);
+            $this->routes[$name] = new Route($path, $controller, $method);
         } else {
             throw new \Exception('The Route already exists');
         }
@@ -93,14 +91,11 @@ class Router
                 $this->container->get(PostModel::class)
             );
 
-            $hasVar = ($route->getAttribute('var') !== '') ? true : false;
-
             $this->addRoute(
                 $route->getAttribute('name'),
                 $route->getAttribute('path'),
                 $calledController,
-                $route->getAttribute('method'),
-                $hasVar
+                $route->getAttribute('method')
             );
         }
     }

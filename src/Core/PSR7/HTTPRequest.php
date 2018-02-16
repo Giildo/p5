@@ -2,9 +2,15 @@
 
 namespace Core\PSR7;
 
+/**
+ * Class HTTPRequest
+ * @package Core\PSR7
+ */
 class HTTPRequest
 {
     /**
+     * Renvoie les données envoyés par les méthodes POST et GET
+     *
      * @param null|string $nameParam
      * @return null|string|string[]
      */
@@ -23,6 +29,8 @@ class HTTPRequest
     }
 
     /**
+     * Renvoie les données envoyées par le serveur
+     *
      * @param string|null $nameParam
      * @return array|string
      */

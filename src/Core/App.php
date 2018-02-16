@@ -23,29 +23,14 @@ class App
     private $router;
 
     /**
-     * @var Database
-     */
-    private $database;
-
-    /**
      * App constructor.
      * @param Router $router
      * @param HTTPRequest $request
-     * @param Database $database
      */
-    public function __construct(Router $router, HTTPRequest $request, Database $database)
+    public function __construct(Router $router, HTTPRequest $request)
     {
         $this->request = $request;
         $this->router = $router;
-        $this->database = $database;
-    }
-
-    /**
-     * @return HTTPRequest
-     */
-    public function getRequest(): HTTPRequest
-    {
-        return $this->request;
     }
 
     /**
@@ -64,7 +49,18 @@ class App
         $controller->run($route->getNameMethod(), $route->getVars());
     }
 
-    public function getRouter()
+    /**
+     * @return HTTPRequest
+     */
+    public function getRequest(): HTTPRequest
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return Router
+     */
+    public function getRouter(): Router
     {
         return $this->router;
     }

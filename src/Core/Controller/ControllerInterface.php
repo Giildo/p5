@@ -2,13 +2,16 @@
 
 namespace Core\Controller;
 
+/**
+ * Interface ControllerInterface
+ * @package Core\Controller
+ */
 interface ControllerInterface
 {
     /**
      * @param string $nameMethod
      * @param array|null $vars
-     * @return string
-     * @throws \Exception
+     * @return void
      */
-    public function run(string $nameMethod, ?array $vars = []);
+    public function run(string $nameMethod, ?array $vars = []): void;
 }
