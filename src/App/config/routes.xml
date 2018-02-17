@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <routes>
+    <route name="general_accueil" path="/accueil" controller="general" method="index" />
+    <route name="404" path="/404" controller="general" method="error404" />
+
     <route name="blog_index" path="/blog/{id: \d+}" controller="blog" method="index" />
     <route name="blog_show" path="/post/{id: \d+}" controller="blog" method="show" var="id" />
 </routes>

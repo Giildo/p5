@@ -1,3 +1,62 @@
 div.btn-group {
-    margin: 0 auto;
+    margin: 10px auto;
+}
+
+.card-header {
+    text-align: center;
+    font-weight: bold;
+}
+
+p {
+    text-indent: 15px;
+}
+
+h1 {
+    text-align: center;
+    padding: 30px 0;
+}
+
+h1:after, h1:before {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(to right, white, black, white);
+}
+
+h1:after {
+    margin-top: 15px;
+}
+
+h1:before {
+    margin-bottom: 15px;
+}
+
+.date {
+    text-align: right;
+    font-style: italic;
+    color: #747474;
+}
+
+.p404 img {
+    display: block;
+    width: 300px;
+    margin: auto;
+}
+
+.p404title2 {
+    font-size: 1.8em;
+}
+
+.p404title1 {
+    font-size: 2.1em;
+}
+
+.p404 ul {
+    padding-left: 80px;
+}
+
+.p404list {
+    font-size: 1.5em;
+    color: #ff523a;
 }

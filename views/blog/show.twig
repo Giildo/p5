@@ -6,4 +6,12 @@
     <h1>{{ post.name }}</h1>
 
     <p>{{ post.content | nl2br }}</p>
+
+    <p class="date">
+        {% if post.updatedAt > post.createdAt %}
+            Modifié le {{ post.createdAt | date("d/m/Y à H:m:i") }}
+        {% else %}
+            Créé le {{ post.createdAt | date("d/m/Y à H:m:i") }}
+        {% endif %}
+    </p>
 {% endblock %}

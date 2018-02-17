@@ -103,11 +103,12 @@ class Router
     /**
      * @param string $uri
      * @return Route
-     * @throws \Exception
      */
     public function getRoute(string $uri): Route
     {
         if ($uri === '' || $uri === '/') {
+            header('HTTP/1.1 301 Moved Permanently');
+            header('Location: /blog/1');
             return $this->routes['blog_show'];
         }
 
@@ -117,6 +118,8 @@ class Router
             }
         }
 
-        throw new \Exception('The requested Route doesn\'t exists');
+        header('HTTP/1.0 404 Not Found');
+        header('Location: /404');
+        return $this->routes['404'];
     }
 }

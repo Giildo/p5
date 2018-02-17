@@ -57,7 +57,7 @@ class BlogController extends Controller implements ControllerInterface
         $pageNb = ceil($postNb / self::LIMIT);
         $start = (self::LIMIT * ($id - 1));
 
-        $posts = $this->postModel->findAll($start, self::LIMIT);
+        $posts = $this->postModel->findAll($start, self::LIMIT, true, ' ORDER BY updatedAt DESC ');
 
         $next = ($id + 1 <= $pageNb) ? $id + 1 : null;
         $previous = ($id - 1 >= 1) ? $id - 1 : null;

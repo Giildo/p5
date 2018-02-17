@@ -11,10 +11,8 @@
         <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="card">
                 <h6 class="card-header">{{ post.name }}</h6>
-                <div class="card-body">
-                    <p class="card-text">{{ post.content | excerpt }}</p>
-                    <a href="/post/{{ post.id }}" class="btn btn-primary">Afficher l'article</a>
-                </div>
+                <p class="card-body card-text">{{ post.content | excerpt }}</p>
+                <a href="/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
             </div>
         </div>
         {% endfor %}

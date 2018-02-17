@@ -1,0 +1,20 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-6 p404">
+            <h1>OUPS !</h1>
+            <p class="p404title1">{{ erreur }}</p>
+            <p class="p404title2">Quelques liens pour vous orienter :</p>
+            <ul>
+                <li><a href="/accueil" class="p404list">Accueil</a></li>
+                <li><a href="/blog/1" class="p404list">Blog</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-6 p404">
+            <img src="/img/sorry.jpg" alt="Image montrant un post-it où il est écrit sorry" />
+        </div>
+    </div>
+{% endblock %}
