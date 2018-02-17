@@ -2,6 +2,7 @@
 
 namespace Core\Controller;
 
+use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
 /**
@@ -16,12 +17,21 @@ class Controller implements ControllerInterface
     private $twig;
 
     /**
-     * Controller constructor.
-     * @param Twig_Environment $twig
+     * @var ContainerInterface
      */
-    public function __construct(Twig_Environment $twig)
+    protected $container;
+
+    /**
+     * Controller constructor.
+     *
+     * @param Twig_Environment $twig
+     * @param ContainerInterface $container
+     * @param array|null $models
+     */
+    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [])
     {
         $this->twig = $twig;
+        $this->container = $container;
     }
 
     /**

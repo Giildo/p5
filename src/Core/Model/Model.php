@@ -49,8 +49,12 @@ class Model
      * @param null|string $orderBy
      * @return array
      */
-    public function findAll(?int $start = null, ?int $limit = null, ?bool $order = false, ?string $orderBy = null): array
-    {
+    public function findAll(
+        ?int $start = null,
+        ?int $limit = null,
+        ?bool $order = false,
+        ?string $orderBy = null
+    ): array {
         $orderBy = ($order) ? $orderBy : '';
 
         if ($start === null && $limit === null) {

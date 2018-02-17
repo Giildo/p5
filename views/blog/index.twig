@@ -8,13 +8,13 @@
 
     <div class="row">
         {% for post in posts %}
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <h6 class="card-header">{{ post.name }}</h6>
-                <p class="card-body card-text">{{ post.content | excerpt }}</p>
-                <a href="/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card">
+                    <h6 class="card-header">{{ post.name }}</h6>
+                    <p class="card-body card-text">{{ post.content | excerpt }}</p>
+                    <a href="/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
+                </div>
             </div>
-        </div>
         {% endfor %}
     </div>
 

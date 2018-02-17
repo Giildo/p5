@@ -2,9 +2,12 @@
 
 namespace App\Blog\Controller;
 
+use App\Blog\Model\CategoryModel;
 use App\Blog\Model\PostModel;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
+use Core\Controller\InstantiationModels;
+use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
 /**
@@ -21,29 +24,26 @@ class BlogController extends Controller implements ControllerInterface
     private $postModel;
 
     /**
-     * Limite d'affichage du nombre d'article par page
-     * @var int
+     * @var CategoryModel
      */
-    protected const LIMIT = 8;
+    private $categoryModel;
 
-    /**
-     * BlogController constructor.
-     *
-     * @param Twig_Environment $twig
-     * @param PostModel $postModel
-     */
-    public function __construct(Twig_Environment $twig, PostModel $postModel)
+    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [])
     {
-        parent::__construct($twig);
+        parent::__construct($twig, $container, $models);
 
-        $this->postModel = $postModel;
+        $this->InstantiationModels($models);
     }
+
+    use InstantiationModels;
 
     /**
      * Affiche l'ensemble des Posts selon la LIMIT
      *
      * @param array $vars
      * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -52,12 +52,14 @@ class BlogController extends Controller implements ControllerInterface
     {
         $postNb = $this->postModel->count();
 
+        $limit = $this->container->get('blog.limit.post');
+
         $id = $vars['id'];
 
-        $pageNb = ceil($postNb / self::LIMIT);
-        $start = (self::LIMIT * ($id - 1));
+        $pageNb = ceil($postNb / $limit);
+        $start = ($limit * ($id - 1));
 
-        $posts = $this->postModel->findAll($start, self::LIMIT, true, ' ORDER BY updatedAt DESC ');
+        $posts = $this->postModel->findAll($start, $limit, true, ' ORDER BY updatedAt DESC ');
 
         $next = ($id + 1 <= $pageNb) ? $id + 1 : null;
         $previous = ($id - 1 >= 1) ? $id - 1 : null;
@@ -65,7 +67,7 @@ class BlogController extends Controller implements ControllerInterface
         if ($id <= $pageNb) {
             $this->render('blog/index.twig', compact('posts', 'pageNb', 'next', 'previous', 'id'));
         } else {
-            $this->render('404.twig', ['erreur' => 'La page demandée n\'existe pas']);
+            $this->render('general/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
         }
     }
 
@@ -86,7 +88,7 @@ class BlogController extends Controller implements ControllerInterface
         if ($post) {
             $this->render('blog/show.twig', compact('post'));
         } else {
-            $this->render('404.twig', ['erreur' => 'La page demandée n\'existe pas']);
+            $this->render('general/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
         }
     }
 }

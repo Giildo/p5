@@ -4,5 +4,5 @@
     <route name="404" path="/404" controller="general" method="error404" />
 
     <route name="blog_index" path="/blog/{id: \d+}" controller="blog" method="index" />
-    <route name="blog_show" path="/post/{id: \d+}" controller="blog" method="show" var="id" />
+    <route name="blog_show" path="/post/{id: \d+}" controller="blog" method="show" />
 </routes>

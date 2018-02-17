@@ -1,5 +1,7 @@
 <?php
 
+use App\Blog\Model\CategoryModel;
+use App\Blog\Model\PostModel;
 use Core\App;
 use Core\Database\Database;
 use Core\Model\Model;
@@ -13,13 +15,21 @@ return [
     'app.prefix' => '\App',
     'app.routes' => __DIR__ . '/routes.xml',
 
-    'db.name'     => 'blog',
+    'db.name'     => 'app',
     'db.user'     => 'root',
     'db.password' => 'jOn79613226',
     'db.host'     => 'localhost',
 
     'twig.pathViews' => dirname(__DIR__, 3) . '/views',
     'twig.options'   => [],
+
+    'general.models' => [],
+
+    'blog.models' => [
+        'post'     => get(PostModel::class),
+        'category' => get(CategoryModel::class)
+    ],
+    'blog.limit.post'        => 8,
 
     App::class         => object(),
     Router::class      => object()->constructor(
@@ -30,7 +40,7 @@ return [
     HTTPRequest::class => object(),
     Database::class    => object()->constructor(get(PDO::class)),
     Model::class       => object(),
-    Controller::class  => object()->constructor(get(Twig_Environment::class)),
+    Controller::class  => object(),
     PDO::class         => function (ContainerInterface $c) {
         return new PDO(
             'mysql:host=' . $c->get('db.host') . ';dbname=' . $c->get('db.name') . ';charset=utf8',

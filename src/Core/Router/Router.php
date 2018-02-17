@@ -5,6 +5,7 @@ namespace Core\Router;
 use App\Blog\Model\PostModel;
 use Core\Controller\ControllerInterface;
 use Psr\Container\ContainerInterface;
+use Twig_Environment;
 
 /**
  * Class Router
@@ -26,6 +27,11 @@ class Router
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $controllers = [];
 
     /**
      * Router constructor.
@@ -86,15 +92,21 @@ class Router
 
             $controller = $this->namespace . '\\' . $controllerType . '\\Controller\\' . $controllerType . 'Controller';
 
-            $calledController = new $controller(
-                $this->container->get(\Twig_Environment::class),
-                $this->container->get(PostModel::class)
-            );
+            // Stockage des Controllers générés pour éviter d'avoir à les générer plusieurs fois
+            if (!isset($this->controllers[$controllerType])) {
+                $models = $route->getAttribute('controller') . '.models';
+
+                $this->controllers[$controllerType] = new $controller(
+                    $this->container->get(Twig_Environment::class),
+                    $this->container->get(ContainerInterface::class),
+                    $this->container->get($models)
+                );
+            }
 
             $this->addRoute(
                 $route->getAttribute('name'),
                 $route->getAttribute('path'),
-                $calledController,
+                $this->controllers[$controllerType],
                 $route->getAttribute('method')
             );
         }
