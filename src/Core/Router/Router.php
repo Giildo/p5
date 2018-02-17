@@ -55,18 +55,18 @@ class Router
     /**
      * @param string $name
      * @param string $path
-     * @param ControllerInterface $controller
+     * @param string $controller
      * @param string $method
      * @throws \Exception
      */
     public function addRoute(
         string $name,
         string $path,
-        ControllerInterface $controller,
+        string $controller,
         string $method
     ): void {
         if (!isset($this->routes[$name])) {
-            $this->routes[$name] = new Route($path, $controller, $method);
+            $this->routes[$name] = new Route($name, $path, $controller, $method);
         } else {
             throw new \Exception('The Route already exists');
         }
@@ -92,15 +92,9 @@ class Router
 
             $controller = $this->namespace . '\\' . $controllerType . '\\Controller\\' . $controllerType . 'Controller';
 
-            // Stockage des Controllers générés pour éviter d'avoir à les générer plusieurs fois
+            // Stockage des chemins des Controllers générés pour éviter d'avoir à les générer plusieurs fois
             if (!isset($this->controllers[$controllerType])) {
-                $models = $route->getAttribute('controller') . '.models';
-
-                $this->controllers[$controllerType] = new $controller(
-                    $this->container->get(Twig_Environment::class),
-                    $this->container->get(ContainerInterface::class),
-                    $this->container->get($models)
-                );
+                $this->controllers[$controllerType] = $controller;
             }
 
             $this->addRoute(

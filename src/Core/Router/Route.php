@@ -2,17 +2,20 @@
 
 namespace Core\Router;
 
-use Core\Controller\ControllerInterface;
-
 class Route
 {
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var string
      */
     private $path;
 
     /**
-     * @var ControllerInterface
+     * @var string
      */
     private $controller;
 
@@ -28,15 +31,18 @@ class Route
 
     /**
      * Route constructor.
+     * @param string $name
      * @param string $path
-     * @param ControllerInterface $controller
+     * @param string $controller
      * @param string $nameMethod
      */
     public function __construct(
+        string $name,
         string $path,
-        ControllerInterface $controller,
+        string $controller,
         string $nameMethod
     ) {
+        $this->name = $name;
         $this->path = $path;
         $this->controller = $controller;
         $this->nameMethod = $nameMethod;
@@ -71,9 +77,9 @@ class Route
     }
 
     /**
-     * @return ControllerInterface
+     * @return string
      */
-    public function getController(): ControllerInterface
+    public function getController(): string
     {
         return $this->controller;
     }
@@ -106,5 +112,13 @@ class Route
     public function getVars()
     {
         return $this->vars;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 }
