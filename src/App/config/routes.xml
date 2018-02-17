@@ -5,4 +5,5 @@
 
     <route name="blog_index" path="/blog/{id: \d+}" controller="blog" method="index" />
     <route name="blog_show" path="/post/{id: \d+}" controller="blog" method="show" />
+    <route name="blog_category" path="/category/{slug: \w+}-{id: \d+}" controller="blog" method="category" />
 </routes>

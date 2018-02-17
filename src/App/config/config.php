@@ -29,7 +29,7 @@ return [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class)
     ],
-    'blog.limit.post'        => 8,
+    'blog.limit.post'        => 9,
 
     App::class         => object(),
     Router::class      => object()->constructor(

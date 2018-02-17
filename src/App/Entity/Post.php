@@ -23,12 +23,12 @@ class Post
     /**
      * @var string
      */
-    private $slug;
+    private $content;
 
     /**
      * @var string
      */
-    private $content;
+    private $category;
 
     /**
      * @var DateTime
@@ -67,17 +67,17 @@ class Post
     /**
      * @return string
      */
-    public function getSlug(): string
+    public function getContent(): string
     {
-        return $this->slug;
+        return $this->content;
     }
 
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getCategory(): string
     {
-        return $this->content;
+        return $this->category;
     }
 
     /**

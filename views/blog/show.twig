@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>{{ post.name }}</h1>
+    <p><em>Catégorie : <a href="/category/{{ category.slug }}-1">{{ category.name }}</a></em></p>
 
     <p>{{ post.content | nl2br }}</p>
 

@@ -85,10 +85,19 @@ class Model
     }
 
     /**
+     * @param null|string $columnName
+     * @param int|null $itemId
      * @return int
      */
-    public function count(): int
+    public function count(?string $columnName = '', ?int $itemId = null): int
     {
-        return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
+        if ($itemId === null) {
+            return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
+        } else {
+            $result = $this->pdo->prepare("SELECT COUNT(id) FROM {$this->table} WHERE {$columnName}=:idItem");
+            $result->bindParam(':idItem', $itemId);
+            $result->execute();
+            return $result->fetchColumn();
+        }
     }
 }

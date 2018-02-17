@@ -60,3 +60,9 @@ h1:before {
     font-size: 1.5em;
     color: #ff523a;
 }
+
+.category-group {
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+}
