@@ -50,24 +50,18 @@ class BlogController extends Controller implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $postNb = $this->postModel->count();
+        $paginationOptions = $this->pagination($vars);
 
-        $limit = $this->container->get('blog.limit.post');
+        $posts = $this->postModel->findAll(
+            $paginationOptions['start'],
+            $paginationOptions['limit'],
+            true,
+            ' ORDER BY updatedAt DESC ');
 
-        $id = $vars['id'];
-
-        $pageNb = ceil($postNb / $limit);
-        $start = ($limit * ($id - 1));
-
-        $posts = $this->postModel->findAll($start, $limit, true, ' ORDER BY updatedAt DESC ');
-
-        $next = ($id + 1 <= $pageNb) ? $id + 1 : null;
-        $previous = ($id - 1 >= 1) ? $id - 1 : null;
-
-        if ($id <= $pageNb) {
-            $this->render('blog/index.twig', compact('posts', 'pageNb', 'next', 'previous', 'id'));
+        if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
+            $this->render('blog/index.twig', compact('posts', 'paginationOptions'));
         } else {
-            $this->render('general/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
+            $this->render404();
         }
     }
 
@@ -88,7 +82,32 @@ class BlogController extends Controller implements ControllerInterface
         if ($post) {
             $this->render('blog/show.twig', compact('post'));
         } else {
-            $this->render('general/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
+            $this->render404();
         }
+    }
+
+    /**
+     * @param array $vars
+     * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    private function pagination(array $vars): array
+    {
+        $pagination = [];
+
+        $postNb = $this->postModel->count();
+
+        $pagination['limit'] = $this->container->get('blog.limit.post');
+
+        $pagination['id'] = $vars['id'];
+
+        $pagination['pageNb'] = ceil($postNb / $pagination['limit']);
+        $pagination['start'] = ($pagination['limit'] * ($pagination['id'] - 1));
+
+        $pagination['next'] = ($pagination['id'] + 1 <= $pagination['pageNb']) ? $pagination['id'] + 1 : null;
+        $pagination['previous'] = ($pagination['id'] - 1 >= 1) ? $pagination['id'] - 1 : null;
+
+        return $pagination;
     }
 }

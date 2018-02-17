@@ -126,6 +126,5 @@ class Router
 
         header('HTTP/1.0 404 Not Found');
         header('Location: /404');
-        return $this->routes['404'];
     }
 }

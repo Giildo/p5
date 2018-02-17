@@ -52,6 +52,8 @@ class Controller implements ControllerInterface
     }
 
     /**
+     * Envoie une vue Twig avec les éléments nécessaire à son traitement
+     *
      * @param string $nameView
      * @param array|null $twigVariable
      * @return void
@@ -62,5 +64,16 @@ class Controller implements ControllerInterface
     protected function render(string $nameView, ?array $twigVariable = []): void
     {
         echo $this->twig->render($nameView, $twigVariable);
+    }
+
+    /**
+     * Envoie une vue Twig pour la page 404
+     *
+     * @return void
+     */
+    protected function render404(): void
+    {
+        header('HTTP/1.0 404 Not Found');
+        header('Location: /404');
     }
 }
