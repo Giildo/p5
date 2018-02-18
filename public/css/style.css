@@ -104,6 +104,30 @@ header h1.col-sm-12:after, header h1.col-sm-12:before {
     background: linear-gradient(to right, black, white, black);
 }
 
+/** Accueil - Form **/
+
+form {
+    margin: 40px 0;
+}
+
+fieldset {
+    padding: 12px;
+}
+
+legend {
+    font-size: 1.5em;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+legend:after {
+    content: '';
+    height: 1px;
+    width: 100%;
+    display: block;
+    background: linear-gradient(to right, black, #b6b6b6 30%, white 75%);
+}
+
 /** Footer **/
 
 footer {

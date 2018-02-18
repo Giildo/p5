@@ -3,6 +3,7 @@
 namespace App\General\Controller;
 
 use Core\Controller\Controller;
+use Core\Form\BootstrapForm;
 
 class GeneralController extends Controller
 {
@@ -16,7 +17,14 @@ class GeneralController extends Controller
      */
     public function index(): void
     {
-        $this->render('general/index.twig', []);
+        $form = new BootstrapForm('col-offset-2 col-sm-8');
+        $form->fieldset('Laissez-nous un message');
+        $form->input('name', 'Nom/Prénom :');
+        $form->input('mail', 'EMail :', '', 'email');
+        $form->textarea('message', 'Message :');
+        $form = $form->submit('Envoyer');
+
+        $this->render('general/index.twig', compact('form'));
     }
 
     /**

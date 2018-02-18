@@ -4,6 +4,7 @@ use App\Blog\Model\CategoryModel;
 use App\Blog\Model\PostModel;
 use Core\App;
 use Core\Database\Database;
+use Core\Form\Form;
 use Core\Model\Model;
 use Core\PSR7\HTTPRequest;
 use Core\Router\Router;
@@ -25,11 +26,11 @@ return [
 
     'general.models' => [],
 
-    'blog.models' => [
+    'blog.models'     => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class)
     ],
-    'blog.limit.post'        => 9,
+    'blog.limit.post' => 9,
 
     App::class         => object(),
     Router::class      => object()->constructor(
@@ -37,6 +38,7 @@ return [
         get('app.routes'),
         get(ContainerInterface::class)
     ),
+    Form::class        => object(),
     HTTPRequest::class => object(),
     Database::class    => object()->constructor(get(PDO::class)),
     Model::class       => object(),

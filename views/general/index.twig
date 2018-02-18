@@ -1,6 +1,6 @@
 {% extends 'layout.twig' %}
 
-{% block title %}Pages d'écriture{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
 
@@ -8,5 +8,10 @@
         <img src="/img/header_accueil.jpg" alt="Photo montrant une personne tenant un café devant un ordinateur portable" class="img-fluid" />
         <h1 class="col-sm-12">Pages d'écriture</h1>
     </header>
+
+    <section class="row">
+        <div class="col-sm-2"></div>
+        {{ form | raw }}
+    </section>
 
 {% endblock %}
