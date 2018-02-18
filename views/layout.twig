@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="http://jojotique.fr/images/icone.png" />
-    <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" /><![endif]-->
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/png" href="http://jojotique.fr/images/icone.png"/>
+    <!--[if IE]>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/><![endif]-->
     <title>{% block title %}{% endblock %}</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Crafty+Girls" rel="stylesheet">
 </head>
 <body>
 
-<nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand" href="/accueil">Jojotique</a>
+<nav class="navbar fixed-top navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand" href="/accueil">
+        <img src="/img/logo.png" alt="Logo représentant une tique techno"/>
+    </a>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02"
+            aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
         <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/accueil">Accueil</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/blog/1">Blog</a>
             </li>
@@ -27,8 +35,34 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container-fluid">
     {% block body %}{% endblock %}
+
+    <footer class="row">
+        <div class="col-sm-9">
+            <img src="/img/logo.png" alt="Logo Jojotique" id="logo" />
+            <address>
+                <p>Jojotique©</p>
+                <p>Strasbourg</p>
+                <p>Phone : 06 30 79 49 53</p>
+                <p>Mail : <a href="mailto:giildo@gmail.com">giildo@gmail.com</a></p>
+            </address>
+        </div>
+        <div class="btn-group col-sm-3">
+            <a href="https://www.facebook.com/jojotique.fr/" target="_blank">
+                <img src="/img/reseaux_sociaux/facebook.png" alt="Logo Facebook en 3D">
+            </a>
+            <a href="https://twitter.com/JojotiqueFr" target="_blank">
+                <img src="/img/reseaux_sociaux/twitter.png" alt="Logo Twitter en 3D">
+            </a>
+            <a href="https://www.linkedin.com/in/jonathan-marco-giildo" target="_blank">
+                <img src="/img/reseaux_sociaux/linkedin.png" alt="Logo de LinkedIn">
+            </a>
+            <a href="https://github.com/Giildo" target="_blank">
+                <img src="/img/reseaux_sociaux/github.png" alt="Logo Github représentant Octocat">
+            </a>
+        </div>
+    </footer>
 </div>
 
 </body>

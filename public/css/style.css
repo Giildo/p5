@@ -1,3 +1,17 @@
+/** Général **/
+
+body {
+    margin-top: 56px;
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.navbar a {
+    font-size: 1.3rem;
+}
+
 div.btn-group {
     margin: 10px auto;
 }
@@ -65,4 +79,59 @@ h1:before {
     width: 60%;
     margin: 0 auto;
     display: block;
+}
+
+/** Accueil **/
+
+header {
+    position: relative;
+}
+
+header img {
+    position: relative;
+}
+
+header h1.col-sm-12 {
+    color: white;
+    position: absolute;
+    top: 10px;
+    font-weight: bold;
+    font-size: 5em;
+    font-family: 'Crafty Girls', cursive;
+}
+
+header h1.col-sm-12:after, header h1.col-sm-12:before {
+    background: linear-gradient(to right, black, white, black);
+}
+
+/** Footer **/
+
+footer {
+    background-color: black;
+    color: white;
+}
+
+footer a img {
+    width: 100px;
+    margin-top: 50px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+footer address {
+    padding-top: 25px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+footer .btn-group {
+    height: 200px;
+}
+
+#logo {
+    background-color: white;
+    width: 250px;
+    border: 10px solid #c8c8c8;
+    margin: 15px 15px 15px 0;
+    border-radius: 10px;
 }

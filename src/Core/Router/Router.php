@@ -114,7 +114,7 @@ class Router
     {
         if ($uri === '' || $uri === '/') {
             header('HTTP/1.1 301 Moved Permanently');
-            header('Location: /blog/1');
+            header('Location: /accueil');
             return $this->routes['blog_show'];
         }
 
