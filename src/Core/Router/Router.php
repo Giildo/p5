@@ -89,8 +89,15 @@ class Router
         /** @var \DOMElement $route */
         foreach ($routes as $route) {
             $controllerType = ucfirst($route->getAttribute('controller'));
+            $part = explode('_', $route->getAttribute('name'));
 
-            $controller = $this->namespace . '\\' . $controllerType . '\\Controller\\' . $controllerType . 'Controller';
+            $controller =
+                $this->namespace .
+                '\\' .
+                ucfirst($part[0]) .
+                '\\Controller\\' .
+                $controllerType .
+                'Controller';
 
             // Stockage des chemins des Controllers générés pour éviter d'avoir à les générer plusieurs fois
             if (!isset($this->controllers[$controllerType])) {

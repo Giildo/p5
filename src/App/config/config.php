@@ -1,8 +1,10 @@
 <?php
 
+use App\Admin\Model\UserModel;
 use App\Blog\Model\CategoryModel;
 use App\Blog\Model\PostModel;
 use Core\App;
+use Core\Auth\DBAuth;
 use Core\Database\Database;
 use Core\Form\Form;
 use Core\Model\Model;
@@ -26,6 +28,10 @@ return [
 
     'general.models' => [],
 
+    'admin.models' => [
+        'user' => get(UserModel::class)
+    ],
+
     'blog.models'     => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class)
@@ -39,6 +45,7 @@ return [
         get(ContainerInterface::class)
     ),
     Form::class        => object(),
+    DBAuth::class      => object(),
     HTTPRequest::class => object(),
     Database::class    => object()->constructor(get(PDO::class)),
     Model::class       => object(),

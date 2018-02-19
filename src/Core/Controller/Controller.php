@@ -2,6 +2,7 @@
 
 namespace Core\Controller;
 
+use Core\Auth\DBAuth;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
@@ -22,16 +23,29 @@ class Controller implements ControllerInterface
     protected $container;
 
     /**
+     * @var DBAuth
+     */
+    protected $auth;
+
+    /**
      * Controller constructor.
      *
      * @param Twig_Environment $twig
      * @param ContainerInterface $container
      * @param array|null $models
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [])
     {
         $this->twig = $twig;
         $this->container = $container;
+
+        if (!empty($models)) {
+            $this->instantiationModels($models);
+        }
+
+        $this->auth = $this->container->get(DBAuth::class);
     }
 
     /**
@@ -63,6 +77,8 @@ class Controller implements ControllerInterface
      */
     protected function render(string $nameView, ?array $twigVariable = []): void
     {
+        $twigVariable['sessionConfirmConnect'] = $this->auth->logged();
+
         echo $this->twig->render($nameView, $twigVariable);
     }
 
@@ -75,5 +91,20 @@ class Controller implements ControllerInterface
     {
         header('HTTP/1.0 404 Not Found');
         header('Location: /404');
+    }
+
+    /**
+     * @param array $models
+     * @return void
+     */
+    protected function instantiationModels(array $models): void
+    {
+        // Implémente les Models nécessaires récupérés depuis la config
+        if (!empty($models)) {
+            foreach ($models as $key => $model) {
+                $key .= "Model";
+                $this->$key = $model;
+            }
+        }
     }
 }

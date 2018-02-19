@@ -1,7 +1,7 @@
 /** Général **/
 
 body {
-    margin-top: 56px;
+    margin-top: 66px;
 }
 
 .navbar-brand img {
@@ -106,26 +106,73 @@ header h1.col-sm-12:after, header h1.col-sm-12:before {
 
 /** Accueil - Form **/
 
-form {
-    margin: 40px 0;
+.generalForm, .loginForm {
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
-fieldset {
+.generalForm fieldset, .loginForm fieldset {
     padding: 12px;
 }
 
-legend {
+.generalForm legend, .loginForm legend {
     font-size: 1.5em;
     font-style: italic;
     margin-bottom: 15px;
 }
 
-legend:after {
+.generalForm legend:after {
     content: '';
     height: 1px;
     width: 100%;
     display: block;
     background: linear-gradient(to right, black, #b6b6b6 30%, white 75%);
+}
+
+/** Connexion - Form **/
+
+.loginForm fieldset {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.loginForm legend {
+    width: auto;
+}
+
+.loginForm h4 {
+    margin-bottom: 30px;
+}
+
+.loginForm h4.success {
+    color: green;
+}
+
+.loginForm h4.error , .loginForm h4.error:after, .loginForm h4.error:before {
+    color: red;
+}
+
+.loginForm h4:after, .loginForm h4:before {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 100%;
+}
+
+.loginForm h4.success:after, .loginForm h4.success:before {
+    background: linear-gradient(to right, white, green 2%, white);
+}
+
+.loginForm h4.error:after, .loginForm h4.error:before {
+    background: linear-gradient(to right, white, red 2%, white);
+}
+
+.loginForm h4:before {
+    margin-bottom: 15px;
+}
+
+.loginForm h4:after {
+    margin-top: 15px;
 }
 
 /** Footer **/

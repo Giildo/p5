@@ -45,6 +45,7 @@ class Form implements FormInterface
      * @param null|string $value
      * @param null|string $type
      * @param null|string $class
+     * @param null|string $autocompletion
      * @return void
      */
     public function input(
@@ -52,12 +53,20 @@ class Form implements FormInterface
         ?string $label = '',
         ?string $value = '',
         ?string $type = 'text',
-        ?string $class = ''
+        ?string $class = '',
+        ?string $autocompletion = ''
     ): void {
         $label = $this->labelConstruct($name, $label);
 
         $this->form .= "<label for='{$name}'>{$label}</label>" .
-            "<input type='{$type}' id='{$name}' name='{$name}' value='{$value}' class='{$class}' />";
+            "<input
+                type='{$type}'
+                id='{$name}'
+                name='{$name}'
+                value='{$value}'
+                class='{$class}'
+                autocomplete='{$autocompletion}'
+            />";
     }
 
     /**

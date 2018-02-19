@@ -17,7 +17,7 @@ class GeneralController extends Controller
      */
     public function index(): void
     {
-        $form = new BootstrapForm('col-offset-2 col-sm-8');
+        $form = new BootstrapForm('offset-sm-2 col-sm-8 generalForm');
         $form->fieldset('Laissez-nous un message');
         $form->input('name', 'Nom/Prénom :');
         $form->input('mail', 'EMail :', '', 'email');

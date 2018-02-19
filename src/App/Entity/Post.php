@@ -41,6 +41,11 @@ class Post
     private $updatedAt;
 
     /**
+     * @var int
+     */
+    private $user;
+
+    /**
      * Post constructor.
      */
     public function __construct()
@@ -103,5 +108,13 @@ class Post
     {
         $this->createdAt = new DateTime($this->createdAt);
         $this->updatedAt = new DateTime($this->updatedAt);
+    }
+
+    /**
+     * @return int
+     */
+    public function getUser(): int
+    {
+        return $this->user;
     }
 }

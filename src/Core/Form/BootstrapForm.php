@@ -22,19 +22,21 @@ class BootstrapForm extends Form implements FormInterface
      * @param null|string $value
      * @param null|string $type
      * @param null|string $class
+     * @param null|string $autocompletion
+     * @return void
      */
     public function input(
         string $name,
         ?string $label = null,
         ?string $value = null,
         ?string $type = 'text',
-        ?string $class = null
-    )
-    {
+        ?string $class = null,
+        ?string $autocompletion = ''
+    ): void {
         $class .= ' form-control';
 
         $this->form .= "<div class='form-group'>";
-        parent::input($name, $label, $value, $type, $class);
+        parent::input($name, $label, $value, $type, $class, $autocompletion);
         $this->form .= "</div>";
     }
 
@@ -46,6 +48,7 @@ class BootstrapForm extends Form implements FormInterface
      * @param int|null $rows
      * @param null|string $value
      * @param null|string $class
+     * @return void
      */
     public function textarea(
         string $name,
@@ -53,8 +56,7 @@ class BootstrapForm extends Form implements FormInterface
         ?int $rows = 10,
         ?string $value = null,
         ?string $class = null
-    )
-    {
+    ): void {
         $class .= ' form-control';
 
         $this->form .= "<div class='form-group'>";

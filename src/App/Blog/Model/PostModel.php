@@ -40,7 +40,12 @@ class PostModel extends Model
             $result = $this->pdo->prepare("SELECT * FROM `{$this->table}` WHERE category=:categoryId{$orderBy}");
         } else {
             $result = $this->pdo->prepare("
-                SELECT posts.id, posts.name, posts.content, posts.createdAt, posts.updatedAt, categories.name as category
+                SELECT  posts.id,
+                        posts.name,
+                        posts.content,
+                        posts.createdAt,
+                        posts.updatedAt,
+                        categories.name as category
                 FROM `{$this->table}`
                 LEFT JOIN categories ON category = categories.id
                 WHERE category=:categoryId

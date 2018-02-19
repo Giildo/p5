@@ -21,21 +21,12 @@ class BlogController extends Controller implements ControllerInterface
     /**
      * @var PostModel
      */
-    private $postModel;
+    protected $postModel;
 
     /**
      * @var CategoryModel
      */
-    private $categoryModel;
-
-    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [])
-    {
-        parent::__construct($twig, $container, $models);
-
-        $this->InstantiationModels($models);
-    }
-
-    use InstantiationModels;
+    protected $categoryModel;
 
     /**
      * Affiche l'ensemble des Posts selon la LIMIT
@@ -58,7 +49,8 @@ class BlogController extends Controller implements ControllerInterface
             $paginationOptions['start'],
             $paginationOptions['limit'],
             true,
-            ' ORDER BY updatedAt DESC ');
+            ' ORDER BY updatedAt DESC '
+        );
 
         $categories = $this->categoryModel->findAll();
 
@@ -115,7 +107,8 @@ class BlogController extends Controller implements ControllerInterface
             $paginationOptions['start'],
             $paginationOptions['limit'],
             true,
-            ' ORDER BY updatedAt DESC ');
+            ' ORDER BY updatedAt DESC '
+        );
 
         $categories = $this->categoryModel->findAll();
 

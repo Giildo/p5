@@ -47,6 +47,7 @@ class App
      * Lance l'application
      *
      * Récupère le Router, lui fait trouver le bon controlleur, l'instancie et lance la vue
+     * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
@@ -77,10 +78,12 @@ class App
         $extractNameRoute = explode('_', $route->getName());
         $models = $extractNameRoute[0] . '.models';
 
+        $models = (!empty($this->container->get($models))) ? $this->container->get($models) : [];
+
         return new $controller(
             $this->container->get(Twig_Environment::class),
             $this->container,
-            $this->container->get($models)
+            $models
         );
     }
 

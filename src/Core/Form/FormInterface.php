@@ -20,8 +20,17 @@ interface FormInterface
      * @param null|string $value
      * @param null|string $type
      * @param null|string $class
+     * @param null|string $autocompletion
+     * @return void
      */
-    public function input(string $name, ?string $label = '', ?string $value = '', ?string $type = 'text', ?string $class = '');
+    public function input(
+        string $name,
+        ?string $label = '',
+        ?string $value = '',
+        ?string $type = 'text',
+        ?string $class = '',
+        ?string $autocompletion = ''
+    );
 
     /**
      * Retourne un champ de type TextArea
@@ -31,8 +40,15 @@ interface FormInterface
      * @param int|null $rows
      * @param null|string $value
      * @param null|string $class
+     * @return void
      */
-    public function textarea(string $name, ?string $label = '', ?int $rows = 10, ?string $value = '', ?string $class = '');
+    public function textarea(
+        string $name,
+        ?string $label = '',
+        ?int $rows = 10,
+        ?string $value = '',
+        ?string $class = ''
+    );
 
     /**
      * Retourne un bouton de validation

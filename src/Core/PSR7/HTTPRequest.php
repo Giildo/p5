@@ -38,4 +38,31 @@ class HTTPRequest
     {
         return ($nameParam === null) ? $_SERVER : $_SERVER[$nameParam];
     }
+
+    /**
+     * Récupère et renvoie les informations de sessions sous forme de tableau
+     *
+     * @param array|string $param
+     * @return mixed
+     */
+    public function getSessionParam($param)
+    {
+        $results = [];
+
+        if (is_array($param)) {
+            if (!empty($param)) {
+                foreach ($param as $item) {
+                    $results[$item] = $_SESSION[$item];
+                }
+
+                return $results;
+            } else {
+                return null;
+            }
+        } elseif (is_string($param)) {
+            return (isset($_SESSION[$param])) ? $_SESSION[$param] : null;
+        }
+
+        return null;
+    }
 }

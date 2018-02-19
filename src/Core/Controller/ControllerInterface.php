@@ -1,6 +1,7 @@
 <?php
 
 namespace Core\Controller;
+
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
