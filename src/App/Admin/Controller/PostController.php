@@ -118,6 +118,7 @@ class PostController extends Controller implements ControllerInterface
             $form->select('user', $usersSelect, $posts['user'], 'Auteur de l\'article');
         } else {
             $form->item("<p>Auteur : {$post->getUser()}</p>");
+            $form->input('user', '', $post->getUser(), 'hidden');
         }
 
         $form = $form->submit('Valider');
