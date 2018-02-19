@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Auth\DBAuth;
+use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\PSR7\HTTPRequest;
 use Core\Router\Route;
@@ -31,16 +33,23 @@ class App
     private $container;
 
     /**
+     * @var DBAuth
+     */
+    private $auth;
+
+    /**
      * App constructor.
      * @param Router $router
      * @param HTTPRequest $request
      * @param ContainerInterface $container
+     * @param DBAuth $auth
      */
-    public function __construct(Router $router, HTTPRequest $request, ContainerInterface $container)
+    public function __construct(Router $router, HTTPRequest $request, ContainerInterface $container, DBAuth $auth)
     {
         $this->request = $request;
         $this->router = $router;
         $this->container = $container;
+        $this->auth = $auth;
     }
 
     /**
@@ -76,6 +85,14 @@ class App
 
         // Récupération du nom de la Route pour permettre de récupérer le nom de la config pour les models
         $extractNameRoute = explode('_', $route->getName());
+        $extractPathRoute = explode('/', $route->getPath());
+
+        // Vérifie que si la route commence par un "admin", le User est bien connecté sinon le renvoie sur NotLog
+        if ($extractPathRoute[1] === 'admin') {
+            if (!$this->auth->logged()) {
+                $this->container->get(Controller::class)->renderNotLog();
+            }
+        }
 
         // Pour la partie admin ajout du suffixe "admin" à la config
         if (isset($extractNameRoute[2])) {

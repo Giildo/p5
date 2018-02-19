@@ -46,4 +46,7 @@ class PostController extends Controller implements ControllerInterface
 
         $this->render('admin/posts/index.twig', compact('posts', 'paginationOptions'));
     }
+
+    public function show():void
+    {}
 }

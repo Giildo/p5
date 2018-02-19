@@ -66,6 +66,37 @@ class Controller implements ControllerInterface
     }
 
     /**
+     * Envoie une vue Twig pour la page 404
+     *
+     * @return void
+     */
+    public function render404(): void
+    {
+        header('HTTP/1.0 404 Not Found');
+        header('Location: /404');
+        die();
+    }
+
+    /**
+     * Envoie une vue Twig pour la page 404
+     *
+     * @return void
+     */
+    public function renderNotLog(): void
+    {
+        header('HTTP/1.1 301 Not Found');
+        header('Location: /user/login');
+        die();
+    }
+
+    public function renderErrorNotAdmin()
+    {
+        header('HTTP/1.1 301 Not Found');
+        header('Location: /error/notAdmin');
+        die();
+    }
+
+    /**
      * Envoie une vue Twig avec les éléments nécessaire à son traitement
      *
      * @param string $nameView
@@ -81,34 +112,6 @@ class Controller implements ControllerInterface
         $twigVariable['sessionAdmin'] = $_SESSION['user']['idAdmin'] === '1';
 
         echo $this->twig->render($nameView, $twigVariable);
-    }
-
-    /**
-     * Envoie une vue Twig pour la page 404
-     *
-     * @return void
-     */
-    protected function render404(): void
-    {
-        header('HTTP/1.0 404 Not Found');
-        header('Location: /404');
-    }
-
-    /**
-     * Envoie une vue Twig pour la page 404
-     *
-     * @return void
-     */
-    protected function renderNotLog(): void
-    {
-        header('HTTP/1.1 301 Not Found');
-        header('Location: /user/login');
-    }
-
-    protected function renderErrorNotAdmin()
-    {
-        header('HTTP/1.1 301 Not Found');
-        header('Location: /error/notAdmin');
     }
 
     /**

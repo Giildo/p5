@@ -121,4 +121,12 @@ class Route
     {
         return $this->name;
     }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
 }

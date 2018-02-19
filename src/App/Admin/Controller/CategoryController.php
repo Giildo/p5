@@ -14,22 +14,26 @@ class CategoryController extends Controller implements ControllerInterface
     protected $categoryModel;
 
     /**
+     * @param array $vars
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function index(): void
+    public function index(array $vars): void
     {
-        if (isset($_SESSION['user'])) {
-            if ($_SESSION['user']['idAdmin'] === '1') {
-                $categories = $this->categoryModel->findAll();
+        if ($_SESSION['user']['idAdmin'] === '1') {
+            $nbPage = $this->categoryModel->count();
 
-                $this->render('admin/categories/index.twig', compact('categories'));
-            } else {
-                $this->renderErrorNotAdmin();
-            }
+            $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.category');
+
+            $categories = $this->categoryModel->findAll();
+
+            $this->render('admin/categories/index.twig', compact('categories', 'paginationOptions'));
         } else {
-            $this->renderNotLog();
+            $this->renderErrorNotAdmin();
         }
     }
 }

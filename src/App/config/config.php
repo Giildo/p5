@@ -30,7 +30,7 @@ return [
 
     'general.error.models' => [],
 
-    'blog.models'     => [
+    'blog.models' => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class)
     ],
@@ -51,8 +51,9 @@ return [
         'category' => get(CategoryModel::class)
     ],
 
-    'blog.limit.post' => 9,
-    'admin.limit.post' => 10,
+    'blog.limit.post'      => 9,
+    'admin.limit.post'     => 10,
+    'admin.limit.category' => 10,
 
     App::class         => object(),
     Router::class      => object()->constructor(
