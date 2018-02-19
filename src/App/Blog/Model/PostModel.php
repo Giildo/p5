@@ -74,7 +74,8 @@ class PostModel extends Model
      * @param int $id
      * @return Post
      */
-    public function findPostWithCategoryAndUser(int $id): Post {
+    public function findPostWithCategoryAndUser(int $id): Post
+    {
         $result = $this->pdo->prepare("
                 SELECT  posts.id,
                         posts.name,
@@ -177,11 +178,11 @@ class PostModel extends Model
             `user` = :user
         WHERE id = :id");
 
-        $result->bindParam('category',$categoryId, PDO::PARAM_INT);
-        $result->bindParam('name',$post['name']);
-        $result->bindParam('content',$post['content']);
-        $result->bindParam('user',$userId, PDO::PARAM_INT);
-        $result->bindParam('id',$postId, PDO::PARAM_INT);
+        $result->bindParam('category', $categoryId, PDO::PARAM_INT);
+        $result->bindParam('name', $post['name']);
+        $result->bindParam('content', $post['content']);
+        $result->bindParam('user', $userId, PDO::PARAM_INT);
+        $result->bindParam('id', $postId, PDO::PARAM_INT);
         return $result->execute();
     }
 }

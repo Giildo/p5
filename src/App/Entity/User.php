@@ -48,7 +48,8 @@ class User implements EntityInterface
     private $admin;
 
     public function __construct()
-    {}
+    {
+    }
 
     /**
      * @return string

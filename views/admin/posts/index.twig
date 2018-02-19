@@ -10,8 +10,8 @@
             <table class="table table-striped col-sm-8">
                 <thead>
                 <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Articles</th>
+                    <th scope="col">Catégorie</th>
                     <th scope="col">Auteur</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -20,8 +20,8 @@
                 <tbody>
                 {% for post in posts %}
                     <tr>
-                        <th scope="row">{{ post.id }}</th>
                         <td>{{ post.name }}</td>
+                        <td>{{ post.category }}</td>
                         <td>{{ post.user }}</td>
                         <td>
                             <a class="btn btn-info" href="/admin/post/update/{{ post.id }}">Modifier</a>

@@ -71,8 +71,7 @@ class PostController extends Controller implements ControllerInterface
      */
     public function update(array $vars):void
     {
-        if (
-            !empty($_POST) &&
+        if (!empty($_POST) &&
             isset($_POST['name']) &&
             isset($_POST['content']) &&
             isset($_POST['user']) &&
@@ -96,11 +95,10 @@ class PostController extends Controller implements ControllerInterface
         $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
         $form->input('name', 'Titre de l\'article', $posts['name']);
         $form->textarea('content', 'Contenu de l\'article', 10, $posts['content']);
-        $form->select('category', $categoriesSelect, $posts['category'],'Catégorie associée');
+        $form->select('category', $categoriesSelect, $posts['category'], 'Catégorie associée');
 
-        if ($this->auth->isAdmin())
-        {
-            $form->select('user', $usersSelect, $posts['user'],'Auteur de l\'article');
+        if ($this->auth->isAdmin()) {
+            $form->select('user', $usersSelect, $posts['user'], 'Auteur de l\'article');
         } else {
             $form->item("<p>Auteur : {$post->getUser()}</p>");
         }

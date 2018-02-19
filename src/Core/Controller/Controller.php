@@ -165,8 +165,7 @@ class Controller implements ControllerInterface
     {
         $post = [];
 
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $post[$key] = (isset($_POST[$key])) ? $_POST[$key] : '';
         }
 
@@ -183,8 +182,7 @@ class Controller implements ControllerInterface
      */
     protected function createPostWithEntity(array $keys, array $posts, EntityInterface $entity): array
     {
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $method = 'get' . ucfirst($key);
             $posts[$key] = (empty($posts[$key])) ? $entity->$method() : $posts[$key];
         }
