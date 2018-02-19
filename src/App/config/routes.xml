@@ -18,4 +18,6 @@
     <route name="admin_post_add" path="^/admin/post/add" controller="post" method="add" />
 
     <route name="admin_category_index" path="^/admin/categories/{id: \d+}" controller="category" method="index" />
+    <route name="admin_category_update" path="^/admin/category/update/{id: \d+}" controller="category" method="update" />
+    <route name="admin_category_add" path="^/admin/category/add" controller="category" method="add" />
 </routes>

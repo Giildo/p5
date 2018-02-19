@@ -76,8 +76,8 @@ class BlogController extends Controller implements ControllerInterface
      */
     public function show(array $vars): void
     {
-        $post = $this->postModel->find($vars['id']);
-        $category = $this->categoryModel->find($post->getCategory());
+        $post = $this->postModel->find($vars['id'], Post::class);
+        $category = $this->categoryModel->find($post->getCategory(), Category::class);
 
         if ($post) {
             $this->render('blog/show.twig', compact('post', 'category'));

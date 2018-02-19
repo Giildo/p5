@@ -22,8 +22,8 @@
                         <th scope="row">{{ category.id }}</th>
                         <td>{{ category.name }}</td>
                         <td>
-                            <button class="btn btn-info">Modifier</button>
-                            <button class="btn btn-danger">Supprimer</button>
+                            <a class="btn btn-info" href="/admin/category/update/{{ category.id }}">Modifier</a>
+                            <a class="btn btn-danger">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}

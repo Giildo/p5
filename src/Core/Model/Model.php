@@ -81,13 +81,14 @@ class Model
 
     /**
      * @param string $id
+     * @param string $entity
      * @return Post|bool
      */
-    public function find(string $id)
+    public function find(string $id, string $entity)
     {
         $result = $this->pdo->prepare("SELECT * FROM `{$this->table}`WHERE id=:id");
         $result->bindParam(':id', $id);
-        $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
+        $result->setFetchMode(PDO::FETCH_CLASS, $entity);
         $result->execute();
 
         return $result->fetch();
