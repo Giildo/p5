@@ -58,7 +58,11 @@ class Form implements FormInterface
     ): void {
         $label = $this->labelConstruct($name, $label);
 
-        $this->form .= "<label for='{$name}'>{$label}</label>" .
+        if ($type !== 'hidden') {
+            $this->form .= "<label for='{$name}'>{$label}</label>";
+        }
+
+        $this->form .=
             '<input
                 type="' . $type . '"
                 id="' . $name . '"
