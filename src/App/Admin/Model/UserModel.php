@@ -9,12 +9,16 @@ use PDO;
 class UserModel extends Model
 {
     /**
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
      * Récupère le User correspondant au pseudo et renvoie le résultat de la comparaison avec le password
      * @param string $pseudo
-     * @param string $password
-     * @return bool
+     * @return User|null
      */
-    public function comparePass(string $pseudo, string $password): bool
+    public function comparePass(string $pseudo): ?User
     {
         $result = $this->pdo->prepare('SELECT * FROM users WHERE pseudo = :pseudo');
         $result->bindParam('pseudo', $pseudo);
@@ -25,9 +29,9 @@ class UserModel extends Model
         $user = $result->fetch();
 
         if (!$user) {
-            return false;
+            return null;
         } else {
-            return $user->getPassword() === $password;
+            return $user;
         }
     }
 
@@ -62,5 +66,27 @@ class UserModel extends Model
         $result->bindParam('phone', $phone);
         $result->bindParam('pass', $r_password);
         return $result->execute();
+    }
+
+    public function userByAdmin(int $id): User
+    {
+        $result = $this->pdo->prepare(
+            "SELECT  users.id,
+                              users.pseudo,
+                              users.firstName,
+                              users.lastName,
+                              users.mail,
+                              users.phone,
+                              users.password,
+                              admin.name AS admin
+                      FROM users
+                      LEFT JOIN admin ON users.admin = admin.id
+                      WHERE users.id=:id"
+        );
+        $result->bindParam('id', $id);
+        $result->setFetchMode(PDO::FETCH_CLASS, User::class);
+        $result->execute();
+
+        return $result->fetch();
     }
 }

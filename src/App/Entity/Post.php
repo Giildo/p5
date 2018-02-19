@@ -41,7 +41,7 @@ class Post
     private $updatedAt;
 
     /**
-     * @var int
+     * @var int|string
      */
     private $user;
 
@@ -111,9 +111,9 @@ class Post
     }
 
     /**
-     * @return int
+     * @return int|string
      */
-    public function getUser(): int
+    public function getUser()
     {
         return $this->user;
     }

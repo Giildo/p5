@@ -24,15 +24,24 @@ class PostController extends Controller implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $nbPage = $this->postModel->count();
+        $admin = false;
+
+        if ($_SESSION['user']['idAdmin'] === '1') {
+            $admin = true;
+            $nbPage = $this->postModel->count();
+        } else {
+            $nbPage = $this->postModel->count('user', $_SESSION['user']['id']);
+        }
 
         $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.post');
 
-        $posts = $this->postModel->findAll(
+        $posts = $this->postModel->findAllByUserAndCategory(
+            $_SESSION['user']['id'],
             $paginationOptions['start'],
             $paginationOptions['limit'],
             true,
-            ' ORDER BY updatedAt DESC '
+            'ORDER BY updatedAt DESC',
+            $admin
         );
 
         $this->render('admin/posts/index.twig', compact('posts', 'paginationOptions'));

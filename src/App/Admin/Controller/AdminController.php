@@ -2,11 +2,17 @@
 
 namespace App\Admin\Controller;
 
+use App\Admin\Model\UserModel;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 
 class AdminController extends Controller implements ControllerInterface
 {
+    /**
+     * @var UserModel
+     */
+    protected $userModel;
+
     /**
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
@@ -14,6 +20,10 @@ class AdminController extends Controller implements ControllerInterface
      */
     public function index()
     {
-        $this->render('admin/index.twig', []);
+        $id = $_SESSION['user']['id'];
+
+        $user = $this->userModel->userByAdmin($id);
+
+        $this->render('admin/index.twig', compact('user'));
     }
 }

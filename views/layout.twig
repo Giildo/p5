@@ -32,6 +32,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="/blog/1">Blog</a>
             </li>
+
             {% if sessionConfirmConnect == true %}
                 <li class="nav-item" id="adminNav">
                     <a class="nav-link" href="/admin/accueil">Admin</a>
@@ -39,6 +40,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/post/1">Articles</a>
                 </li>
+            {% endif %}
+
+            {% if sessionAdmin == true %}
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/category/1">Catégories</a>
                 </li>

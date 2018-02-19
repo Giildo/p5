@@ -64,7 +64,7 @@ class UserController extends Controller implements ControllerInterface
             $this->render('admin/login.twig', compact('form1', 'form2', 'error'));
         } else {
             header('HTTP/1.1 301 Moved Permanently');
-            header('Location: /admin/post/1');
+            header('Location: /admin/accueil');
         }
     }
 
@@ -75,7 +75,8 @@ class UserController extends Controller implements ControllerInterface
      */
     public function logout(): void
     {
-        unset($_SESSION['confirmConnect']);
+        $this->auth->logout();
+
         header('HTTP/1.1 301 Moved Permanently');
         header('Location: /accueil');
     }
@@ -108,13 +109,9 @@ class UserController extends Controller implements ControllerInterface
     private function comparePass(array $results): array
     {
         if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
-            $result = $this->userModel->comparePass($_POST['c_pseudo'], $_POST['c_password']);
+            $user = $this->userModel->comparePass($_POST['c_pseudo']);
 
-            if ($result) {
-                $_SESSION['confirmConnect'] = true;
-            } else {
-                $results['c_error'] = true;
-            }
+            $this->auth->log($user, $_POST['c_password'], $results);
         }
 
         return $results;

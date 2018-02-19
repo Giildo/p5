@@ -12,6 +12,7 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Articles</th>
+                    <th scope="col">Auteur</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -21,6 +22,7 @@
                     <tr>
                         <th scope="row">{{ post.id }}</th>
                         <td>{{ post.name }}</td>
+                        <td>{{ post.user }}</td>
                         <td>
                             <button class="btn btn-info">Modifier</button>
                             <button class="btn btn-danger">Supprimer</button>

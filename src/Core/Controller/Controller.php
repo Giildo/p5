@@ -78,6 +78,7 @@ class Controller implements ControllerInterface
     protected function render(string $nameView, ?array $twigVariable = []): void
     {
         $twigVariable['sessionConfirmConnect'] = $this->auth->logged();
+        $twigVariable['sessionAdmin'] = $_SESSION['user']['idAdmin'] === '1';
 
         echo $this->twig->render($nameView, $twigVariable);
     }
@@ -91,6 +92,23 @@ class Controller implements ControllerInterface
     {
         header('HTTP/1.0 404 Not Found');
         header('Location: /404');
+    }
+
+    /**
+     * Envoie une vue Twig pour la page 404
+     *
+     * @return void
+     */
+    protected function renderNotLog(): void
+    {
+        header('HTTP/1.1 301 Not Found');
+        header('Location: /user/login');
+    }
+
+    protected function renderErrorNotAdmin()
+    {
+        header('HTTP/1.1 301 Not Found');
+        header('Location: /error/notAdmin');
     }
 
     /**

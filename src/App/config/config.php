@@ -28,12 +28,16 @@ return [
 
     'general.models' => [],
 
+    'general.error.models' => [],
+
     'blog.models'     => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class)
     ],
 
-    'admin.models' => [],
+    'admin.models' => [
+        'user' => get(UserModel::class)
+    ],
 
     'admin.user.models' => [
         'user' => get(UserModel::class)

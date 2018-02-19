@@ -2,6 +2,7 @@
 <routes>
     <route name="general_accueil" path="^/accueil" controller="general" method="index" />
     <route name="general_404" path="^/404" controller="general" method="error404" />
+    <route name="general_error_notAdmin" path="^/error/notAdmin" controller="error" method="notAdmin" />
 
     <route name="blog_index" path="^/blog/{id: \d+}" controller="blog" method="index" />
     <route name="blog_show" path="^/post/{id: \d+}" controller="blog" method="show" />

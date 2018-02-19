@@ -3,5 +3,58 @@
 {% block title %}Administration des articles{% endblock %}
 
 {% block body %}
-    <h1>Bonjour, bienvenue sur les categories</h1>
+    <h1>Bonjour, bienvenue sur les catégories</h1>
+
+    <div class="row">
+        <div class="offset-sm-2 col-sm-8">
+            <table class="table table-striped col-sm-8">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Articles</th>
+                    <th scope="col">Auteur</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <th scope="row">{{ post.id }}</th>
+                        <td>{{ post.name }}</td>
+                        <td>{{ post.user }}</td>
+                        <td>
+                            <button class="btn btn-info">Modifier</button>
+                            <button class="btn btn-danger">Supprimer</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="btn-group">
+            {% if paginationOptions.previous != null %}
+                <a href="/admin/post/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
+            {% else %}
+                <button class="btn btn-warning" disabled><</button>
+            {% endif %}
+
+            {% for i in 1..paginationOptions.pageNb %}
+                {% if i != paginationOptions.id %}
+                    <a href="/admin/post/{{ i }}" class="btn btn-warning">{{ i }}</a>
+                {% else %}
+                    <button class="btn btn-warning" disabled>{{ i }}</button>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginationOptions.next != null %}
+                <a href="/admin/post/{{ paginationOptions.next }}" class="btn btn-warning">></a>
+            {% else %}
+                <button class="btn btn-warning" disabled>></button>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
