@@ -24,8 +24,8 @@
                         <td>{{ post.name }}</td>
                         <td>{{ post.user }}</td>
                         <td>
-                            <button class="btn btn-info">Modifier</button>
-                            <button class="btn btn-danger">Supprimer</button>
+                            <a class="btn btn-info" href="/admin/post/update/{{ post.id }}">Modifier</a>
+                            <a class="btn btn-danger" href="">Supprimer</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -37,21 +37,21 @@
     <div class="row">
         <div class="btn-group">
             {% if paginationOptions.previous != null %}
-                <a href="/admin/post/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
+                <a href="/admin/posts/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
             {% else %}
                 <button class="btn btn-warning" disabled><</button>
             {% endif %}
 
             {% for i in 1..paginationOptions.pageNb %}
                 {% if i != paginationOptions.id %}
-                    <a href="/admin/post/{{ i }}" class="btn btn-warning">{{ i }}</a>
+                    <a href="/admin/posts/{{ i }}" class="btn btn-warning">{{ i }}</a>
                 {% else %}
                     <button class="btn btn-warning" disabled>{{ i }}</button>
                 {% endif %}
             {% endfor %}
 
             {% if paginationOptions.next != null %}
-                <a href="/admin/post/{{ paginationOptions.next }}" class="btn btn-warning">></a>
+                <a href="/admin/posts/{{ paginationOptions.next }}" class="btn btn-warning">></a>
             {% else %}
                 <button class="btn btn-warning" disabled>></button>
             {% endif %}

@@ -44,7 +44,9 @@ return [
     ],
 
     'admin.post.models' => [
-        'post' => get(PostModel::class)
+        'post'     => get(PostModel::class),
+        'category' => get(CategoryModel::class),
+        'user'     => get(UserModel::class)
     ],
 
     'admin.category.models' => [

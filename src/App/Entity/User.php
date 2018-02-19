@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
-class User
+use Core\Entity\EntityInterface;
+
+class User implements EntityInterface
 {
 
     /**
@@ -44,6 +46,9 @@ class User
      * @var string
      */
     private $admin;
+
+    public function __construct()
+    {}
 
     /**
      * @return string

@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use Core\Entity\EntityInterface;
 use DateTime;
 
 /**
  * Class Post
  * @package App\Entity
  */
-class Post
+class Post implements EntityInterface
 {
     /**
      * @var int

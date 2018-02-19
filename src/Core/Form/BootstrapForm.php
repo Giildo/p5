@@ -65,6 +65,29 @@ class BootstrapForm extends Form implements FormInterface
     }
 
     /**
+     * Retourne un champ de type select
+     *
+     * @param string $name
+     * @param array $options
+     * @param null|string $optionCurrent
+     * @param null|string $label
+     * @param null|string $class
+     */
+    public function select(
+        string $name,
+        array $options,
+        ?string $optionCurrent = '',
+        ?string $label = '',
+        ?string $class = ''
+    ): void {
+        $class .= ' form-control';
+
+        $this->form .= "<div class='form-group'>";
+        parent::select($name, $options, $optionCurrent, $label, $class);
+        $this->form .= "</div>";
+    }
+
+    /**
      * Retourne un bouton de validation
      *
      * @param string $text

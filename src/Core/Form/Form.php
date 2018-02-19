@@ -59,14 +59,14 @@ class Form implements FormInterface
         $label = $this->labelConstruct($name, $label);
 
         $this->form .= "<label for='{$name}'>{$label}</label>" .
-            "<input
-                type='{$type}'
-                id='{$name}'
-                name='{$name}'
-                value='{$value}'
-                class='{$class}'
-                autocomplete='{$autocompletion}'
-            />";
+            '<input
+                type="' . $type . '"
+                id="' . $name . '"
+                name="' . $name . '"
+                value="' . $value . '"
+                class="' . $class . '"
+                autocomplete="' . $autocompletion . '"
+            />';
     }
 
     /**
@@ -103,6 +103,45 @@ class Form implements FormInterface
     }
 
     /**
+     * Crée un élément de type select
+     *
+     * @param string $name
+     * @param array $options
+     * @param null|string $optionCurrent
+     * @param null|string $label
+     * @param null|string $class
+     * @return void
+     */
+    public function select(
+        string $name,
+        array $options,
+        ?string $optionCurrent = '',
+        ?string $label = '',
+        ?string $class = ''
+    ): void {
+        $selected = '';
+
+        $label = $this->labelConstruct($name, $label);
+
+        $this->form .= "<label for='{$name}'>{$label}</label>" .
+            "<select class='{$class}' name='{$name}' id='{$name}'>";
+
+        foreach ($options as $option) {
+            $optionMaj = ucfirst($option);
+
+            if ($optionMaj === $optionCurrent) {
+                $selected = 'selected';
+            }
+
+            $this->form .= "<option value='{$option}' {$selected}>{$optionMaj}</option>";
+
+            $selected = '';
+        }
+
+        $this->form .= '</select>';
+    }
+
+    /**
      * Retourne un bouton de validation
      *
      * @param string $text
@@ -136,7 +175,7 @@ class Form implements FormInterface
      * @param null|string $label
      * @return string
      */
-    private function labelConstruct(string $name, ?string $label = ''): string
+    protected function labelConstruct(string $name, ?string $label = ''): string
     {
         if ($label === null) {
             return ucfirst($name);

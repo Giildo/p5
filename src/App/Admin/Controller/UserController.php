@@ -29,7 +29,8 @@ class UserController extends Controller implements ControllerInterface
         $results = $this->comparePass($results);
 
         if (!$this->auth->logged()) {
-            $post = $this->createPost();
+            $keys = ['c_pseudo', 'c_password', 'r_pseudo', 'firstName', 'mail', 'phone', 'r_password',];
+            $post = $this->createPost($keys);
 
             $result = $this->addUser($results, $post);
 
@@ -79,25 +80,6 @@ class UserController extends Controller implements ControllerInterface
 
         header('HTTP/1.1 301 Moved Permanently');
         header('Location: /accueil');
-    }
-
-    /**
-     * Génère un tableau qui va regrouper les éléments passés en post ou non
-     *
-     * @return string[]
-     */
-    private function createPost(): array
-    {
-        $post['c_pseudo'] = (isset($_POST['c_pseudo'])) ? $_POST['c_pseudo'] : '';
-        $post['c_password'] = (isset($_POST['c_password'])) ? $_POST['c_password'] : '';
-        $post['r_pseudo'] = (isset($_POST['r_pseudo'])) ? $_POST['r_pseudo'] : '';
-        $post['firstName'] = (isset($_POST['firstName'])) ? $_POST['firstName'] : '';
-        $post['lastName'] = (isset($_POST['lastName'])) ? $_POST['lastName'] : '';
-        $post['mail'] = (isset($_POST['mail'])) ? $_POST['mail'] : '';
-        $post['phone'] = (isset($_POST['phone'])) ? $_POST['phone'] : '';
-        $post['r_password'] = (isset($_POST['r_password'])) ? $_POST['r_password'] : '';
-
-        return $post;
     }
 
     /**

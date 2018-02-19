@@ -4,6 +4,8 @@ namespace Core\Model;
 
 use App\Entity\Post;
 use Core\Database\Database;
+use Core\Entity\Entity;
+use Core\Entity\EntityInterface;
 use PDO;
 use PDOStatement;
 
@@ -43,6 +45,7 @@ class Model
     }
 
     /**
+     * @param string $entity
      * @param int|null $start
      * @param int|null $limit
      * @param bool|null $order
@@ -50,6 +53,7 @@ class Model
      * @return array
      */
     public function findAll(
+        string $entity,
         ?int $start = null,
         ?int $limit = null,
         ?bool $order = false,
@@ -57,14 +61,19 @@ class Model
     ): array {
         $orderBy = ($order) ? $orderBy : '';
 
-        if ($start === null && $limit === null) {
-            $result = $this->pdo->prepare("SELECT * FROM `{$this->table}`{$orderBy}");
-        } else {
-            $result = $this->pdo->prepare("SELECT * FROM `{$this->table}`{$orderBy}LIMIT :start, :limit");
+        $limitStart = '';
+        if ($start !== null && $limit !== null) {
+            $limitStart = 'LIMIT :start, :limit';
+        }
+
+        $result = $this->pdo->prepare("SELECT * FROM `{$this->table}`{$orderBy} {$limitStart}");
+
+        if ($start !== null && $limit !== null) {
             $result->bindParam(':start', $start, PDO::PARAM_INT);
             $result->bindParam(':limit', $limit, PDO::PARAM_INT);
         }
-        $this->setFetchMode($result, Post::class);
+
+        $result->setFetchMode(PDO::FETCH_CLASS, $entity);
         $result->execute();
 
         return $result->fetchAll();
@@ -78,7 +87,7 @@ class Model
     {
         $result = $this->pdo->prepare("SELECT * FROM `{$this->table}`WHERE id=:id");
         $result->bindParam(':id', $id);
-        $this->setFetchMode($result, Post::class);
+        $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
         $result->execute();
 
         return $result->fetch();
@@ -99,5 +108,23 @@ class Model
             $result->execute();
             return $result->fetchColumn();
         }
+    }
+
+    /**
+     * Récupère l'ID d'un élément avec la valeur d'une colonne
+     *
+     * @param string $columnName
+     * @param string $value
+     * @param string $entity
+     * @return EntityInterface
+     */
+    public function findIdByColumn(string $columnName, string $value, string $entity): EntityInterface
+    {
+        $result = $this->pdo->prepare("SELECT id FROM {$this->table} WHERE {$columnName} = :value");
+        $result->bindParam('value', $value);
+        $result->setFetchMode(PDO::FETCH_CLASS, $entity);
+        $result->execute();
+
+        return $result->fetch();
     }
 }

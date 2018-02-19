@@ -4,6 +4,8 @@ namespace App\Blog\Controller;
 
 use App\Blog\Model\CategoryModel;
 use App\Blog\Model\PostModel;
+use App\Entity\Category;
+use App\Entity\Post;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\Controller\InstantiationModels;
@@ -46,13 +48,14 @@ class BlogController extends Controller implements ControllerInterface
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
         $posts = $this->postModel->findAll(
+            Post::class,
             $paginationOptions['start'],
             $paginationOptions['limit'],
             true,
             ' ORDER BY updatedAt DESC '
         );
 
-        $categories = $this->categoryModel->findAll();
+        $categories = $this->categoryModel->findAll(Category::class);
 
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render('blog/index.twig', compact('posts', 'paginationOptions', 'categories'));
@@ -110,7 +113,7 @@ class BlogController extends Controller implements ControllerInterface
             ' ORDER BY updatedAt DESC '
         );
 
-        $categories = $this->categoryModel->findAll();
+        $categories = $this->categoryModel->findAll(Category::class);
 
         $categoryName = $posts[0]->getCategory();
 

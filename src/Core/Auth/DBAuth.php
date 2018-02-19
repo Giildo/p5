@@ -67,4 +67,14 @@ class DBAuth
         unset($_SESSION['confirmConnect']);
         unset($_SESSION['user']);
     }
+
+    /**
+     * Vérifie que le User est un admin et renvoie true ou false
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $_SESSION['user']['idAdmin'] === '1';
+    }
 }

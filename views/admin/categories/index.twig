@@ -35,21 +35,21 @@
     <div class="row">
         <div class="btn-group">
             {% if paginationOptions.previous != null %}
-                <a href="/admin/category/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
+                <a href="/admin/categories/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
             {% else %}
                 <button class="btn btn-warning" disabled><</button>
             {% endif %}
 
             {% for i in 1..paginationOptions.pageNb %}
                 {% if i != paginationOptions.id %}
-                    <a href="/admin/category/{{ i }}" class="btn btn-warning">{{ i }}</a>
+                    <a href="/admin/categories/{{ i }}" class="btn btn-warning">{{ i }}</a>
                 {% else %}
                     <button class="btn btn-warning" disabled>{{ i }}</button>
                 {% endif %}
             {% endfor %}
 
             {% if paginationOptions.next != null %}
-                <a href="/admin/category/{{ paginationOptions.next }}" class="btn btn-warning">></a>
+                <a href="/admin/categories/{{ paginationOptions.next }}" class="btn btn-warning">></a>
             {% else %}
                 <button class="btn btn-warning" disabled>></button>
             {% endif %}

@@ -3,6 +3,7 @@
 namespace App\Admin\Controller;
 
 use App\Blog\Model\CategoryModel;
+use App\Entity\Category;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 
@@ -24,12 +25,12 @@ class CategoryController extends Controller implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        if ($_SESSION['user']['idAdmin'] === '1') {
+        if ($this->auth->isAdmin()) {
             $nbPage = $this->categoryModel->count();
 
             $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.category');
 
-            $categories = $this->categoryModel->findAll();
+            $categories = $this->categoryModel->findAll(Category::class);
 
             $this->render('admin/categories/index.twig', compact('categories', 'paginationOptions'));
         } else {

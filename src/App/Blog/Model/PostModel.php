@@ -38,10 +38,12 @@ class PostModel extends Model
     ): array {
         $orderBy = ($order) ? $orderBy : '';
 
-        if ($start === null && $limit === null) {
-            $result = $this->pdo->prepare("SELECT * FROM `{$this->table}` WHERE category=:categoryId{$orderBy}");
-        } else {
-            $result = $this->pdo->prepare("
+        $startLimit = '';
+        if ($start !== null && $limit !== null) {
+            $startLimit = 'LIMIT :start, :limit';
+        }
+
+        $result = $this->pdo->prepare("
                 SELECT  posts.id,
                         posts.name,
                         posts.content,
@@ -52,15 +54,45 @@ class PostModel extends Model
                 LEFT JOIN categories ON posts.category = categories.id
                 WHERE posts.category=:categoryId
                 {$orderBy}
-                LIMIT :start, :limit");
+                {$startLimit}");
+
+        if ($start !== null && $limit !== null) {
             $result->bindParam(':start', $start, PDO::PARAM_INT);
             $result->bindParam(':limit', $limit, PDO::PARAM_INT);
         }
+
         $result->bindParam(':categoryId', $categoryId);
-        $this->setFetchMode($result, Post::class);
+        $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
         $result->execute();
 
         return $result->fetchAll();
+    }
+
+    /**
+     * Récupère un post de son ID avec sa catégorie
+     *
+     * @param int $id
+     * @return Post
+     */
+    public function findPostWithCategoryAndUser(int $id): Post {
+        $result = $this->pdo->prepare("
+                SELECT  posts.id,
+                        posts.name,
+                        posts.content,
+                        posts.createdAt,
+                        posts.updatedAt,
+                        categories.name as category,
+                        users.pseudo as user
+                FROM posts
+                LEFT JOIN categories ON posts.category = categories.id
+                LEFT JOIN users ON posts.user = users.id
+                WHERE posts.id = :id");
+
+        $result->bindParam(':id', $id);
+        $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
+        $result->execute();
+
+        return $result->fetch();
     }
 
     /**
@@ -96,9 +128,7 @@ class PostModel extends Model
         }
 
         $result =
-            $this
-                ->pdo
-                ->prepare("
+            $this->pdo->prepare("
                     SELECT  posts.id,
                             posts.name,
                             posts.content,
@@ -122,9 +152,36 @@ class PostModel extends Model
             $result->bindParam(':userId', $userId);
         }
 
-        $this->setFetchMode($result, Post::class);
+        $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
         $result->execute();
 
         return $result->fetchAll();
+    }
+
+    /**
+     * Renvoie les données à la BD pour adapter les éléments de post
+     *
+     * @param int $userId
+     * @param int $categoryId
+     * @param array $post
+     * @param int $postId
+     * @return bool
+     */
+    public function updatePost(int $userId, int $categoryId, array $post, int $postId): bool
+    {
+        $result = $this->pdo->prepare("UPDATE posts
+        SET `category` = :category,
+            `name` = :name,
+            `content` = :content,
+            `updatedAt` = NOW(),
+            `user` = :user
+        WHERE id = :id");
+
+        $result->bindParam('category',$categoryId, PDO::PARAM_INT);
+        $result->bindParam('name',$post['name']);
+        $result->bindParam('content',$post['content']);
+        $result->bindParam('user',$userId, PDO::PARAM_INT);
+        $result->bindParam('id',$postId, PDO::PARAM_INT);
+        return $result->execute();
     }
 }
