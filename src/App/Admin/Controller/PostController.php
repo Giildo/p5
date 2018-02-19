@@ -71,6 +71,9 @@ class PostController extends Controller implements ControllerInterface
      */
     public function update(array $vars):void
     {
+        $u_success = false;
+        $u_error = false;
+
         if (!empty($_POST) &&
             isset($_POST['name']) &&
             isset($_POST['content']) &&
@@ -79,8 +82,15 @@ class PostController extends Controller implements ControllerInterface
         ) {
             $user = $this->userModel->findIdByColumn('pseudo', $_POST['user'], User::class);
             $category = $this->categoryModel->findIdByColumn('name', $_POST['category'], Category::class);
-            $this->postModel->updatePost($user->getId(), $category->getId(), $_POST, $vars['id']);
+            $updateResult = $this->postModel->updatePost($user->getId(), $category->getId(), $_POST, $vars['id']);
+
+            if ($updateResult) {
+                $u_success = true;
+            } else {
+                $u_error = true;
+            }
         }
+
         $post = $this->postModel->findPostWithCategoryAndUser($vars['id']);
         $categories = $this->categoryModel->findAll(Category::class);
         $users = $this->userModel->findAll(User::class);
@@ -93,6 +103,13 @@ class PostController extends Controller implements ControllerInterface
         $posts = $this->createPostWithEntity($keys, $posts, $post);
 
         $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
+
+        if ($u_success) {
+            $form->item("<h4 class='success'>Modification réussie !</h4>");
+        } elseif ($u_error) {
+            $form->item("<h4 class='error'>Une erreur est survenue !</h4>");
+        }
+
         $form->input('name', 'Titre de l\'article', $posts['name']);
         $form->textarea('content', 'Contenu de l\'article', 10, $posts['content']);
         $form->select('category', $categoriesSelect, $posts['category'], 'Catégorie associée');

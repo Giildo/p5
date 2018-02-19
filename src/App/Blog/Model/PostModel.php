@@ -164,12 +164,19 @@ class PostModel extends Model
      *
      * @param int $userId
      * @param int $categoryId
-     * @param array $post
+     * @param array $posts
      * @param int $postId
      * @return bool
      */
-    public function updatePost(int $userId, int $categoryId, array $post, int $postId): bool
+    public function updatePost(int $userId, int $categoryId, array $posts, int $postId): bool
     {
+        foreach ($posts as $post) {
+            if (empty($post))
+            {
+                return false;
+            }
+        }
+
         $result = $this->pdo->prepare("UPDATE posts
         SET `category` = :category,
             `name` = :name,
@@ -179,8 +186,8 @@ class PostModel extends Model
         WHERE id = :id");
 
         $result->bindParam('category', $categoryId, PDO::PARAM_INT);
-        $result->bindParam('name', $post['name']);
-        $result->bindParam('content', $post['content']);
+        $result->bindParam('name', $posts['name']);
+        $result->bindParam('content', $posts['content']);
         $result->bindParam('user', $userId, PDO::PARAM_INT);
         $result->bindParam('id', $postId, PDO::PARAM_INT);
         return $result->execute();
