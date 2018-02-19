@@ -41,6 +41,11 @@ class User
     private $mail;
 
     /**
+     * @var string
+     */
+    private $admin;
+
+    /**
      * @return string
      */
     public function getFirstName(): string
@@ -107,5 +112,13 @@ class User
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdmin(): string
+    {
+        return $this->admin;
     }
 }

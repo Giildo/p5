@@ -33,20 +33,23 @@
                 <a class="nav-link" href="/blog/1">Blog</a>
             </li>
             {% if sessionConfirmConnect == true %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/post/1">Admin post</a>
+                <li class="nav-item" id="adminNav">
+                    <a class="nav-link" href="/admin/accueil">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/category/1">Admin category</a>
+                    <a class="nav-link" href="/admin/post/1">Articles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/category/1">Catégories</a>
                 </li>
             {% endif %}
         </ul>
     </div>
 
     {% if sessionConfirmConnect == true %}
-        <a href="/logout" class="btn btn-outline-info">Déconnexion</a>
+        <a href="/user/logout" class="btn btn-outline-info">Déconnexion</a>
     {% else %}
-        <a href="/login" class="btn btn-outline-info">Connexion</a>
+        <a href="/user/login" class="btn btn-outline-info">Connexion</a>
     {% endif %}
 </nav>
 

@@ -28,15 +28,27 @@ return [
 
     'general.models' => [],
 
-    'admin.models' => [
-        'user' => get(UserModel::class)
-    ],
-
     'blog.models'     => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class)
     ],
+
+    'admin.models' => [],
+
+    'admin.user.models' => [
+        'user' => get(UserModel::class)
+    ],
+
+    'admin.post.models' => [
+        'post' => get(PostModel::class)
+    ],
+
+    'admin.category.models' => [
+        'category' => get(CategoryModel::class)
+    ],
+
     'blog.limit.post' => 9,
+    'admin.limit.post' => 10,
 
     App::class         => object(),
     Router::class      => object()->constructor(

@@ -4,6 +4,8 @@ body {
     margin-top: 66px;
 }
 
+/** Nav **/
+
 .navbar-brand img {
     height: 40px;
 }
@@ -11,6 +13,12 @@ body {
 .navbar a {
     font-size: 1.3rem;
 }
+
+#adminNav {
+    border-left: 1px solid rgba(255,255,255,0.5);
+}
+
+/** Pages **/
 
 div.btn-group {
     margin: 10px auto;

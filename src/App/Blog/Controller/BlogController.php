@@ -123,28 +123,4 @@ class BlogController extends Controller implements ControllerInterface
             $this->render404();
         }
     }
-
-    /**
-     * @param array $vars
-     * @param int $nbItem
-     * @return array
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    private function pagination(array $vars, int $nbItem): array
-    {
-        $pagination = [];
-
-        $pagination['limit'] = $this->container->get('blog.limit.post');
-
-        $pagination['id'] = $vars['id'];
-
-        $pagination['pageNb'] = ceil($nbItem / $pagination['limit']);
-        $pagination['start'] = ($pagination['limit'] * ($pagination['id'] - 1));
-
-        $pagination['next'] = ($pagination['id'] + 1 <= $pagination['pageNb']) ? $pagination['id'] + 1 : null;
-        $pagination['previous'] = ($pagination['id'] - 1 >= 1) ? $pagination['id'] - 1 : null;
-
-        return $pagination;
-    }
 }

@@ -7,8 +7,10 @@
     <route name="blog_show" path="^/post/{id: \d+}" controller="blog" method="show" />
     <route name="blog_category" path="^/category/{slug: \w+}-{id: \d+}" controller="blog" method="category" />
 
-    <route name="admin_login" path="^/login" controller="user" method="login" />
-    <route name="admin_logout" path="^/logout" controller="user" method="logout" />
+    <route name="admin_accueil" path="^/admin/accueil" controller="admin" method="index" />
+
+    <route name="admin_user_login" path="^/user/login" controller="user" method="login" />
+    <route name="admin_user_logout" path="^/user/logout" controller="user" method="logout" />
 
     <route name="admin_post_index" path="^/admin/post/{id: \d+}" controller="post" method="index" />
 

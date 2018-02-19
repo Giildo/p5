@@ -76,7 +76,13 @@ class App
 
         // Récupération du nom de la Route pour permettre de récupérer le nom de la config pour les models
         $extractNameRoute = explode('_', $route->getName());
-        $models = $extractNameRoute[0] . '.models';
+
+        // Pour la partie admin ajout du suffixe "admin" à la config
+        if (isset($extractNameRoute[2])) {
+            $models = $extractNameRoute[0] . '.' . $extractNameRoute[1] . '.models';
+        } else {
+            $models = $extractNameRoute[0] . '.models';
+        }
 
         $models = (!empty($this->container->get($models))) ? $this->container->get($models) : [];
 
