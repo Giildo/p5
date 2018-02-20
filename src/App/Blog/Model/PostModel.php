@@ -40,7 +40,7 @@ class PostModel extends Model
 
         $startLimit = '';
         if ($start !== null && $limit !== null) {
-            $startLimit = 'LIMIT :start, :limit';
+            $startLimit = 'LIMIT :limit OFFSET :start';
         }
 
         $result = $this->pdo->prepare("
@@ -125,7 +125,7 @@ class PostModel extends Model
         }
 
         if ($start !== null && $limit !== null) {
-            $startLimit = 'LIMIT :start, :limit';
+            $startLimit = 'LIMIT :limit OFFSET :start';
         }
 
         $result =

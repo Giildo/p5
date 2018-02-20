@@ -63,7 +63,7 @@ class Model
 
         $limitStart = '';
         if ($start !== null && $limit !== null) {
-            $limitStart = 'LIMIT :start, :limit';
+            $limitStart = 'LIMIT :limit OFFSET :start';
         }
 
         $result = $this->pdo->prepare("SELECT * FROM `{$this->table}`{$orderBy} {$limitStart}");
