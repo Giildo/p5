@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 use DateTime;
 
@@ -9,49 +10,49 @@ use DateTime;
  * Class Post
  * @package App\Entity
  */
-class Post implements EntityInterface
+class Post extends Entity implements EntityInterface
 {
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      */
-    private $content;
+    protected $content;
 
     /**
      * @var string
      */
-    private $category;
+    protected $category;
 
     /**
      * @var DateTime
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var DateTime
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @var int|string
      */
-    private $user;
+    protected $user;
 
     /**
      * Post constructor.
      */
     public function __construct()
     {
-        $this->date();
+        $this->date(['updatedAt', 'createdAt']);
     }
 
     /**
@@ -100,15 +101,6 @@ class Post implements EntityInterface
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * Génère les dates avec l'objet DateTime
-     */
-    private function date(): void
-    {
-        $this->createdAt = new DateTime($this->createdAt);
-        $this->updatedAt = new DateTime($this->updatedAt);
     }
 
     /**

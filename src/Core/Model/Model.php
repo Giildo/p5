@@ -80,6 +80,50 @@ class Model
     }
 
     /**
+     * Récupère un post en fonction de la catégorie
+     *
+     * @param string $statement
+     * @param string $columnName
+     * @param int $columnId
+     * @param string $entity
+     * @param int|null $start
+     * @param int|null $limit
+     * @param bool|null $order
+     * @param null|string $orderBy
+     * @return array
+     */
+    protected function findAllByColumn(
+        string $statement,
+        string $columnName,
+        int $columnId,
+        string $entity,
+        ?int $start,
+        ?int $limit,
+        ?bool $order = false,
+        ?string $orderBy = null
+    ): array {
+        $orderBy = ($order) ? $orderBy : '';
+
+        $startLimit = '';
+        if ($start !== null && $limit !== null) {
+            $startLimit = 'LIMIT :limit OFFSET :start';
+        }
+
+        $result = $this->pdo->prepare($statement . $orderBy . $startLimit);
+
+        if ($start !== null && $limit !== null) {
+            $result->bindParam(':start', $start, PDO::PARAM_INT);
+            $result->bindParam(':limit', $limit, PDO::PARAM_INT);
+        }
+
+        $result->bindParam($columnName, $columnId);
+        $result->setFetchMode(PDO::FETCH_CLASS, $entity);
+        $result->execute();
+
+        return $result->fetchAll();
+    }
+
+    /**
      * @param string $id
      * @param string $entity
      * @return Post|bool

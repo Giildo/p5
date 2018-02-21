@@ -2,6 +2,7 @@
 
 use App\Admin\Model\UserModel;
 use App\Blog\Model\CategoryModel;
+use App\Blog\Model\CommentModel;
 use App\Blog\Model\PostModel;
 use function DI\get;
 
@@ -12,7 +13,8 @@ return [
 
     'blog.models' => [
         'post'     => get(PostModel::class),
-        'category' => get(CategoryModel::class)
+        'category' => get(CategoryModel::class),
+        'comment'  => get(CommentModel::class)
     ],
 
     'admin.models' => [
