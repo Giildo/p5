@@ -65,4 +65,13 @@ class HTTPRequest
 
         return null;
     }
+
+    /**
+     * Stocke dans la variable de session l'uri passée et l'actuel pour les méthodes qui ont besoin de l'uri passée
+     */
+    public function paths(): void
+    {
+        $_SESSION['paths']['past'] = $_SESSION['paths']['current'];
+        $_SESSION['paths']['current'] = $this->getServerParam('REQUEST_URI');
+    }
 }
