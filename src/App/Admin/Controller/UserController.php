@@ -6,6 +6,7 @@ use App\Admin\Model\UserModel;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
+use Core\PSR7\HTTPRequest;
 
 class UserController extends Controller implements ControllerInterface
 {
@@ -78,8 +79,10 @@ class UserController extends Controller implements ControllerInterface
     {
         $this->auth->logout();
 
+        $uri = (isset($_SESSION['paths']['past'])) ? $_SESSION['paths']['past'] : '/accueil';
+
         header('HTTP/1.1 301 Moved Permanently');
-        header('Location: /accueil');
+        header('Location: ' . $uri);
     }
 
     /**

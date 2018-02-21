@@ -50,6 +50,8 @@ class App
         $this->router = $router;
         $this->container = $container;
         $this->auth = $auth;
+
+        $this->request->paths();
     }
 
     /**
