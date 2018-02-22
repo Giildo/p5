@@ -22,7 +22,7 @@ class PostModel extends Model
     /**
      * Récupère un post en fonction de la catégorie
      *
-     * @param int $categoryId
+     * @param string $categorySlug
      * @param int|null $start
      * @param int|null $limit
      * @param bool|null $order
@@ -30,7 +30,7 @@ class PostModel extends Model
      * @return array
      */
     public function findAllByCategory(
-        int $categoryId,
+        string $categorySlug,
         ?int $start,
         ?int $limit,
         ?bool $order = false,
@@ -49,10 +49,11 @@ class PostModel extends Model
                         posts.content,
                         posts.createdAt,
                         posts.updatedAt,
-                        categories.name as category
+                        categories.name as category,
+                        categories.slug as categorySlug
                 FROM posts
-                LEFT JOIN categories ON posts.category = categories.id
-                WHERE posts.category=:categoryId
+                INNER JOIN categories ON posts.category = categories.id
+                WHERE categories.slug=:slug
                 {$orderBy}
                 {$startLimit}");
 
@@ -61,7 +62,7 @@ class PostModel extends Model
             $result->bindParam(':limit', $limit, PDO::PARAM_INT);
         }
 
-        $result->bindParam(':categoryId', $categoryId);
+        $result->bindParam(':slug', $categorySlug);
         $result->setFetchMode(PDO::FETCH_CLASS, Post::class);
         $result->execute();
 
@@ -83,10 +84,13 @@ class PostModel extends Model
                         posts.createdAt,
                         posts.updatedAt,
                         categories.name as category,
+                        categories.slug as categorySlug,
                         users.pseudo as user
                 FROM posts
-                LEFT JOIN categories ON posts.category = categories.id
-                LEFT JOIN users ON posts.user = users.id
+                LEFT JOIN categories
+                  ON posts.category = categories.id
+                LEFT JOIN users
+                  ON posts.user = users.id
                 WHERE posts.id = :id");
 
         $result->bindParam(':id', $id);
@@ -171,8 +175,7 @@ class PostModel extends Model
     public function updatePost(int $userId, int $categoryId, array $posts, int $postId): bool
     {
         foreach ($posts as $post) {
-            if (empty($post))
-            {
+            if (empty($post)) {
                 return false;
             }
         }
@@ -191,5 +194,39 @@ class PostModel extends Model
         $result->bindParam('user', $userId, PDO::PARAM_INT);
         $result->bindParam('id', $postId, PDO::PARAM_INT);
         return $result->execute();
+    }
+
+    /**
+     * Compte le nombre d'article en fonction du slug de la catégorie
+     *
+     * @param string $categorySlug
+     * @return int
+     */
+    public function countPostByCategory(string $categorySlug): int
+    {
+        $result = $this->pdo->prepare(
+            'SELECT COUNT(posts.id) FROM posts
+                      INNER JOIN categories ON posts.category = categories.id
+                      WHERE categories.slug=:slug');
+        $result->bindParam('slug', $categorySlug);
+        $result->execute();
+        return $result->fetchColumn();
+    }
+
+    /**
+     * Compte le nombre d'article en fonction de l'ID de l'utilisateur
+     *
+     * @param int $userId
+     * @return int
+     */
+    public function countPostsByUser(int $userId): int
+    {
+        $result = $this->pdo->prepare(
+            'SELECT COUNT(posts.id) FROM posts
+                      INNER JOIN users ON posts.user = users.id
+                      WHERE users.id=:id');
+        $result->bindParam('id', $userId);
+        $result->execute();
+        return $result->fetchColumn();
     }
 }

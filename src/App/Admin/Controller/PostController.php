@@ -45,7 +45,7 @@ class PostController extends Controller implements ControllerInterface
             $admin = true;
             $nbPage = $this->postModel->count();
         } else {
-            $nbPage = $this->postModel->count('user', $_SESSION['user']['id']);
+            $nbPage = $this->postModel->countPostsByUser($_SESSION['user']['id']);
         }
 
         $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.post');

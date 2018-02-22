@@ -89,17 +89,22 @@ class BlogController extends Controller implements ControllerInterface
             $this->commentModel->addComment($_POST['comment'], $_POST['userId'], $_POST['postId']);
         }
 
-        $post = $this->postModel->find($vars['id'], Post::class);
-        $category = $this->categoryModel->find($post->getCategory(), Category::class);
+        $post = $this->postModel->findPostWithCategoryAndUser($vars['id']);
 
         /** @var Comment[] $comments */
-        $comments = $this->commentModel->findAllByPost($vars['id'], null, null, true, ' ORDER BY c.updatedAt DESC');
+        $comments = $this->commentModel->findAllByPost(
+            $vars['id'],
+            null,
+            null,
+            true,
+            ' ORDER BY c.updatedAt DESC'
+        );
 
         $form = new BootstrapForm(' offset-sm-2 col-sm-8');
         if (!$this->auth->logged()) {
             $form->item('<em>Vous devez être connecté·e pour laisser un commentaire : <a href="/user/login">se connecter</a>.</em>');
         }
-        $form->textarea('comment','Votre commentaire');
+        $form->textarea('comment', 'Votre commentaire');
         $form->input('postId', '', $post->getId(), 'hidden');
         if ($this->auth->logged()) {
             $form->input('userId', '', $_SESSION['user']['id'], 'hidden');
@@ -107,7 +112,7 @@ class BlogController extends Controller implements ControllerInterface
         $form = $form->submit('Valider');
 
         if ($post) {
-            $this->render('blog/show.twig', compact('post', 'category', 'comments', 'form'));
+            $this->render('blog/show.twig', compact('post', 'comments', 'form'));
         } else {
             $this->render404();
         }
@@ -126,25 +131,25 @@ class BlogController extends Controller implements ControllerInterface
      */
     public function category(array $vars): void
     {
-        $categoryId = $this->categoryModel->findBySlug($vars['slug']);
-
-        $nbPosts = $this->postModel->count('category', $categoryId);
+        $nbPosts = $this->postModel->countPostByCategory($vars['slug']);
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
         /** @var Post[] $posts */
         $posts = $this->postModel->findAllByCategory(
-            $categoryId, $paginationOptions['start'], $paginationOptions['limit'], true, ' ORDER BY updatedAt DESC '
+            $vars['slug'],
+            $paginationOptions['start'],
+            $paginationOptions['limit'],
+            true,
+            ' ORDER BY updatedAt DESC '
         );
 
         $categories = $this->categoryModel->findAll(Category::class);
 
-        $categoryName = $posts[0]->getCategory();
-
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render(
                 'blog/category.twig',
-                compact('posts', 'paginationOptions', 'categories', 'categoryName', 'vars')
+                compact('posts', 'paginationOptions', 'categories')
             );
         } else {
             $this->render404();

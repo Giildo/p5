@@ -45,8 +45,10 @@ class CommentModel extends Model
             ':postId',
             $postId,
             Comment::class,
-            $start, $limit,
-            $order, $orderBy
+            $start,
+            $limit,
+            $order,
+            $orderBy
         );
     }
 

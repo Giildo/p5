@@ -50,8 +50,7 @@ class CategoryController extends Controller implements ControllerInterface
         $u_success = false;
         $u_error = false;
 
-        if (
-            !empty($_POST) &&
+        if (!empty($_POST) &&
             isset($_POST['name']) &&
             isset($_POST['slug'])
         ) {

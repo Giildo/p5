@@ -32,8 +32,7 @@ class Entity
      */
     protected function getDate(DateTime $date, ?bool $datetime = true, ?string $returnFormat)
     {
-        if ($datetime)
-        {
+        if ($datetime) {
             return $date;
         } else {
             return $this->dateString($date, $returnFormat);
