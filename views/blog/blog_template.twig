@@ -5,7 +5,7 @@
     <h1>{% block title %}{% endblock %}</h1>
 
     <div class="row">
-        <div class="col-sm-8">
+        <div class="offset-sm-1 col-sm-8">
             <div class="row">
                 {% for post in posts %}
                     <div class="col-lg-4 col-md-6">
@@ -24,10 +24,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <div class="btn-group-vertical category-group" role="group">
                 {% for category in categories %}
-                    <a href="/category/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
+                    {% if categoryName == category.name %}
+                        <button class="btn btn-primary" disabled>{{ category.name }}</button>
+                    {% else %}
+                        <a href="/category/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
