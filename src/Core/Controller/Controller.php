@@ -116,6 +116,16 @@ class Controller implements ControllerInterface
     }
 
     /**
+     * Méthode de redirection
+     */
+    public function redirection(string $path): void
+    {
+        header('HTTP/1.1 301 Not Found');
+        header('Location: ' . $path);
+        die();
+    }
+
+    /**
      * @param array $models
      * @return void
      */

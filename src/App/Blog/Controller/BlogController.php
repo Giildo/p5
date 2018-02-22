@@ -81,12 +81,36 @@ class BlogController extends Controller implements ControllerInterface
      */
     public function show(array $vars): void
     {
-        if (!empty($_POST) &&
-            isset($_POST['comment']) &&
-            isset($_POST['postId']) &&
-            isset($_POST['userId'])
+        $submitMessage = 'Valider';
+        $textareaValue = null;
+        $error = false;
+
+        // Vérifie si le com à modifier existe sinon redirige la page vers le post simple
+        if (isset($vars['commentId'])) {
+            $submitMessage = 'Modifier';
+            $textareaValue = $this->commentModel->find($vars['commentId'], Comment::class)->getComment();
+            if (!$this->commentModel->idExist($vars['commentId'])) {
+                $this->redirection('/post/' . $vars['id']);
+            }
+        }
+
+        if (
+            !empty($_POST) &&
+            !empty($_POST['comment']) &&
+            !empty($_POST['postId']) &&
+            !empty($_POST['userId'])
         ) {
-            $this->commentModel->addComment($_POST['comment'], $_POST['userId'], $_POST['postId']);
+            // Vérifie si les hiddens correspondent aux autres infos (sécurité)
+            if ($_POST['postId'] === $vars['id'] && $_SESSION['user']['id'] === $_POST['userId']) {
+                if (!isset($vars['commentId'])) {
+                    $this->commentModel->addComment($_POST['comment'], $_SESSION['user']['id'], $vars['id']);
+                } elseif (isset($vars['commentId']) ) {
+                    $this->commentModel->updateComment($_POST['comment'], $vars['commentId'], $_POST['userId'], $_POST['postId']);
+                    $this->redirection('/post/' . $vars['id']);
+                }
+            } else {
+                $error = true;
+            }
         }
 
         $post = $this->postModel->findPostWithCategoryAndUser($vars['id']);
@@ -100,16 +124,18 @@ class BlogController extends Controller implements ControllerInterface
             ' ORDER BY c.updatedAt DESC'
         );
 
-        $form = new BootstrapForm(' offset-sm-2 col-sm-8');
+        $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
         if (!$this->auth->logged()) {
             $form->item('<em>Vous devez être connecté·e pour laisser un commentaire : <a href="/user/login">se connecter</a>.</em>');
+        } elseif ($error) {
+            $form->item('<h4 class="error">Une erreur est survenue lors de l\'envoi du commentaire.</h4>');
         }
-        $form->textarea('comment', 'Votre commentaire');
+        $form->textarea('comment', 'Votre commentaire', 5, $textareaValue);
         $form->input('postId', '', $post->getId(), 'hidden');
         if ($this->auth->logged()) {
             $form->input('userId', '', $_SESSION['user']['id'], 'hidden');
         }
-        $form = $form->submit('Valider');
+        $form = $form->submit($submitMessage);
 
         if ($post) {
             $this->render('blog/show.twig', compact('post', 'comments', 'form'));

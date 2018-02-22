@@ -100,13 +100,13 @@ class Route
     {
         $matches = [];
 
-        preg_match_all('#{([a-z]+): \\\\{1}[a-z]{1}\\+?}#', $routePath, $matches);
+        preg_match_all('#{([a-zA-Z_]+): \\\\{1}[a-z]{1}\\+?}#', $routePath, $matches);
 
         foreach ($matches[1] as $match) {
             $this->vars[] = $match;
         }
 
-        return preg_replace('#{[a-z]+: (\\\\{1}[a-z]{1}\\+?)}#', '($1)', $routePath);
+        return preg_replace('#{[a-zA-Z_]+: (\\\\{1}[a-z]{1}\\+?)}#', '($1)', $routePath);
     }
 
     public function getVars()

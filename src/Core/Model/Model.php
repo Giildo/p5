@@ -139,16 +139,6 @@ class Model
     }
 
     /**
-     * Compte le nombre d'item dans la base de données
-     *
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
-    }
-
-    /**
      * Récupère l'ID d'un élément avec la valeur d'une colonne
      *
      * @param string $columnName
@@ -164,5 +154,31 @@ class Model
         $result->execute();
 
         return $result->fetch();
+    }
+
+    /**
+     * Compte le nombre d'item dans la base de données
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
+    }
+
+    /**
+     * Vérifie qu'un ID existe dans la table
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function idExist(int $id): bool
+    {
+        $result = $this->pdo->prepare("SELECT id FROM {$this->table} WHERE id=:id");
+        $result->bindParam('id', $id, PDO::PARAM_INT);
+        $result->execute();
+        $result = $result->fetch();
+
+        return ($result) ? true : false;
     }
 }

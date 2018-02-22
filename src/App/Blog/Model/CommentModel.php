@@ -8,6 +8,7 @@ use PDO;
 
 class CommentModel extends Model
 {
+    protected $table = 'comments';
 
     /**
      * Récupère tous les commentaire d'un article
@@ -67,6 +68,27 @@ class CommentModel extends Model
         $result->bindParam('comment', $comment);
         $result->bindParam('userId', $userId, PDO::PARAM_INT);
         $result->bindParam('postId', $postId, PDO::PARAM_INT);
+        return $result->execute();
+    }
+
+    /**
+     * Ajoute un commentaire à la base de données
+     *
+     * @param string $comment
+     * @param int $id
+     * @param int $userId
+     * @param int $postId
+     * @return bool
+     */
+    public function updateComment(string $comment, int $id, int $userId, int $postId): bool
+    {
+        $result = $this->pdo->prepare(
+            "UPDATE comments
+            SET comment=:comment, updatedAt=NOW(), user=:userId, post=:postId WHERE id=:id;");
+        $result->bindParam('comment', $comment);
+        $result->bindParam('userId', $userId, PDO::PARAM_INT);
+        $result->bindParam('postId', $postId, PDO::PARAM_INT);
+        $result->bindParam('id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
 }

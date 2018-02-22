@@ -27,7 +27,7 @@
         <div class="col-sm-2">
             <div class="btn-group-vertical category-group" role="group">
                 {% for category in categories %}
-                    {% if categoryName == category.name %}
+                    {% if posts.0.categorySlug == category.slug %}
                         <button class="btn btn-primary" disabled>{{ category.name }}</button>
                     {% else %}
                         <a href="/category/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
