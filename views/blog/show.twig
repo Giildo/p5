@@ -3,35 +3,42 @@
 {% block title %}{{ post.name }}{% endblock %}
 
 {% block body %}
-    <h1>{{ post.name }}</h1>
-    <p><em>Catégorie : <a href="/category/{{ category.slug }}-1">{{ category.name }}</a></em></p>
-
-    <p>{{ post.content | nl2br }}</p>
-
-    <p class="date">
-        {% if post.updatedAt > post.createdAt %}
-            Modifié le {{ post.createdAt | date("d/m/Y à H:m:i") }}
-        {% else %}
-            Créé le {{ post.createdAt | date("d/m/Y à H:m:i") }}
-        {% endif %}
-    </p>
-
     <div class="row">
-        <h2 class="offset-sm-2 col-sm-8">Commentaires :</h2>
-        {{ form | raw }}
+        <div class="offset-sm-2 col-sm-8">
+            <h1>{{ post.name }}</h1>
+            <p><em>Catégorie : <a href="/category/{{ category.slug }}-1">{{ category.name }}</a></em></p>
+
+            <p>{{ post.content | nl2br }}</p>
+
+            <p class="date">
+                {% if post.updatedAt > post.createdAt %}
+                    Modifié le {{ post.createdAt | date("d/m/Y à H:m:i") }}
+                {% else %}
+                    Créé le {{ post.createdAt | date("d/m/Y à H:m:i") }}
+                {% endif %}
+            </p>
+        </div>
     </div>
 
-    {% for comment in comments %}
-        <div class="row">
-            <div class="offset-sm-2 col-sm-8">
-                <span class="pseudo">{{ comment.user }}</span>
-                <span class="date">{{ comment.getCreatedAt(false) }}, a écrit :</span>
+    <div class="row comments">
+        <div class="col-sm-12">
+            <div class="row">
+                <h2 class="offset-sm-2 col-sm-8">Commentaires :</h2>
             </div>
-        </div>
-        <div class="row">
-            <div class="offset-sm-2 col-sm-8">
-                <span class="comment">{{ comment.comment }}</span>
+
+            <div class="row">
+                {{ form | raw }}
             </div>
+
+            {% for comment in comments %}
+                <div class="row commentBlock">
+                    <div class="offset-sm-2 col-sm-8">
+                        <span class="pseudo">{{ comment.user }}</span>
+                        <span class="date">{{ comment.getCreatedAt(false) }}, a écrit :</span><br />
+                        <span class="comment">{{ comment.comment }}</span>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}
