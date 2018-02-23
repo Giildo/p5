@@ -5,6 +5,7 @@ namespace App\Blog\Model;
 use App\Entity\Comment;
 use Core\Model\Model;
 use PDO;
+use stdClass;
 
 class CommentModel extends Model
 {
@@ -32,10 +33,10 @@ class CommentModel extends Model
                         c.comment,
                         c.createdAt,
                         c.updatedAt,
-                        c.user as userId,
-                        c.post as postId,
-                        u.pseudo as user,
-                        p.name as post
+                        c.user AS userId,
+                        c.post AS postId,
+                        u.pseudo AS user,
+                        p.name AS post
                 FROM comments c
                 LEFT JOIN users u ON c.user = u.id
                 LEFT JOIN posts p ON c.post = p.id
@@ -84,11 +85,28 @@ class CommentModel extends Model
     {
         $result = $this->pdo->prepare(
             "UPDATE comments
-            SET comment=:comment, updatedAt=NOW(), user=:userId, post=:postId WHERE id=:id;");
+            SET comment=:comment, updatedAt=NOW(), user=:userId, post=:postId WHERE id=:id;"
+        );
         $result->bindParam('comment', $comment);
         $result->bindParam('userId', $userId, PDO::PARAM_INT);
         $result->bindParam('postId', $postId, PDO::PARAM_INT);
         $result->bindParam('id', $id, PDO::PARAM_INT);
         return $result->execute();
+    }
+
+    /**
+     * Récupère les IDs de l'utilisateur, du com et du post et les renvoie
+     *
+     * @param int $commentId
+     * @return stdClass|null
+     */
+    public function correctPostIdAndCommentId(int $commentId): ?stdClass
+    {
+        $result = $this->pdo->prepare("SELECT comments.id, comments.post, comments.user FROM comments WHERE id=:id");
+        $result->bindParam('id', $commentId, PDO::PARAM_INT);
+        $result->execute();
+        $result = $result->fetch();
+
+        return ($result) ? : null;
     }
 }

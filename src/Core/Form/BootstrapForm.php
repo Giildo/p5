@@ -11,7 +11,7 @@ class BootstrapForm extends Form implements FormInterface
     public function fieldset(string $legend, ?string $class = ' form-group'): void
     {
 
-        parent::fieldset($legend, $class, $line);
+        parent::fieldset($legend, $class);
     }
 
     /**

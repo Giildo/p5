@@ -3,7 +3,6 @@
 namespace App\Blog\Controller;
 
 use App\Blog\Model\CategoryModel;
-use App\Blog\Model\CommentModel;
 use App\Blog\Model\PostModel;
 use App\Entity\Category;
 use App\Entity\Comment;
@@ -12,13 +11,7 @@ use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
 
-/**
- * Gère l'affichage des Posts
- *
- * Class BlogController
- * @package App\Blog\Controller
- */
-class BlogController extends Controller implements ControllerInterface
+class PostController extends Controller implements ControllerInterface
 {
     /**
      * @var PostModel
@@ -29,11 +22,6 @@ class BlogController extends Controller implements ControllerInterface
      * @var CategoryModel
      */
     protected $categoryModel;
-
-    /**
-     * @var CommentModel
-     */
-    protected $commentModel;
 
     /**
      * Affiche l'ensemble des Posts selon la LIMIT
@@ -74,55 +62,28 @@ class BlogController extends Controller implements ControllerInterface
      *
      * @param array $vars
      * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws \Exception
      */
     public function show(array $vars): void
     {
         $submitMessage = 'Valider';
-        $textareaValue = null;
+        $textareaValue = '';
         $error = false;
 
-        // Vérifie si le com à modifier existe sinon redirige la page vers le post simple
-        if (isset($vars['commentId'])) {
-            $submitMessage = 'Modifier';
-            $textareaValue = $this->commentModel->find($vars['commentId'], Comment::class)->getComment();
-            if (!$this->commentModel->idExist($vars['commentId'])) {
-                $this->redirection('/post/' . $vars['id']);
-            }
-        }
+        $commentController = $this->container->get(CommentController::class);
 
-        if (
-            !empty($_POST) &&
-            !empty($_POST['comment']) &&
-            !empty($_POST['postId']) &&
-            !empty($_POST['userId'])
-        ) {
-            // Vérifie si les hiddens correspondent aux autres infos (sécurité)
-            if ($_POST['postId'] === $vars['id'] && $_SESSION['user']['id'] === $_POST['userId']) {
-                if (!isset($vars['commentId'])) {
-                    $this->commentModel->addComment($_POST['comment'], $_SESSION['user']['id'], $vars['id']);
-                } elseif (isset($vars['commentId']) ) {
-                    $this->commentModel->updateComment($_POST['comment'], $vars['commentId'], $_POST['userId'], $_POST['postId']);
-                    $this->redirection('/post/' . $vars['id']);
-                }
-            } else {
-                $error = true;
-            }
-        }
+        $commentController->pathUpdateComExistsAndIsCorrect($vars, $submitMessage, $textareaValue);
+
+        $commentController->updateCom($vars, $error);
 
         $post = $this->postModel->findPostWithCategoryAndUser($vars['id']);
 
         /** @var Comment[] $comments */
-        $comments = $this->commentModel->findAllByPost(
-            $vars['id'],
-            null,
-            null,
-            true,
-            ' ORDER BY c.updatedAt DESC'
-        );
+        $comments = $commentController->listComByPost($vars['id']);
 
         $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
         if (!$this->auth->logged()) {
