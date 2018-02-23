@@ -4,10 +4,10 @@
     <route name="general_404" path="^/404" controller="general" method="error404" />
     <route name="general_error_notAdmin" path="^/error/notAdmin" controller="error" method="notAdmin" />
 
-    <route name="blog_index" path="^/blog/{id: \d+}" controller="blog" method="index" />
-    <route name="blog_showCom" path="^/post/{id: \d+}-{commentId: \d+}" controller="blog" method="show" />
-    <route name="blog_show" path="^/post/{id: \d+}" controller="blog" method="show" />
-    <route name="blog_category" path="^/category/{slug: \w+}-{id: \d+}" controller="blog" method="category" />
+    <route name="blog_post_index" path="^/blog/{id: \d+}" controller="post" method="index" />
+    <route name="blog_post_showCom" path="^/post/{id: \d+}-{commentId: \d+}" controller="post" method="show" />
+    <route name="blog_post_show" path="^/post/{id: \d+}" controller="post" method="show" />
+    <route name="blog_post_category" path="^/category/{slug: \w+}-{id: \d+}" controller="post" method="category" />
 
     <route name="admin_accueil" path="^/admin/accueil" controller="admin" method="index" />
 

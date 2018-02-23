@@ -11,10 +11,13 @@ return [
 
     'general.error.models' => [],
 
-    'blog.models' => [
+    'blog.post.models' => [
         'post'     => get(PostModel::class),
-        'category' => get(CategoryModel::class),
-        'comment'  => get(CommentModel::class)
+        'category' => get(CategoryModel::class)
+    ],
+
+    'blog.comment.models' => [
+        'comment' => get(CommentModel::class)
     ],
 
     'admin.models' => [

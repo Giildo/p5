@@ -207,7 +207,8 @@ class PostModel extends Model
         $result = $this->pdo->prepare(
             'SELECT COUNT(posts.id) FROM posts
                       INNER JOIN categories ON posts.category = categories.id
-                      WHERE categories.slug=:slug');
+                      WHERE categories.slug=:slug'
+        );
         $result->bindParam('slug', $categorySlug);
         $result->execute();
         return $result->fetchColumn();
@@ -224,7 +225,8 @@ class PostModel extends Model
         $result = $this->pdo->prepare(
             'SELECT COUNT(posts.id) FROM posts
                       INNER JOIN users ON posts.user = users.id
-                      WHERE users.id=:id');
+                      WHERE users.id=:id'
+        );
         $result->bindParam('id', $userId);
         $result->execute();
         return $result->fetchColumn();
