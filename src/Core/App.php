@@ -95,7 +95,6 @@ class App
                 $this->container->get(Controller::class)->renderNotLog();
             }
         }
-
         // Pour la partie admin ajout du suffixe "admin" à la config
         if (isset($extractNameRoute[2])) {
             $models = $extractNameRoute[0] . '.' . $extractNameRoute[1] . '.models';

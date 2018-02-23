@@ -99,15 +99,10 @@ class Router
                 $controllerType .
                 'Controller';
 
-            // Stockage des chemins des Controllers générés pour éviter d'avoir à les générer plusieurs fois
-            if (!isset($this->controllers[$controllerType])) {
-                $this->controllers[$controllerType] = $controller;
-            }
-
             $this->addRoute(
                 $route->getAttribute('name'),
                 $route->getAttribute('path'),
-                $this->controllers[$controllerType],
+                $controller,
                 $route->getAttribute('method')
             );
         }
