@@ -20,7 +20,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @var string
      */
-    protected $name;
+    protected $title;
 
     /**
      * @var string
@@ -66,9 +66,9 @@ class Post extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**

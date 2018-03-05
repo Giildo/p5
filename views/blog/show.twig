@@ -1,11 +1,11 @@
 {% extends 'layout.twig' %}
 
-{% block title %}{{ post.name }}{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
     <div class="row">
         <div class="offset-sm-2 col-sm-8">
-            <h1>{{ post.name }}</h1>
+            <h1>{{ post.title }}</h1>
             <p><em>Catégorie : <a href="/category/{{ post.categorySlug }}-1">{{ post.category }}</a></em></p>
 
             <p>{{ post.content | nl2br }}</p>

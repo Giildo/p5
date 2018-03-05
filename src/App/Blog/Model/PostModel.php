@@ -45,7 +45,7 @@ class PostModel extends Model
 
         $result = $this->pdo->prepare("
                 SELECT  posts.id,
-                        posts.name,
+                        posts.title,
                         posts.content,
                         posts.createdAt,
                         posts.updatedAt,
@@ -79,7 +79,7 @@ class PostModel extends Model
     {
         $result = $this->pdo->prepare("
                 SELECT  posts.id,
-                        posts.name,
+                        posts.title,
                         posts.content,
                         posts.createdAt,
                         posts.updatedAt,
@@ -135,7 +135,7 @@ class PostModel extends Model
         $result =
             $this->pdo->prepare("
                     SELECT  posts.id,
-                            posts.name,
+                            posts.title,
                             posts.content,
                             posts.createdAt,
                             posts.updatedAt,

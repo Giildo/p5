@@ -36,7 +36,7 @@ class CommentModel extends Model
                         c.user AS userId,
                         c.post AS postId,
                         u.pseudo AS user,
-                        p.name AS post
+                        p.title AS post
                 FROM comments c
                 LEFT JOIN users u ON c.user = u.id
                 LEFT JOIN posts p ON c.post = p.id

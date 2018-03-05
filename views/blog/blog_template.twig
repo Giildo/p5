@@ -10,7 +10,7 @@
                 {% for post in posts %}
                     <div class="col-lg-4 col-md-6">
                         <div class="card">
-                            <h6 class="card-header">{{ post.name }}</h6>
+                            <h6 class="card-header">{{ post.title }}</h6>
                             <p class="card-body card-text">{{ post.content | excerpt }}</p>
                             <a href="/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
                         </div>
