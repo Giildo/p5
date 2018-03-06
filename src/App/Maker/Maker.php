@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Faker;
+namespace App\Maker;
 
 use Faker\Factory;
 use PDO;
 
-class FakerPost
+class Maker
 {
     public function run(PDO $pdo): void
     {

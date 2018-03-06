@@ -38,9 +38,9 @@ class DBAuth
      * @param User $user
      * @param string $password
      * @param array $results
-     * @return array
+     * @return void
      */
-    public function log(User $user, string $password, array $results): array
+    public function log(User $user, string $password, array &$results): void
     {
         if ($user->getPassword() === $password) {
             $_SESSION['confirmConnect'] = true;
@@ -53,8 +53,6 @@ class DBAuth
         } else {
             $results['c_error'] = true;
         }
-
-        return $results;
     }
 
     /**

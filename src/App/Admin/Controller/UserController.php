@@ -27,16 +27,14 @@ class UserController extends Controller implements ControllerInterface
     {
         $results = [];
 
-        $results = $this->comparePass($results);
+        $this->comparePass($results);
 
         if (!$this->auth->logged()) {
-            $keys = ['c_pseudo', 'c_password', 'r_pseudo', 'firstName', 'mail', 'phone', 'r_password',];
+            $keys = ['c_pseudo', 'c_password', 'r_pseudo', 'firstName', 'lastName', 'mail', 'phone', 'r_password',];
+
             $post = $this->createPost($keys);
 
-            $result = $this->addUser($results, $post);
-
-            $results = $result['results'];
-            $post = $result['post'];
+            $this->addUser($results, $post);
 
             $form1 = new BootstrapForm('col-sm-6 loginForm');
             $form1->fieldset('Connectez-vous');
@@ -89,17 +87,15 @@ class UserController extends Controller implements ControllerInterface
      * Compare grâce au UserModel si le password en Post est le même que celui en BD
      *
      * @param array $results
-     * @return array
+     * @return void
      */
-    private function comparePass(array $results): array
+    private function comparePass(array &$results): void
     {
         if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
             $user = $this->userModel->comparePass($_POST['c_pseudo']);
 
             $this->auth->log($user, $_POST['c_password'], $results);
         }
-
-        return $results;
     }
 
     /**
@@ -107,9 +103,9 @@ class UserController extends Controller implements ControllerInterface
      *
      * @param array $results
      * @param array $post
-     * @return array
+     * @return void
      */
-    private function addUser(array $results, array $post): array
+    private function addUser(array &$results, array &$post): void
     {
         if (!empty($_POST) &&
             isset($_POST['r_pseudo']) &&
@@ -151,7 +147,5 @@ class UserController extends Controller implements ControllerInterface
                 }
             }
         }
-
-        return compact('post', 'results');
     }
 }
