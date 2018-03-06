@@ -2,10 +2,11 @@
 
 namespace Core\Entity;
 
+use Core\ORM\ORMEntity;
 use DateTime;
 use DateTimeZone;
 
-class Entity
+class Entity extends ORMEntity
 {
     /**
      * Génère les dates avec l'objet DateTime

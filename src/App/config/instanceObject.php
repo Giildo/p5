@@ -10,6 +10,7 @@ use Core\Router\Router;
 use function DI\get;
 use function DI\object;
 use Psr\Container\ContainerInterface;
+use Core\ORM\ORM;
 
 return [
 
@@ -18,6 +19,10 @@ return [
         get('app.prefix'),
         get('app.routes'),
         get(ContainerInterface::class)
+    ),
+    ORM::class               => object()->constructor(
+        get(ContainerInterface::class),
+        get(PDO::class)
     ),
     Form::class              => object(),
     DBAuth::class            => object(),
@@ -30,17 +35,17 @@ return [
         get(ContainerInterface::class),
         get('blog.comment.models')
     ),
-        PDO::class           => function (ContainerInterface $c) {
-            return new PDO(
-                'mysql:host=' . $c->get('db.host') . ';dbname=' . $c->get('db.name') . ';charset=utf8',
-                $c->get('db.user'),
-                $c->get('db.password'),
-                [
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
-                ]
-            );
-        },
+    PDO::class               => function (ContainerInterface $c) {
+        return new PDO(
+            'mysql:host=' . $c->get('db.host') . ';dbname=' . $c->get('db.name') . ';charset=utf8',
+            $c->get('db.user'),
+            $c->get('db.password'),
+            [
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION
+            ]
+        );
+    },
 
     Twig_Loader_Filesystem::class => object()->constructor(get('twig.pathViews')),
     Twig_Environment::class       => object()->constructor(
