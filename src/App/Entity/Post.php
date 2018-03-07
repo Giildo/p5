@@ -110,4 +110,20 @@ class Post extends Entity implements EntityInterface
     {
         return $this->user;
     }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
 }

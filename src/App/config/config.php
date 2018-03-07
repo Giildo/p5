@@ -14,5 +14,11 @@ return [
 
     'blog.limit.post'      => 9,
     'admin.limit.post'     => 10,
-    'admin.limit.category' => 10
+    'admin.limit.category' => 10,
+
+    'users'      => \App\Admin\Model\UserModel::class,
+    'posts'      => \App\Blog\Model\PostModel::class,
+    'categories' => \App\Blog\Model\CategoryModel::class,
+    'comments'   => \App\Blog\Model\CommentModel::class,
+    'news'       => \App\Essai\Model\NewsModel::class
 ];

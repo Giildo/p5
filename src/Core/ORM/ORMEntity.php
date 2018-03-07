@@ -2,19 +2,26 @@
 
 namespace Core\ORM;
 
-use PDO;
-
-abstract class ORMEntity
+class ORMEntity
 {
     /**
      * @var string
      */
-    protected $tableName = null;
+    protected $tableName;
 
     /**
      * @var array
      */
     protected $columns = [];
+
+    /**
+     * ORMEntity constructor.
+     * @param string $tableName
+     */
+    public function __construct(string $tableName)
+    {
+        $this->tableName = $tableName;
+    }
 
     /**
      * @param string $name
@@ -23,11 +30,7 @@ abstract class ORMEntity
      */
     public function __set(string $name, string $value): void
     {
-        $method = 'set' . ucfirst($name);
-
-        if (is_callable([$this, $method])) {
-            $this->$method($value);
-        }
+        $this->$name = $value;
     }
 
     /**
@@ -74,31 +77,5 @@ abstract class ORMEntity
         $this->tableName = $tableName;
 
         return $this;
-    }
-
-    protected function columnsDefinition()
-    {
-        $columns = [];
-
-        foreach ($this->columns as $column) {
-            if ($column['columnName'] !== 'id') {
-                $columns[] .= $column['columnName'];
-            }
-        }
-
-        return implode(', ', $columns);
-    }
-
-    protected function valuesDefinition(string $columns): string
-    {
-        $columns = explode(', ', $columns);
-        $values = [];
-
-        foreach ($columns as $column) {
-            $method = 'get' . ucfirst($column);
-            $values[] = '"' . $this->$method() . '"';
-        }
-
-        return implode(', ', $values);
     }
 }

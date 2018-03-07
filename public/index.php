@@ -16,10 +16,6 @@ $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/controllerConfig.ph
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/instanceObject.php');
 $container = $builder->build();
 
-$post = new \App\Entity\Post();
-$post->setTableName('posts');
-var_dump($post);
-
 try {
     // Initialisation de Twig via le Container
     $twig = $container->get(Twig_Environment::class);

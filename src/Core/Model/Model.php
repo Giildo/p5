@@ -35,16 +35,6 @@ class Model
     }
 
     /**
-     * @param PDOStatement $result
-     * @param $class
-     * @return void
-     */
-    public function setFetchMode(PDOStatement $result, $class): void
-    {
-        $result->setFetchMode(PDO::FETCH_CLASS, $class);
-    }
-
-    /**
      * @param string $entity
      * @param int|null $start
      * @param int|null $limit
@@ -164,5 +154,39 @@ class Model
     public function count(): int
     {
         return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
+    }
+
+    /**
+     * Récupère un statement pour ajouter un élément dans la base de données
+     *
+     * @param string $statement
+     * @return void
+     */
+    public function insert(string $statement): void
+    {
+        $this->pdo->query($statement);
+    }
+
+    /**
+     * Récupère les colonnes dans la base de données et les retourne
+     *
+     * @return array
+     */
+    public function showColumns(): array
+    {
+        $results = $this->pdo->query("SHOW COLUMNS FROM {$this->table}");
+        return $results->fetchAll();
+    }
+
+    /**
+     * Crée une table dans la base de données
+     *
+     * @param string $tableName
+     * @param string $statement
+     * @return void
+     */
+    public function createTable(string $tableName, string $statement): void
+    {
+        $this->pdo->query("CREATE TABLE IF NOT EXISTS {$tableName} " . $statement . " ENGINE=INNODB");
     }
 }

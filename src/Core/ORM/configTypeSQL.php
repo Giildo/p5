@@ -6,5 +6,9 @@ $string = ['char', 'varchar', 'tinytext', 'text', 'mediumtext', 'longtext', 'bin
 $spatial = ['geometry', 'point', 'linestring', 'polygon', 'multipoint', 'multilinestring', 'multipolygon', 'geometrycollection'];
 
 return [
-    'SQL.types' => array_merge($numeric, $date, $string, $spatial)
+    'SQL.types'   => array_merge($numeric, $date, $string, $spatial),
+    'SQL.string'  => $string,
+    'SQL.numeric' => $numeric,
+    'SQL.date'    => $date,
+    'SQL.spatial' => $spatial
 ];
