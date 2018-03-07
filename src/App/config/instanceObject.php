@@ -6,6 +6,8 @@ use Core\Auth\DBAuth;
 use Core\Database\Database;
 use Core\Form\Form;
 use Core\Model\Model;
+use Core\ORM\ORMEntity;
+use Core\ORM\ORMSelect;
 use Core\Router\Router;
 use function DI\get;
 use function DI\object;
@@ -24,6 +26,7 @@ return [
         get(ContainerInterface::class),
         get(PDO::class)
     ),
+    ORMSelect::class         => object(),
     Form::class              => object(),
     DBAuth::class            => object(),
     HTTPRequest::class       => object(),

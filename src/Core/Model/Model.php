@@ -34,6 +34,12 @@ class Model
         $this->pdo = $database->getPDO();
     }
 
+    public function findORM(string $statement): array
+    {
+        $result = $this->pdo->query($statement);
+        return $result->fetchAll();
+    }
+
     /**
      * @param string $entity
      * @param int|null $start

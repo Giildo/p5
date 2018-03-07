@@ -20,5 +20,5 @@ return [
     'posts'      => \App\Blog\Model\PostModel::class,
     'categories' => \App\Blog\Model\CategoryModel::class,
     'comments'   => \App\Blog\Model\CommentModel::class,
-    'news'       => \App\Essai\Model\NewsModel::class
+    'admin'      => \App\Admin\Model\AdminModel::class
 ];
