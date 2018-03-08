@@ -10,6 +10,7 @@ require_once(dirname(__DIR__) . '/vendor/autoload.php');
 
 // Initialisation du container
 $builder = new ContainerBuilder();
+$builder->addDefinitions(dirname(__DIR__) . '/src/Core/ORM/configTypeSQL.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/controllerConfig.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/instanceObject.php');

@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 
-class Category implements EntityInterface
+class Category extends Entity implements EntityInterface
 {
     /**
      * @var int

@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 
-class User implements EntityInterface
+class User extends Entity implements EntityInterface
 {
 
     /**
