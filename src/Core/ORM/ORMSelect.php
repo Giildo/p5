@@ -60,7 +60,7 @@ class ORMSelect
      */
     public function execute(): array
     {
-        $model = $this->container->get($this->container->get($this->tableName));
+        $model = $this->container->get($this->tableName);
 
         $results = $model->findORM($this->statement);
         $columnsTable = $model->showColumns();

@@ -1,5 +1,7 @@
 <?php
 
+use function \DI\get;
+
 return [
     'app.prefix' => '\App',
     'app.routes' => __DIR__ . '/routes.xml',
@@ -16,9 +18,9 @@ return [
     'admin.limit.post'     => 10,
     'admin.limit.category' => 10,
 
-    'users'      => \App\Admin\Model\UserModel::class,
-    'posts'      => \App\Blog\Model\PostModel::class,
-    'categories' => \App\Blog\Model\CategoryModel::class,
-    'comments'   => \App\Blog\Model\CommentModel::class,
-    'admin'      => \App\Admin\Model\AdminModel::class
+    'users'      => get(\App\Admin\Model\UserModel::class),
+    'posts'      => get(\App\Blog\Model\PostModel::class),
+    'categories' => get(\App\Blog\Model\CategoryModel::class),
+    'comments'   => get(\App\Blog\Model\CommentModel::class),
+    'admin'      => get(\App\Admin\Model\AdminModel::class)
 ];

@@ -90,7 +90,7 @@ class ORM
 
         $this->verifStatement($statement);
 
-        $model = $this->container->get($this->container->get($tableName));
+        $model = $this->container->get($tableName);
 
         $model->createTable($tableName, $statement);
     }
@@ -113,7 +113,7 @@ class ORM
 
         try {
             /** @var Model $model */
-            $model = $this->container->get($this->container->get($entity->getTableName()));
+            $model = $this->container->get($entity->getTableName());
         } catch (DependencyException | NotFoundException $e) {
             throw new ORMException("Le model demandé n'existe pas");
         }
