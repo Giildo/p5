@@ -105,7 +105,7 @@ class ORMSelect
         $att = $column['columnName'];
         if (isset($result->$att)) {
             if (in_array($column['columnType'], $this->container->get('SQL.string'))) {
-                return (string)$result->$att;
+                return (string)htmlspecialchars($result->$att);
             } elseif (in_array($column['columnType'], $this->container->get('SQL.numeric'))) {
                 return (int)$result->$att;
             } elseif (in_array($column['columnType'], $this->container->get('SQL.date'))) {

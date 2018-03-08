@@ -190,10 +190,13 @@ class ORM
 
             //Vérifie si $typeArray est vide, si c'est le cas ça veut dire que la colonne n'est pas définie dans la base de données
             if (!empty($typeArray)) {
-                if ($this->verifValue($typeArray, $entity->$columnEntity, $columnEntity)) {
-                    $values[] = '"' . $entity->$columnEntity . '"';
-                } else {
+                //Vérifie la valeur, si OK la renvoie en forçant le type (par sécurité) et en échappant les caractères HTML (sécurité pour les string)
+                $result = $this->verifValue($typeArray, $entity->$columnEntity, $columnEntity);
+
+                if (is_null($result)) {
                     throw new ORMException("La valeur de la colonne \"{$columnEntity}\" ne correspond pas au type inscrit dans la base de données");
+                } else {
+                    $values[] = $result;
                 }
             } else {
                 throw new ORMException("La colonne \"{$columnEntity}\" n'est pas définie dans la base de données");
@@ -320,28 +323,28 @@ class ORM
      * @param array $valueTypeAndSize De la base de données
      * @param mixed $value Valeur à vérifier
      * @param string $columnName
-     * @return bool|null
+     * @return mixed
      * @throws ORMException
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      */
-    private function verifValue(array $valueTypeAndSize, $value, string $columnName): ?bool
+    private function verifValue(array $valueTypeAndSize, $value, string $columnName)
     {
         if (in_array($valueTypeAndSize[0], $this->container->get('SQL.string'))) {
             //Vérifie si une longueur maximale de texte est donnée, si oui vérifie si on est inférieur
             if (isset($valueTypeAndSize[1])) {
                 if (strlen($value) <= $valueTypeAndSize[1]) {
-                    return is_string($value);
+                    return (is_string($value)) ? '"' . htmlspecialchars($value) . '"' : null;
                 } else {
                     throw new ORMException("La longueur du texte contenu dans \"{$columnName}\" est trop importante");
                 }
             } else {
-                return is_string($value);
+                return (is_string($value)) ? '"' . htmlspecialchars($value) . '"' : null;
             }
         } elseif (in_array($valueTypeAndSize[0], $this->container->get('SQL.numeric'))) {
-            return is_numeric($value);
+            return (is_numeric($value)) ? (int)$value : null;
         } elseif (in_array($valueTypeAndSize[0], $this->container->get('SQL.date'))) {
-            return $value instanceof DateTime;
+            return ($value instanceof DateTime) ? new DateTime($value) : null;
         }
 
         throw new ORMException("Le format de \"{$columnName}\" n'existe pas");
