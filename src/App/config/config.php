@@ -22,5 +22,6 @@ return [
     'posts'      => get(\App\Blog\Model\PostModel::class),
     'categories' => get(\App\Blog\Model\CategoryModel::class),
     'comments'   => get(\App\Blog\Model\CommentModel::class),
-    'admin'      => get(\App\Admin\Model\AdminModel::class)
+    'admin'      => get(\App\Admin\Model\AdminModel::class),
+    'news'       => get(\App\Essai\Model\NewsModel::class)
 ];

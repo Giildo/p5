@@ -28,7 +28,10 @@ class ORMSelect
         $this->statement = 'SELECT';
         $this->container = $container;
         $this->ORMEntity = $ORMEntity;
+        $this->typesSQLDefinition();
     }
+
+    use ORMConfigSQL;
 
     public function select(?string $columnsName = '*'): ORMSelect
     {
@@ -104,11 +107,11 @@ class ORMSelect
     {
         $att = $column['columnName'];
         if (isset($result->$att)) {
-            if (in_array($column['columnType'], $this->container->get('SQL.string'))) {
+            if (in_array($column['columnType'], $this->sqlString)) {
                 return (string)htmlspecialchars($result->$att);
-            } elseif (in_array($column['columnType'], $this->container->get('SQL.numeric'))) {
+            } elseif (in_array($column['columnType'], $this->sqlNumeric)) {
                 return (int)$result->$att;
-            } elseif (in_array($column['columnType'], $this->container->get('SQL.date'))) {
+            } elseif (in_array($column['columnType'], $this->sqlDate)) {
                 return new DateTime($result->$att);
             }
         } else {

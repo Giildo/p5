@@ -2,6 +2,7 @@
 
 namespace Core\ORM;
 
+use DateTime;
 use stdClass;
 
 class ORMEntity
@@ -12,53 +13,70 @@ class ORMEntity
     protected $tableName;
 
     /**
+     * @var ORMTable
+     */
+    protected $ORMTable;
+
+    /**
      * @var array
      */
     protected $columns = [];
 
     /**
+     * ORMEntity constructor.
+     * @param ORMTable $ORMTable
+     */
+    public function __construct(ORMTable $ORMTable)
+    {
+        $this->ORMTable = $ORMTable;
+        $this->tableName = $ORMTable->getTableName();
+        $this->typesSQLDefinition();
+
+        foreach ($this->ORMTable->getColumns() as $column) {
+            $att = $column['columnName'];
+            $this->columns[] = $att;
+            $this->$att = null;
+        }
+    }
+
+    use ORMConfigSQL;
+
+    /**
      * @param string $name
      * @param mixed $value
      * @return void
+     * @throws ORMException
      */
     public function __set(string $name, $value): void
     {
-        $this->$name = $value;
+        if (in_array($name, $this->columns)) {
+            $this->$name = $value;
+        } else {
+            throw new ORMException("Il est impossible de modifier un élément qui n'existe pas dans la table.");
+        }
+    }
+
+    public function constructWithStdclass(stdClass $class): void
+    {
+        foreach ($this->columns as $column) {
+            $this->$column = $this->valuesType($this->ORMTable->getColumns()[$column]['columnType'], $class->$column);
+        }
     }
 
     /**
-     * @param string $columnName
-     * @param string $columnType
-     * @param int|null $max
-     * @param array|null $options
-     * @return ORMEntity
+     * @param string $type
+     * @param string $value
+     * @return DateTime|int|null|string
      */
-    public function hasColumn(string $columnName, string $columnType, ?int $max = null, ?array $options = []): ORMEntity
+    public function valuesType(string $type, string $value)
     {
-        $this->columns[] = [
-            'columnName' => $columnName,
-            'columnType' => $columnType,
-            'max' => $max,
-            'options' => $options
-        ];
-
-        return $this;
-    }
-
-    /**
-     * @param stdClass $class
-     */
-    public function constructWithStdclass(stdClass $class)
-    {
-        $name = $class->Field;
-
-        $typeAndMax = $this->typeDefinition($class->Type);
-        $type = $typeAndMax[0];
-        $max = (isset($typeAndMax[1])) ? $typeAndMax[1] : null;
-
-        $options = $this->optionsDefinition($class);
-
-        $this->hasColumn($name, $type, (int)$max, $options);
+        if (in_array($type, $this->sqlString)) {
+            return htmlspecialchars($value);
+        } elseif (in_array($type, $this->sqlNumeric)) {
+            return (int)$value;
+        } elseif (in_array($type, $this->sqlDate)) {
+            return new DateTime($value);
+        }
     }
 
     /**
@@ -67,14 +85,6 @@ class ORMEntity
     public function getTableName(): string
     {
         return $this->tableName;
-    }
-
-    /**
-     * @return array
-     */
-    public function getColumns(): array
-    {
-        return $this->columns;
     }
 
     /**
@@ -89,46 +99,10 @@ class ORMEntity
     }
 
     /**
-     * @param array $columns
-     * @return ORMEntity
+     * @return ORMTable
      */
-    public function setColumns(array $columns): ORMEntity
+    public function getORMTable(): ORMTable
     {
-        $this->columns = $columns;
-
-        return $this;
-    }
-
-    /**
-     * Récupère la définition de la colonne et sépare le type du max
-     *
-     * @param string $type
-     * @return string[]
-     */
-    private function typeDefinition(string $type): array
-    {
-        $type = str_replace(')', '', $type);
-        return explode('(', $type);
-    }
-
-    private function optionsDefinition(Stdclass $class): array
-    {
-        $options = [];
-
-        if ($class->Null === 'YES') {
-            $options['not_null'] = false;
-        }
-
-        if ($class->Key === 'PRI') {
-            $options['primary'] = true;
-        } elseif ($class->Key === 'MUL') {
-            $options['foreign'] = true;
-        }
-
-        if ($class->Extra === 'auto_increment') {
-            $options['auto_increment'] = true;
-        }
-
-        return $options;
+        return $this->ORMTable;
     }
 }

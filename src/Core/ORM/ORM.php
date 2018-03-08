@@ -22,42 +22,36 @@ class ORM
     private $pdo;
 
     /**
-     * @var array
-     */
-    private $SQLType = [];
-
-    /**
      * ORM constructor
      *
      * @param Container $container
      * @param PDO $pdo
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function __construct(Container $container, PDO $pdo)
     {
         $this->container = $container;
         $this->pdo = $pdo;
-        $this->SQLType = $this->container->get('SQL.types');
+        $this->typesSQLDefinition();
     }
+
+    use ORMConfigSQL;
 
     /**
      * Récupère les éléments d'un objet ORM pour créer une nouvelle table dans la BDD
      *
-     * @param string $tableName
-     * @param array $columns
+     * @param ORMTable $ORMTable
      * @return void
      * @throws DependencyException
      * @throws NotFoundException
      * @throws ORMException
      */
-    public function createTable(string $tableName, array $columns): void
+    public function createTable(ORMTable $ORMTable): void
     {
         $statement = '(';
-        $end = array_pop(array_keys($columns));
-        $i = 0;
+        $end = count($ORMTable->getColumns());
+        $i = 1;
 
-        foreach ($columns as $column) {
+        foreach ($ORMTable->getColumns() as $column) {
             foreach ($column as $key => $value) {
                 switch ($key) {
                     case 'columnName':
@@ -90,9 +84,9 @@ class ORM
 
         $this->verifStatement($statement);
 
-        $model = $this->container->get($tableName);
+        $model = $this->container->get($ORMTable->getTableName());
 
-        $model->createTable($tableName, $statement);
+        $model->createTable($ORMTable->getTableName(), $statement);
     }
 
     /**
@@ -104,8 +98,6 @@ class ORM
      *
      * @param ORMEntity $entity
      * @throws ORMException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     public function save(ORMEntity $entity): void
     {
@@ -120,9 +112,9 @@ class ORM
 
         $columnsResults = $model->showColumns();
 
-        $this->verifAllColumnsIsDefined($entity->getColumns(), $columnsResults, $entity);
+        $this->verifAllColumnsIsDefined($entity->getORMTable()->getColumns(), $columnsResults, $entity);
 
-        $this->columnsDefinition($entity->getColumns(), $entity, $columnsResults, $columns, $values);
+        $this->columnsDefinition($entity->getORMTable()->getColumns(), $entity, $columnsResults, $columns, $values);
 
         $model->insert("INSERT INTO {$entity->getTableName()} ({$columns}) VALUES ({$values})");
     }
@@ -140,8 +132,6 @@ class ORM
      * @param string $valuesString
      * @return void
      * @throws ORMException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     private function columnsDefinition(array $columns, ORMEntity $entity, array $columnsTable, string &$columnsString, string &$valuesString): void
     {
@@ -168,8 +158,6 @@ class ORM
      * @param string $valuesString
      * @return void
      * @throws ORMException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     private function valuesDefinition(array $columnsEntity, ORMEntity $entity, array $columnsTable, string &$valuesString): void
     {
@@ -252,7 +240,7 @@ class ORM
      */
     private function columnTypeDefinition(string &$statement, string $value): void
     {
-        if (in_array(strtolower($value), $this->SQLType)) {
+        if (in_array(strtolower($value), $this->sqlTypes)) {
             $statement .= ' ' . strtoupper($value);
         } else {
             throw new ORMException('Le type SQL demandé n\'est pas valide');
@@ -325,12 +313,10 @@ class ORM
      * @param string $columnName
      * @return mixed
      * @throws ORMException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
     private function verifValue(array $valueTypeAndSize, $value, string $columnName)
     {
-        if (in_array($valueTypeAndSize[0], $this->container->get('SQL.string'))) {
+        if (in_array($valueTypeAndSize[0], $this->sqlString)) {
             //Vérifie si une longueur maximale de texte est donnée, si oui vérifie si on est inférieur
             if (isset($valueTypeAndSize[1])) {
                 if (strlen($value) <= $valueTypeAndSize[1]) {
@@ -341,9 +327,9 @@ class ORM
             } else {
                 return (is_string($value)) ? '"' . htmlspecialchars($value) . '"' : null;
             }
-        } elseif (in_array($valueTypeAndSize[0], $this->container->get('SQL.numeric'))) {
+        } elseif (in_array($valueTypeAndSize[0], $this->sqlNumeric)) {
             return (is_numeric($value)) ? (int)$value : null;
-        } elseif (in_array($valueTypeAndSize[0], $this->container->get('SQL.date'))) {
+        } elseif (in_array($valueTypeAndSize[0], $this->sqlDate)) {
             return ($value instanceof DateTime) ? new DateTime($value) : null;
         }
 
