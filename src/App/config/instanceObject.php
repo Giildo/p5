@@ -12,7 +12,7 @@ use Core\Router\Router;
 use function DI\get;
 use function DI\object;
 use Psr\Container\ContainerInterface;
-use Core\ORM\ORM;
+use Core\ORM\ORMController;
 
 return [
 
@@ -22,7 +22,7 @@ return [
         get('app.routes'),
         get(ContainerInterface::class)
     ),
-    ORM::class               => object()->constructor(
+    ORMController::class     => object()->constructor(
         get(ContainerInterface::class),
         get(PDO::class)
     ),

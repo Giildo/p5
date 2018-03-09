@@ -5,7 +5,7 @@ namespace Core\ORM;
 /**
  * Trait pour définir les tableaux des types SQL disponibles afin de les avoir dans nos classes et pouvoir tester les éléments en entrée en sortie.
  * Trait ORMConfigSQL
- * @package Core\ORM
+ * @package Core\ORMController
  */
 trait ORMConfigSQL
 {

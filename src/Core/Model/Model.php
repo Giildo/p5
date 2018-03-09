@@ -174,6 +174,21 @@ class Model
     }
 
     /**
+     * Récupère un statement pour modifier un élément dans la base de données
+     *
+     * @param string $statement
+     * @param string $primaryKey
+     * @param $primaryKeyValue
+     * @return void
+     */
+    public function update(string $statement, string $primaryKey, $primaryKeyValue): void
+    {
+        $results = $this->pdo->prepare($statement);
+        $results->bindParam($primaryKey, $primaryKeyValue);
+        $results->execute();
+    }
+
+    /**
      * Récupère les colonnes dans la base de données et les retourne
      *
      * @return array

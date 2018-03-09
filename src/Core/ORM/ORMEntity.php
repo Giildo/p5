@@ -20,7 +20,17 @@ class ORMEntity
     /**
      * @var array
      */
-    protected $columns = [];
+    protected $properties = [];
+
+    /**
+     * @var array
+     */
+    protected $primaryKey = [];
+
+    /**
+     * @var array
+     */
+    protected $foreignKey = [];
 
     /**
      * ORMEntity constructor.
@@ -34,8 +44,13 @@ class ORMEntity
 
         foreach ($this->ORMTable->getColumns() as $column) {
             $att = $column['columnName'];
-            $this->columns[] = $att;
-            $this->$att = null;
+            if ($column['options']['primary']) {
+                $this->primaryKey[$column['columnName']] = null;
+            } elseif ($column['options']['foreign']) {
+                $this->foreignKey[$column['columnName']] = null;
+            } else {
+                $this->properties[$att] = null;
+            }
         }
     }
 
@@ -49,33 +64,42 @@ class ORMEntity
      */
     public function __set(string $name, $value): void
     {
-        if (in_array($name, $this->columns)) {
-            $this->$name = $value;
+        $type = gettype($value);
+        if (array_key_exists($name, $this->properties)) {
+            if (gettype($this->properties[$name]) === 'NULL' || $type === gettype($this->properties[$name])) {
+                $this->properties[$name] = $value;
+            } else {
+                throw new ORMException("Il est impossible de modifier le type de la propriété.");
+            }
+        } elseif (array_key_exists($name, $this->foreignKey)) {
+            if (gettype($this->properties[$name]) === 'NULL' || $type === gettype($this->foreignKey[$name])) {
+                $this->foreignKey[$name] = $value;
+            } else {
+                throw new ORMException("Il est impossible de modifier le type de la propriété.");
+            }
+        } elseif (array_key_exists($name, $this->primaryKey)) {
+            throw new ORMException("Il est impossible de modifier la clé primaire de l'objet.");
         } else {
-            throw new ORMException("Il est impossible de modifier un élément qui n'existe pas dans la table.");
+            throw new ORMException("Il est impossible de modifier un élément qui n'existe pas dans la table \"{$this->tableName}\".");
         }
+    }
+
+    public function __get(string $name)
+    {
+        $values = array_merge($this->foreignKey, $this->properties, $this->primaryKey);
+        return $values[$name];
     }
 
     public function constructWithStdclass(stdClass $class): void
     {
-        foreach ($this->columns as $column) {
-            $this->$column = $this->valuesType($this->ORMTable->getColumns()[$column]['columnType'], $class->$column);
-        }
-    }
-
-    /**
-     * @param string $type
-     * @param string $value
-     * @return DateTime|int|null|string
-     */
-    public function valuesType(string $type, string $value)
-    {
-        if (in_array($type, $this->sqlString)) {
-            return htmlspecialchars($value);
-        } elseif (in_array($type, $this->sqlNumeric)) {
-            return (int)$value;
-        } elseif (in_array($type, $this->sqlDate)) {
-            return new DateTime($value);
+        foreach ($class as $key => $value) {
+            if (array_key_exists($key, $this->primaryKey)) {
+                $this->primaryKey[$key] = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $class->$key);
+            } elseif (array_key_exists($key, $this->foreignKey)) {
+                $this->foreignKey[$key] = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $class->$key);
+            } else {
+                $this->properties[$key] = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $class->$key);
+            }
         }
     }
 
@@ -104,5 +128,45 @@ class ORMEntity
     public function getORMTable(): ORMTable
     {
         return $this->ORMTable;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPrimaryKey(): array
+    {
+        return $this->primaryKey;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @return array
+     */
+    public function getForeignKey(): array
+    {
+        return $this->foreignKey;
+    }
+
+    /**
+     * @param string $type
+     * @param string $value
+     * @return DateTime|int|null|string
+     */
+    private function valuesType(string $type, string $value)
+    {
+        if (in_array($type, $this->sqlString)) {
+            return htmlspecialchars($value);
+        } elseif (in_array($type, $this->sqlNumeric)) {
+            return (int)$value;
+        } elseif (in_array($type, $this->sqlDate)) {
+            return new DateTime($value);
+        }
     }
 }
