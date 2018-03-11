@@ -10,7 +10,7 @@ class ORMEntity
     /**
      * @var string
      */
-    protected $tableName;
+    protected $tableName = '';
 
     /**
      * @var ORMTable
@@ -20,36 +20,61 @@ class ORMEntity
     /**
      * @var array
      */
-    protected $properties = [];
-
-    /**
-     * @var array
-     */
     protected $primaryKey = [];
-
-    /**
-     * @var array
-     */
-    protected $foreignKey = [];
 
     /**
      * ORMEntity constructor.
      * @param ORMTable $ORMTable
+     * @throws ORMException
      */
     public function __construct(ORMTable $ORMTable)
     {
         $this->ORMTable = $ORMTable;
-        $this->tableName = $ORMTable->getTableName();
+        if ($this->tableName !== $ORMTable->getTableName()) {
+            throw new ORMException("La Table \"{$ORMTable->getTableName()}\" passée en argument ne correspond par à l'entité créée.");
+        }
         $this->typesSQLDefinition();
 
-        foreach ($this->ORMTable->getColumns() as $column) {
-            $att = $column['columnName'];
-            if ($column['options']['primary']) {
-                $this->primaryKey[$column['columnName']] = null;
-            } elseif ($column['options']['foreign']) {
-                $this->foreignKey[$column['columnName']] = null;
+        date_default_timezone_set('Europe/Paris');
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @throws ORMException
+     */
+    public function __set($name, $value)
+    {
+        $method = 'set' . ucfirst($name);
+
+        if (is_callable([$this, $method])) {
+            $this->$method($value);
+        } else {
+            if (array_key_exists($name, $this->ORMTable->getColumns())) {
+                throw new ORMException("Vous n'avez pas l'autorisation de modifier la propriété \"{$name}\".");
             } else {
-                $this->properties[$att] = null;
+                throw new ORMException("La propriété \"{$name}\" n'existe pas.");
+            }
+        }
+    }
+
+    /**
+     *
+     * @param string $name
+     * @throws ORMException
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        $method = 'get' . ucfirst($name);
+
+        if (is_callable([$this, $method])) {
+            return static::$method();
+        } else {
+            if (array_key_exists($name, $this->ORMTable->getColumns())) {
+                throw new ORMException("Vous n'avez pas l'autorisation d'accéder à la propriété \"{$name}\".");
+            } else {
+                throw new ORMException("La propriété \"{$name}\" n'existe pas.");
             }
         }
     }
@@ -57,48 +82,28 @@ class ORMEntity
     use ORMConfigSQL;
 
     /**
-     * @param string $name
-     * @param mixed $value
-     * @return void
+     * Utilise les éléments récupérés dans un stdClass pour créer un objet avec des propriétés avec le bon typage
+     * Différencie si l'élément est une foreign key, si c'est le cas le place dans "colonne + Id"
+     *
+     * @uses valuesType
+     * Récupère le typage dans l'ORMTable et la valeur à modifier
+     * Renvoie la valeur avec le bon typage
+     *
+     * @param stdClass $class
      * @throws ORMException
      */
-    public function __set(string $name, $value): void
-    {
-        $type = gettype($value);
-        if (array_key_exists($name, $this->properties)) {
-            if (gettype($this->properties[$name]) === 'NULL' || $type === gettype($this->properties[$name])) {
-                $this->properties[$name] = $value;
-            } else {
-                throw new ORMException("Il est impossible de modifier le type de la propriété.");
-            }
-        } elseif (array_key_exists($name, $this->foreignKey)) {
-            if (gettype($this->properties[$name]) === 'NULL' || $type === gettype($this->foreignKey[$name])) {
-                $this->foreignKey[$name] = $value;
-            } else {
-                throw new ORMException("Il est impossible de modifier le type de la propriété.");
-            }
-        } elseif (array_key_exists($name, $this->primaryKey)) {
-            throw new ORMException("Il est impossible de modifier la clé primaire de l'objet.");
-        } else {
-            throw new ORMException("Il est impossible de modifier un élément qui n'existe pas dans la table \"{$this->tableName}\".");
-        }
-    }
-
-    public function __get(string $name)
-    {
-        $values = array_merge($this->foreignKey, $this->properties, $this->primaryKey);
-        return $values[$name];
-    }
-
     public function constructWithStdclass(stdClass $class): void
     {
         foreach ($class as $key => $value) {
-            if (array_key_exists($key, $this->primaryKey)) {
-                $this->primaryKey[$key] = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $class->$key);
-            } elseif (array_key_exists($key, $this->foreignKey)) {
-                $this->foreignKey[$key] = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $class->$key);
+            if ($this->ORMTable->getColumns()[$key]['options']['foreign']) {
+                $property = $key . 'Id';
+                $this->$property = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value);
             } else {
-                $this->properties[$key] = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $class->$key);
+                $this->$key = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value);
+            }
+
+            if ($this->ORMTable->getColumns()[$key]['options']['primary']) {
+                $this->primaryKey[] = $key;
             }
         }
     }
@@ -109,17 +114,6 @@ class ORMEntity
     public function getTableName(): string
     {
         return $this->tableName;
-    }
-
-    /**
-     * @param string $tableName
-     * @return ORMEntity
-     */
-    public function setTableName(string $tableName): ORMEntity
-    {
-        $this->tableName = $tableName;
-
-        return $this;
     }
 
     /**
@@ -139,25 +133,10 @@ class ORMEntity
     }
 
     /**
-     * @return array
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return array
-     */
-    public function getForeignKey(): array
-    {
-        return $this->foreignKey;
-    }
-
-    /**
      * @param string $type
      * @param string $value
      * @return DateTime|int|null|string
+     * @throws ORMException
      */
     private function valuesType(string $type, string $value)
     {
@@ -167,6 +146,8 @@ class ORMEntity
             return (int)$value;
         } elseif (in_array($type, $this->sqlDate)) {
             return new DateTime($value);
+        } else {
+            throw new ORMException("Le typage \"{$type}\" n'existe pas.");
         }
     }
 }

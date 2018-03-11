@@ -9,6 +9,11 @@ use DateTime;
 class Comment extends Entity implements EntityInterface
 {
     /**
+     * @var string
+     */
+    protected $tableName = 'comments';
+
+    /**
      * @var int
      */
     protected $id;
@@ -39,14 +44,9 @@ class Comment extends Entity implements EntityInterface
     protected $postId;
 
     /**
-     * @var string
+     * @var User[]
      */
     protected $user;
-
-    /***
-     * @var string
-     */
-    protected $post;
 
     public function __construct()
     {
@@ -62,6 +62,14 @@ class Comment extends Entity implements EntityInterface
     }
 
     /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return string
      */
     public function getComment(): string
@@ -70,23 +78,43 @@ class Comment extends Entity implements EntityInterface
     }
 
     /**
-     * @param bool|null $datetime
-     * @param null|string $returnFormat
-     * @return DateTime|string
+     * @param string $comment
      */
-    public function getCreatedAt(?bool $datetime = true, ?string $returnFormat = 'Le %e %b %Y à %Hh%Mmin')
+    public function setComment(string $comment): void
     {
-        return $this->getDate($this->createdAt, $datetime, $returnFormat);
+        $this->comment = $comment;
     }
 
     /**
-     * @param bool|null $datetime
-     * @param null|string $returnFormat
      * @return DateTime
      */
-    public function getUpdatedAt(?bool $datetime = true, ?string $returnFormat = 'Le %e %b %Y à %Hh%Mmin')
+    public function getCreatedAt(): DateTime
     {
-        return $this->getDate($this->updatedAt, $datetime, $returnFormat);
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     */
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     /**
@@ -98,6 +126,14 @@ class Comment extends Entity implements EntityInterface
     }
 
     /**
+     * @param int $userId
+     */
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
      * @return int
      */
     public function getPostId(): int
@@ -106,18 +142,26 @@ class Comment extends Entity implements EntityInterface
     }
 
     /**
-     * @return string
+     * @param int $postId
      */
-    public function getUser(): string
+    public function setPostId(int $postId): void
+    {
+        $this->postId = $postId;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUser(): array
     {
         return $this->user;
     }
 
     /**
-     * @return string
+     * @param User[] $user
      */
-    public function getPost(): string
+    public function setUser(array $user): void
     {
-        return $this->post;
+        $this->user = $user;
     }
 }

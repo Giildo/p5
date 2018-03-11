@@ -5,12 +5,12 @@ namespace App\Entity;
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 
-class Category extends Entity implements EntityInterface
+class Admin extends Entity implements EntityInterface
 {
     /**
      * @var string
      */
-    protected $tableName = 'categories';
+    protected $tableName = 'admin';
 
     /**
      * @var int
@@ -21,15 +21,6 @@ class Category extends Entity implements EntityInterface
      * @var string
      */
     protected $name;
-
-    /**
-     * @var string
-     */
-    protected $slug;
-
-    public function __construct()
-    {
-    }
 
     /**
      * @return int
@@ -61,21 +52,5 @@ class Category extends Entity implements EntityInterface
     public function setName(string $name): void
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     */
-    public function setSlug(string $slug): void
-    {
-        $this->slug = $slug;
     }
 }

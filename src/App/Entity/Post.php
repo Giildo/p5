@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
+use Core\ORM\ORMException;
+use Core\ORM\ORMTable;
 use DateTime;
 
 /**
@@ -12,6 +14,11 @@ use DateTime;
  */
 class Post extends Entity implements EntityInterface
 {
+    /**
+     * @var string
+     */
+    protected $tableName = 'posts';
+
     /**
      * @var int
      */
@@ -28,11 +35,6 @@ class Post extends Entity implements EntityInterface
     protected $content;
 
     /**
-     * @var string
-     */
-    protected $category;
-
-    /**
      * @var DateTime
      */
     protected $createdAt;
@@ -43,16 +45,38 @@ class Post extends Entity implements EntityInterface
     protected $updatedAt;
 
     /**
-     * @var int|string
+     * @var int
+     */
+    protected $categoryId;
+
+    /**
+     * @var int
+     */
+    protected $userId;
+
+    /**
+     * @var Comment[]
+     */
+    protected $comments;
+
+    /**
+     * @var User
      */
     protected $user;
 
     /**
-     * Post constructor.
+     * @var Category
      */
-    public function __construct()
+    protected $category;
+
+    /**
+     * Post constructor.
+     * @param ORMTable $ORMTable
+     * @throws \Core\ORM\ORMException
+     */
+    public function __construct(ORMTable $ORMTable)
     {
-        $this->date(['updatedAt', 'createdAt']);
+        parent::__construct($ORMTable);
     }
 
     /**
@@ -72,6 +96,14 @@ class Post extends Entity implements EntityInterface
     }
 
     /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
      * @return string
      */
     public function getContent(): string
@@ -80,11 +112,11 @@ class Post extends Entity implements EntityInterface
     }
 
     /**
-     * @return string
+     * @param string $content
      */
-    public function getCategory(): string
+    public function setContent(string $content): void
     {
-        return $this->category;
+        $this->content = $content;
     }
 
     /**
@@ -96,6 +128,14 @@ class Post extends Entity implements EntityInterface
     }
 
     /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
      * @return DateTime
      */
     public function getUpdatedAt(): DateTime
@@ -104,26 +144,90 @@ class Post extends Entity implements EntityInterface
     }
 
     /**
-     * @return int|string
+     * @param DateTime $updatedAt
      */
-    public function getUser()
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCategoryId(): int
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @param int $categoryId
+     */
+    public function setCategoryId(int $categoryId): void
+    {
+        $this->categoryId = $categoryId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return Comment[]
+     */
+    public function getComments(): array
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment[] $comments
+     */
+    public function setComments(array $comments): void
+    {
+        $this->comments = $comments;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * @param string $title
+     * @param User $user
      */
-    public function setTitle(string $title): void
+    public function setUser(User $user): void
     {
-        $this->title = $title;
+        $this->user = $user;
     }
 
     /**
-     * @param string $content
+     * @return Category
      */
-    public function setContent(string $content): void
+    public function getCategory(): Category
     {
-        $this->content = $content;
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function setCategory(Category $category): void
+    {
+        $this->category = $category;
     }
 }

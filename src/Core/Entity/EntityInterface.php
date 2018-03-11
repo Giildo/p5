@@ -2,7 +2,13 @@
 
 namespace Core\Entity;
 
+use Core\ORM\ORMTable;
+
 interface EntityInterface
 {
-    public function __construct();
+    /**
+     * EntityInterface constructor.
+     * @param ORMTable $ORMTable
+     */
+    public function __construct(ORMTable $ORMTable);
 }

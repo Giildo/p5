@@ -26,6 +26,12 @@ class ORMTable
     }
 
     /**
+     * Ajoute une colonne à la définition de la table.
+     * Pour les options, prend en compte :
+     * - primary => true
+     * - auto_increment => true
+     * - not_null => false (par défault en true)
+     *
      * @param string $columnName
      * @param string $columnType
      * @param int|null $max
@@ -45,6 +51,21 @@ class ORMTable
     }
 
     /**
+     * Crée une colonne en fonction d'un élément stdClass
+     *
+     * @uses typeDefinition
+     * Récupère le type de la colonne (ex. : varchar(50))
+     * Sépare le typage du maximum de caractère
+     * Renvoie un tableau pour séparer les deux
+     *
+     * @uses optionsDefinition
+     * Trois colonnes sont utilisées dans les stdClass pour définir différentes options
+     * Lit les différentes colonnes et définit les options en fonction
+     * Renvoie le tableau d'options
+     *
+     * @uses hasColumn
+     * Crée la colonne en fonction des éléments récupérés en amont.
+     *
      * @param stdClass[] $classes
      */
     public function constructWithStdclass(array $classes)
@@ -52,13 +73,13 @@ class ORMTable
         foreach ($classes as $class) {
             $name = $class->Field;
 
-            $typeAndMax = $this->typeDefinition($class->Type);
-            $type = $typeAndMax[0];
-            $max = (isset($typeAndMax[1])) ? $typeAndMax[1] : null;
+            $type = '';
+            $max = 0;
+            $this->typeDefinition($class->Type, $type, $max);
 
             $options = $this->optionsDefinition($class);
 
-            $this->hasColumn($name, $type, (int)$max, $options);
+            $this->hasColumn($name, $type, $max, $options);
         }
     }
 
@@ -99,16 +120,29 @@ class ORMTable
 
     /**
      * Récupère la définition de la colonne et sépare le type du max
+     * Fait passer par référence les deux valeurs
      *
+     * @param string $columnType
      * @param string $type
-     * @return string[]
+     * @param int $max
+     * @return void
      */
-    protected function typeDefinition(string $type): array
+    protected function typeDefinition(string $columnType, string &$type, int &$max): void
     {
-        $type = str_replace(')', '', $type);
-        return explode('(', $type);
+        $columnType = str_replace(')', '', $columnType);
+        $columnType = explode('(', $columnType);
+        $type = $columnType[0];
+        $max = (isset($columnType[1])) ? (int)$columnType[1] : null;
     }
 
+    /**
+     * Trois colonnes sont utilisées dans les stdClass pour définir différentes options
+     * Lit les différentes colonnes et définit les options en fonction
+     * Renvoie le tableau d'options
+     *
+     * @param stdClass $class
+     * @return array
+     */
     protected function optionsDefinition(Stdclass $class): array
     {
         $options = [];

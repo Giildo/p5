@@ -90,7 +90,7 @@ class ORMController
      * @param ORMEntity $entity
      * @throws ORMException
      */
-    public function save(ORMEntity $entity): void
+    public function save($entity): void
     {
         try {
             /** @var Model $model */
@@ -106,8 +106,8 @@ class ORMController
         $this->verifAllColumnsIsDefined($entity->getORMTable()->getColumns(), $columnsBDD, $entity);
 
         $primaryDefined = false;
-        foreach ($entity->getPrimaryKey() as $value) {
-            if (!is_null($value)) {
+        foreach ($entity->getPrimaryKey() as $primaryKey) {
+            if (!is_null($entity->$primaryKey)) {
                 $primaryDefined = true;
             }
         }
@@ -163,11 +163,10 @@ class ORMController
             $statement .= $columnsAndValues[0][$i] . '=' . $columnsAndValues[1][$i];
         }
 
-        $columnPrimary = key($entity->getPrimaryKey());
-
+        $columnPrimary = $entity->getPrimaryKey()[0];
         $statement .= " WHERE {$columnPrimary}=:{$columnPrimary}";
 
-        $model->update($statement, $columnPrimary, $entity->getPrimaryKey()[$columnPrimary]);
+        $model->update($statement, $columnPrimary, $entity->$columnPrimary);
     }
 
     /**
@@ -265,16 +264,13 @@ class ORMController
      * @return void
      * @throws ORMException
      */
-    private function verifAllColumnsIsDefined(array $columnsEntity, array $columnsBDD, ORMEntity $entity): void
+    private function verifAllColumnsIsDefined(array $columnsEntity, array $columnsBDD, $entity): void
     {
-        //Créé un tableau qui regroupe toutes les valeurs de l'entité
-        $valuesEntity = array_merge($entity->getProperties(), $entity->getForeignKey());
-
         //Vérifie toutes dans le tableau créé ci-dessus si une valeur est rentrée, si c'est le cas, ajoute dans un tableau le nom de la colonne
         foreach ($columnsEntity as $columnEntity) {
             $att = $columnEntity['columnName'];
 
-            if ($att === 'id' || !empty($valuesEntity[$att])) {
+            if ($att === 'id' || !is_null($entity->$att)) {
                 $columnsEntityName[] = $columnEntity['columnName'];
             }
         }
