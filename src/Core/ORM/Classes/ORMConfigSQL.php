@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\ORM;
+namespace Core\ORM\Classes;
 
 /**
  * Trait pour définir les tableaux des types SQL disponibles afin de les avoir dans nos classes et pouvoir tester les éléments en entrée en sortie.

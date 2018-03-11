@@ -9,7 +9,7 @@ use PDO;
 /**
  * Fait le lien pour les Categories
  *
- * Class PostModel
+ * Classes PostModel
  * @package App\Blog\Model
  */
 class PostModel extends Model

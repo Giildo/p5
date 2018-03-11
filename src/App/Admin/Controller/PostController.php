@@ -123,6 +123,6 @@ class PostController extends Controller implements ControllerInterface
 
         $form = $form->submit('Valider');
 
-        $this->render('admin/posts/update.twig', compact('form', 'post'));
+        $this->render('admin/posts/ORMUpdate.twig', compact('form', 'post'));
     }
 }

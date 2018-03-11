@@ -57,10 +57,6 @@ class User extends Entity implements EntityInterface
      */
     protected $admin;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return int
      */

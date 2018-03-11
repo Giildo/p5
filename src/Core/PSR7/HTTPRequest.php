@@ -3,7 +3,7 @@
 namespace Core\PSR7;
 
 /**
- * Class HTTPRequest
+ * Classes HTTPRequest
  * @package Core\PSR7
  */
 class HTTPRequest

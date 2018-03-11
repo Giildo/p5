@@ -4,12 +4,10 @@ namespace App\Entity;
 
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
-use Core\ORM\ORMException;
-use Core\ORM\ORMTable;
 use DateTime;
 
 /**
- * Class Post
+ * Classes Post
  * @package App\Entity
  */
 class Post extends Entity implements EntityInterface
@@ -68,16 +66,6 @@ class Post extends Entity implements EntityInterface
      * @var Category
      */
     protected $category;
-
-    /**
-     * Post constructor.
-     * @param ORMTable $ORMTable
-     * @throws \Core\ORM\ORMException
-     */
-    public function __construct(ORMTable $ORMTable)
-    {
-        parent::__construct($ORMTable);
-    }
 
     /**
      * @return int

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\ORM;
+namespace Core\ORM\Classes;
 
 use DateTime;
 use stdClass;
@@ -24,16 +24,16 @@ class ORMEntity
 
     /**
      * ORMEntity constructor.
-     * @param ORMTable $ORMTable
+     * @param ORMTable|null $ORMTable
      * @throws ORMException
      */
-    public function __construct(ORMTable $ORMTable)
+    public function __construct(?ORMTable $ORMTable = null)
     {
         $this->ORMTable = $ORMTable;
-        if ($this->tableName !== $ORMTable->getTableName()) {
+        if (!is_null($ORMTable) && $this->tableName !== $ORMTable->getTableName()) {
             throw new ORMException("La Table \"{$ORMTable->getTableName()}\" passée en argument ne correspond par à l'entité créée.");
         }
-        $this->typesSQLDefinition();
+        //$this->typesSQLDefinition();
 
         date_default_timezone_set('Europe/Paris');
     }

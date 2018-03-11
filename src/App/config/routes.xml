@@ -15,10 +15,10 @@
     <route name="admin_user_logout" path="^/user/logout" controller="user" method="logout" />
 
     <route name="admin_post_index" path="^/admin/posts/{id: \d+}" controller="post" method="index" />
-    <route name="admin_post_update" path="^/admin/post/update/{id: \d+}" controller="post" method="update" />
+    <route name="admin_post_update" path="^/admin/post/ORMUpdate/{id: \d+}" controller="post" method="ORMUpdate" />
     <route name="admin_post_add" path="^/admin/post/add" controller="post" method="add" />
 
     <route name="admin_category_index" path="^/admin/categories/{id: \d+}" controller="category" method="index" />
-    <route name="admin_category_update" path="^/admin/category/update/{id: \d+}" controller="category" method="update" />
+    <route name="admin_category_update" path="^/admin/category/ORMUpdate/{id: \d+}" controller="category" method="ORMUpdate" />
     <route name="admin_category_add" path="^/admin/category/add" controller="category" method="add" />
 </routes>

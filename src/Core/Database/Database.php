@@ -5,7 +5,7 @@ namespace Core\Database;
 use PDO;
 
 /**
- * Class Database
+ * Classes Database
  * @package Core\Database
  */
 class Database

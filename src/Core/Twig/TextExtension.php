@@ -8,7 +8,7 @@ use Twig_SimpleFilter;
 /**
  * Extension pour les texts dans Twig
  *
- * Class TextExtension
+ * Classes TextExtension
  * @package Core\Twig
  */
 class TextExtension extends Twig_Extension

@@ -81,6 +81,6 @@ class CategoryController extends Controller implements ControllerInterface
         $form->input('slug', 'Slug de la catégorie', $posts['slug']);
         $form = $form->submit('Valider');
 
-        $this->render('admin/categories/update.twig', compact('category', 'form'));
+        $this->render('admin/categories/ORMUpdate.twig', compact('category', 'form'));
     }
 }

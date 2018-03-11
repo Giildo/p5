@@ -4,16 +4,16 @@ namespace Core\Model;
 
 use App\Entity\Post;
 use Core\Database\Database;
-use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
+use Core\ORM\Interfaces\ORMModelInterface;
+use Core\ORM\Classes\ORMModel;
 use PDO;
-use PDOStatement;
 
 /**
- * Class Model
+ * Classes Model
  * @package Core\Model
  */
-class Model
+class Model extends ORMModel implements ORMModelInterface
 {
     /**
      * @var \PDO
@@ -31,13 +31,7 @@ class Model
      */
     public function __construct(Database $database)
     {
-        $this->pdo = $database->getPDO();
-    }
-
-    public function findORM(string $statement): array
-    {
-        $result = $this->pdo->query($statement);
-        return $result->fetchAll();
+        parent::__construct($database->getPDO());
     }
 
     /**
@@ -160,54 +154,5 @@ class Model
     public function count(): int
     {
         return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
-    }
-
-    /**
-     * Récupère un statement pour ajouter un élément dans la base de données
-     *
-     * @param string $statement
-     * @return void
-     */
-    public function insert(string $statement): void
-    {
-        $this->pdo->query($statement);
-    }
-
-    /**
-     * Récupère un statement pour modifier un élément dans la base de données
-     *
-     * @param string $statement
-     * @param string $primaryKey
-     * @param $primaryKeyValue
-     * @return void
-     */
-    public function update(string $statement, string $primaryKey, $primaryKeyValue): void
-    {
-        $results = $this->pdo->prepare($statement);
-        $results->bindParam($primaryKey, $primaryKeyValue);
-        $results->execute();
-    }
-
-    /**
-     * Récupère les colonnes dans la base de données et les retourne
-     *
-     * @return array
-     */
-    public function showColumns(): array
-    {
-        $results = $this->pdo->query("SHOW COLUMNS FROM {$this->table}");
-        return $results->fetchAll();
-    }
-
-    /**
-     * Crée une table dans la base de données
-     *
-     * @param string $tableName
-     * @param string $statement
-     * @return void
-     */
-    public function createTable(string $tableName, string $statement): void
-    {
-        $this->pdo->query("CREATE TABLE IF NOT EXISTS {$tableName} " . $statement . " ENGINE=INNODB");
     }
 }

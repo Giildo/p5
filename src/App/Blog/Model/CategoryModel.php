@@ -8,7 +8,7 @@ use PDO;
 /**
  * Fait le lien pour les Posts
  *
- * Class CategoryModel
+ * Classes CategoryModel
  * @package App\Blog\Model
  */
 class CategoryModel extends Model

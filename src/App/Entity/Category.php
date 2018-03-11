@@ -27,10 +27,6 @@ class Category extends Entity implements EntityInterface
      */
     protected $slug;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return int
      */

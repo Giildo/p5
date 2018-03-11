@@ -1,8 +1,9 @@
 <?php
 
-namespace Core\ORM;
+namespace Core\ORM\Classes;
 
 use Core\Model\Model;
+use Core\ORM\Interfaces\ORMModelInterface;
 use DateTime;
 use DI\Container;
 use DI\DependencyException;
@@ -12,18 +13,10 @@ use PDO;
 class ORMController
 {
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * ORMController constructor
-     *
-     * @param Container $container
      */
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->typesSQLDefinition();
     }
 
@@ -33,12 +26,11 @@ class ORMController
      * Récupère les éléments d'un objet ORMController pour créer une nouvelle table dans la BDD
      *
      * @param ORMTable $ORMTable
+     * @param ORMModelInterface $model
      * @return void
-     * @throws DependencyException
-     * @throws NotFoundException
      * @throws ORMException
      */
-    public function createTable(ORMTable $ORMTable): void
+    public function createTable(ORMTable $ORMTable, ORMModelInterface $model): void
     {
         $statement = '(';
         $end = count($ORMTable->getColumns());
@@ -77,30 +69,22 @@ class ORMController
 
         $this->verifStatement($statement);
 
-        $model = $this->container->get($ORMTable->getTableName());
-
-        $model->createTable($ORMTable->getTableName(), $statement);
+        $model->ORMCreateTable($ORMTable->getTableName(), $statement);
     }
 
     /**
      * Vérifie si une clé primaire est définie, ce qui indique que l'objet a été récupéré depuis la BDD
-     * Si c'est le cas il va lancer la fonction update pour modifier une ligne en BDD
-     * Sinon lance insert pour ajouter une nouvelle ligne
+     * Si c'est le cas il va lancer la fonction ORMUpdate pour modifier une ligne en BDD
+     * Sinon lance ORMInsert pour ajouter une nouvelle ligne
      *
      * @param ORMEntity $entity
+     * @param ORMModelInterface $model
      * @throws ORMException
      */
-    public function save($entity): void
+    public function save($entity, ORMModelInterface $model): void
     {
-        try {
-            /** @var Model $model */
-            $model = $this->container->get($entity->getTableName());
-        } catch (DependencyException | NotFoundException $e) {
-            throw new ORMException("Le model demandé n'existe pas");
-        }
-
         //Récupère la définition des colonnes depuis la BDD
-        $columnsBDD = $model->showColumns();
+        $columnsBDD = $model->ORMShowColumns();
 
         //Vérifie que toutes les colonnes sont définies sinon renvoie une erreur
         $this->verifAllColumnsIsDefined($entity->getORMTable()->getColumns(), $columnsBDD, $entity);
@@ -127,29 +111,29 @@ class ORMController
      * Si tout est OK enregistre l'objet dans la table
      *
      * @param ORMEntity $entity
-     * @param Model $model
+     * @param ORMModelInterface $model
      * @param array $columnsBDD
      * @return void
      * @throws ORMException
      */
-    private function insert(ORMEntity $entity, Model $model, array $columnsBDD): void
+    private function insert(ORMEntity $entity, ORMModelInterface $model, array $columnsBDD): void
     {
         //Définie les colonnes et les valeurs à rentrer
         $columns = $values = '';
         $this->columnsDefinition($entity->getORMTable()->getColumns(), $entity, $columnsBDD, $columns, $values);
 
         //Envoie au modèle le statement nécessaire à l'insertion
-        $model->insert("INSERT INTO {$entity->getTableName()} ({$columns}) VALUES ({$values})");
+        $model->ORMInsert("INSERT INTO {$entity->getTableName()} ({$columns}) VALUES ({$values})");
     }
 
     /**
      * @param ORMEntity $entity
-     * @param Model $model
+     * @param ORMModelInterface $model
      * @param array $columnsBDD
      * @return void
      * @throws ORMException
      */
-    private function update(ORMEntity $entity, Model $model, array $columnsBDD): void
+    private function update(ORMEntity $entity, ORMModelInterface $model, array $columnsBDD): void
     {
         $columns = $values = '';
         $columnsAndValues = $this->columnsDefinition($entity->getORMTable()->getColumns(), $entity, $columnsBDD, $columns, $values);
@@ -166,7 +150,7 @@ class ORMController
         $columnPrimary = $entity->getPrimaryKey()[0];
         $statement .= " WHERE {$columnPrimary}=:{$columnPrimary}";
 
-        $model->update($statement, $columnPrimary, $entity->$columnPrimary);
+        $model->ORMUpdate($statement, $columnPrimary, $entity->$columnPrimary);
     }
 
     /**

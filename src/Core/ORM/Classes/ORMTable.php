@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\ORM;
+namespace Core\ORM\Classes;
 
 use stdClass;
 

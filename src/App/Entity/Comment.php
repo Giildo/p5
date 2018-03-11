@@ -48,11 +48,6 @@ class Comment extends Entity implements EntityInterface
      */
     protected $user;
 
-    public function __construct()
-    {
-        $this->date(['updatedAt', 'createdAt']);
-    }
-
     /**
      * @return int
      */

@@ -2,7 +2,7 @@
 
 namespace Core\Entity;
 
-use Core\ORM\ORMTable;
+use Core\ORM\Classes\ORMTable;
 
 interface EntityInterface
 {

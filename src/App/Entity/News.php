@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
-use Core\ORM\ORMTable;
 
 class News extends Entity implements EntityInterface
 {
@@ -27,16 +26,6 @@ class News extends Entity implements EntityInterface
      * @var string
      */
     protected $content;
-
-    /**
-     * News constructor.
-     * @param ORMTable $ORMTable
-     * @throws \Core\ORM\ORMException
-     */
-    public function __construct(ORMTable $ORMTable)
-    {
-        parent::__construct($ORMTable);
-    }
 
     /**
      * @return int|null

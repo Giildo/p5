@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
 /**
- * Class App
+ * Classes App
  * @package Core
  */
 class App

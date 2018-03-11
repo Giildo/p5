@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
 /**
- * Class Router
+ * Classes Router
  * @package Core\Router
  */
 class Router

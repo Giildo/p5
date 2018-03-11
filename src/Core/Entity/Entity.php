@@ -2,7 +2,7 @@
 
 namespace Core\Entity;
 
-use Core\ORM\ORMEntity;
+use Core\ORM\Classes\ORMEntity;
 use DateTime;
 use DateTimeZone;
 

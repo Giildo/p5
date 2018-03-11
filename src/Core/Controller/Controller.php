@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
 /**
- * Class Controller
+ * Classes Controller
  * @package Core\Controller
  */
 class Controller implements ControllerInterface
