@@ -33,7 +33,7 @@ trait ORMConfigSQL
     /**
      * Définit les tableaux
      */
-    private function typesSQLDefinition(): void
+    public function typesSQLDefinition(): void
     {
         $this->sqlNumeric = ['tinyint', 'smallint', 'mediumint', 'int', 'bigint', 'decimal', 'float', 'double', 'real', 'bit', 'boolean', 'serial'];
         $this->sqlDate = ['date', 'datetime', 'timestamp', 'time', 'year'];

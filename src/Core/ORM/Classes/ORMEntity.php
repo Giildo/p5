@@ -25,15 +25,18 @@ class ORMEntity
     /**
      * ORMEntity constructor.
      * @param ORMTable|null $ORMTable
+     * @param bool|null $SQLTypeDefine
      * @throws ORMException
      */
-    public function __construct(?ORMTable $ORMTable = null)
+    public function __construct(?ORMTable $ORMTable = null, ?bool $SQLTypeDefine = false)
     {
-        $this->ORMTable = $ORMTable;
-        if (!is_null($ORMTable) && $this->tableName !== $ORMTable->getTableName()) {
-            throw new ORMException("La Table \"{$ORMTable->getTableName()}\" passée en argument ne correspond par à l'entité créée.");
+        if (!is_null($ORMTable)) {
+            $this->setORMTable($ORMTable);
         }
-        //$this->typesSQLDefinition();
+
+        if ($SQLTypeDefine) {
+            $this->typesSQLDefinition();
+        }
 
         date_default_timezone_set('Europe/Paris');
     }
@@ -48,7 +51,11 @@ class ORMEntity
         $method = 'set' . ucfirst($name);
 
         if (is_callable([$this, $method])) {
-            $this->$method($value);
+            if (!is_array($value)) {
+                $this->$method(htmlspecialchars($value));
+            } else {
+                $this->$method($value);
+            }
         } else {
             if (array_key_exists($name, $this->ORMTable->getColumns())) {
                 throw new ORMException("Vous n'avez pas l'autorisation de modifier la propriété \"{$name}\".");
@@ -90,20 +97,23 @@ class ORMEntity
      * Renvoie la valeur avec le bon typage
      *
      * @param stdClass $class
+     * @param array|null $sqlTypes
      * @throws ORMException
      */
-    public function constructWithStdclass(stdClass $class): void
+    public function constructWithStdclass(stdClass $class, ?array $sqlTypes = []): void
     {
         foreach ($class as $key => $value) {
-            if ($this->ORMTable->getColumns()[$key]['options']['foreign']) {
-                $property = $key . 'Id';
-                $this->$property = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value);
-            } else {
-                $this->$key = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value);
-            }
+            if (!is_null($key)) {
+                if ($this->ORMTable->getColumns()[$key]['options']['foreign']) {
+                    $property = $key . 'Id';
+                    $this->$property = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes);
+                } else {
+                    $this->$key = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes);
+                }
 
-            if ($this->ORMTable->getColumns()[$key]['options']['primary']) {
-                $this->primaryKey[] = $key;
+                if ($this->ORMTable->getColumns()[$key]['options']['primary']) {
+                    $this->primaryKey[] = $key;
+                }
             }
         }
     }
@@ -133,21 +143,57 @@ class ORMEntity
     }
 
     /**
+     * Vérifie que l'ORMTable correspond selon le nom et l'ajoute dans les paramètres
+     *
+     * @param ORMTable $ORMTable
+     * @throws ORMException
+     */
+    public function setORMTable(ORMTable $ORMTable): void
+    {
+        if ($this->tableName === $ORMTable->getTableName()) {
+            $this->ORMTable = $ORMTable;
+        } else {
+            throw new ORMException("La Table \"{$ORMTable->getTableName()}\" passée en argument ne correspond par à l'entité créée.");
+        }
+    }
+
+    /**
+     * @param array $primaryKey
+     */
+    public function setPrimaryKey(array $primaryKey): void
+    {
+        $this->primaryKey = $primaryKey;
+    }
+
+    /**
      * @param string $type
      * @param string $value
+     * @param array|null $sqlTypes
      * @return DateTime|int|null|string
      * @throws ORMException
      */
-    private function valuesType(string $type, string $value)
+    private function valuesType(string $type, string $value, ?array $sqlTypes = [])
     {
-        if (in_array($type, $this->sqlString)) {
-            return htmlspecialchars($value);
-        } elseif (in_array($type, $this->sqlNumeric)) {
-            return (int)$value;
-        } elseif (in_array($type, $this->sqlDate)) {
-            return new DateTime($value);
+        if (!empty($sqlTypes)) {
+            if (in_array($type, $sqlTypes['sqlString'])) {
+                return htmlspecialchars($value);
+            } elseif (in_array($type, $sqlTypes['sqlNumeric'])) {
+                return (int)$value;
+            } elseif (in_array($type, $sqlTypes['sqlDate'])) {
+                return new DateTime($value);
+            } else {
+                throw new ORMException("Le typage \"{$type}\" n'existe pas.");
+            }
         } else {
-            throw new ORMException("Le typage \"{$type}\" n'existe pas.");
+            if (in_array($type, $this->sqlString)) {
+                return htmlspecialchars($value);
+            } elseif (in_array($type, $this->sqlNumeric)) {
+                return (int)$value;
+            } elseif (in_array($type, $this->sqlDate)) {
+                return new DateTime($value);
+            } else {
+                throw new ORMException("Le typage \"{$type}\" n'existe pas.");
+            }
         }
     }
 }

@@ -37,5 +37,11 @@ interface ORMModelInterface
      */
     public function ORMCreateTable(string $statement): void;
 
-    public function ORMFind(string $statement, string $entityType): array;
+    /**
+     * @param string $statement
+     * @param null|string $entityType
+     * @param array|null $whereOptions
+     * @return array
+     */
+    public function ORMFind(string $statement, ?string $entityType = null, ?array $whereOptions = []): array;
 }

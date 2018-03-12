@@ -67,8 +67,9 @@ class ORMTable
      * Crée la colonne en fonction des éléments récupérés en amont.
      *
      * @param stdClass[] $classes
+     * @return void
      */
-    public function constructWithStdclass(array $classes)
+    public function constructWithStdclass(array $classes): void
     {
         foreach ($classes as $class) {
             $name = $class->Field;

@@ -1,7 +1,5 @@
 <?php
 
-define('ROOT', dirname(__DIR__));
-
 use Core\App;
 use Core\Twig\TextExtension;
 use DI\ContainerBuilder;
@@ -16,21 +14,6 @@ $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/controllerConfig.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/instanceObject.php');
 $container = $builder->build();
-
-$pdo = $container->get(PDO::class);
-$results = $pdo->query('SELECT * FROM news WHERE id=4');
-$news = $results->fetch();
-$results = $pdo->query('SHOW COLUMNS FROM news');
-$newsTable = $results->fetchAll();
-$newsModel = new \App\Essai\Model\NewsModel($container->get(\Core\Database\Database::class));
-
-$newsOrmTable = new \Core\ORM\Classes\ORMTable('news');
-$newsOrmTable->constructWithStdclass($newsTable);
-$ormNews = new \App\Entity\News($newsOrmTable);
-
-$ormSelect = new \Core\ORM\Classes\ORMSelect(dirname(__DIR__) . '/src/App/config/orm_config.php');
-$listNews = $ormSelect->from('news')
-    ->execute($newsModel, $ormNews);
 
 try {
     // Initialisation de Twig via le Container

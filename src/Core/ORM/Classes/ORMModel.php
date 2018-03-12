@@ -74,10 +74,31 @@ class ORMModel implements ORMModelInterface
         $this->pdo->query("CREATE TABLE IF NOT EXISTS {$this->table} " . $statement . " ENGINE=INNODB");
     }
 
-    public function ORMFind(string $statement, string $entityType): array
+    /**
+     * @param string $statement
+     * @param string|null $entityType
+     * @param array|null $whereOptions
+     * @return array
+     */
+    public function ORMFind(string $statement, ?string $entityType = null, ?array $whereOptions = []): array
     {
-        $result = $this->pdo->query($statement);
-        $result->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $entityType);
+        $result = $this->pdo->prepare($statement);
+
+        if (!is_null($entityType)) {
+            $result->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $entityType);
+        }
+
+        if (!empty($whereOptions)) {
+            foreach ($whereOptions as $key => $value) {
+                if (preg_match('#\.#', $key)) {
+                    $results = explode('.', $key);
+                    $key = $results[0] . ucfirst(strtolower($results[1]));
+                }
+                $result->bindParam($key, $value);
+            }
+        }
+
+        $result->execute();
         return $result->fetchAll();
     }
 }
