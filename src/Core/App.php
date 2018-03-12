@@ -5,6 +5,7 @@ namespace Core;
 use Core\Auth\DBAuth;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
+use Core\ORM\Classes\ORMSelect;
 use Core\PSR7\HTTPRequest;
 use Core\Router\Route;
 use Core\Router\Router;
@@ -107,7 +108,8 @@ class App
         return new $controller(
             $this->container->get(Twig_Environment::class),
             $this->container,
-            $models
+            $models,
+            new ORMSelect(dirname(__DIR__) . '/App/config/orm_config.php')
         );
     }
 

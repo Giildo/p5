@@ -2,6 +2,7 @@
 
 namespace Core\Controller;
 
+use Core\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
@@ -17,8 +18,9 @@ interface ControllerInterface
      * @param Twig_Environment $twig
      * @param ContainerInterface $container
      * @param array|null $models
+     * @param ORMSelect $select
      */
-    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = []);
+    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [], ?ORMSelect $select = null);
 
     /**
      * Lance la méthode passée en paramètres en lui ajoutant si besoin des les paramètres

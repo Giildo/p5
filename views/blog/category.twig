@@ -1,24 +1,24 @@
 {% extends 'blog/blog_template.twig' %}
 
-{% block title %}{{ posts.0.category }}{% endblock %}
+{% block title %}{{ posts.0.category.name }}{% endblock %}
 
 {% block pagination %}
     {% if paginationOptions.previous != null %}
-        <a href="/category/{{ posts.0.categorySlug }}-{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
+        <a href="/category/{{ posts.0.category.slug }}-{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
     {% else %}
         <button class="btn btn-warning" disabled><</button>
     {% endif %}
 
     {% for i in 1..paginationOptions.pageNb %}
         {% if i != paginationOptions.id %}
-            <a href="/category/{{ posts.0.categorySlug }}-{{ i }}" class="btn btn-warning">{{ i }}</a>
+            <a href="/category/{{ posts.0.category.slug }}-{{ i }}" class="btn btn-warning">{{ i }}</a>
         {% else %}
             <button class="btn btn-warning" disabled>{{ i }}</button>
         {% endif %}
     {% endfor %}
 
     {% if paginationOptions.next != null %}
-        <a href="/category/{{ posts.0.categorySlug }}-{{ paginationOptions.next }}" class="btn btn-warning">></a>
+        <a href="/category/{{ posts.0.category.slug }}-{{ paginationOptions.next }}" class="btn btn-warning">></a>
     {% else %}
         <button class="btn btn-warning" disabled>></button>
     {% endif %}

@@ -77,10 +77,18 @@ class ORMSelect
     /**
      * @param array $orderByOptions
      * @return ORMSelect
+     * @throws ORMException
      */
     public function orderBy(array $orderByOptions): ORMSelect
     {
-        $this->statement['orderBy'] = $orderByOptions;
+        foreach ($orderByOptions as $direction) {
+            $directionMaj = strtoupper($direction);
+            if ($directionMaj === 'DESC' || $directionMaj === 'ASC') {
+                $this->statement['orderBy'] = $orderByOptions;
+            } else {
+                throw new ORMException("\"{$direction}\" n'est pas un sens de trie autorisé, veuillez indiquer \"ASC\" ou \"DESC\".");
+            }
+        }
 
         return $this;
     }
@@ -139,11 +147,13 @@ class ORMSelect
 
     /**
      * @param array $options
+     * @param bool $oneToMany
      * @return ORMSelect
      */
-    public function innerOptions(array $options): ORMSelect
+    public function innerOptions(array $options, bool $oneToMany): ORMSelect
     {
         $this->statement['innerOptions'] = $options;
+        $this->statement['oneToMany'] = $oneToMany;
 
         return $this;
     }
@@ -198,64 +208,114 @@ class ORMSelect
 
         //Sépare les données en fonction des entités à créer
         $stdClasses = [];
-        foreach ($entities as $key => $entity) {
-            $stdClasses[$key] = new stdClass();
-        }
-
         $allStdClasses = [];
-        foreach ($items as $item) {
-            foreach ($entities as $key => $entity) {
-                $stdClasses[$key] = new stdClass();
+
+        if ($this->statement['join']) {
+            foreach ($items as $item) {
+                foreach ($entities as $key => $entity) {
+                    $stdClasses[$key] = new stdClass();
+                }
+                foreach ($item as $columnName => $value) {
+                    $results = explode('_', $columnName);
+
+                    $stdClass = $stdClasses[$results[0]];
+
+                    $att = $results[1];
+                    $stdClass->$att = $value;
+
+                    $stdClasses[$results[0]] = $stdClass;
+                }
+                $allStdClasses[] = $stdClasses;
             }
 
-            foreach ($item as $columnName => $value) {
-                $results = explode('_', $columnName);
+            $allEntities = [];
+            foreach ($allStdClasses as $stdClasses) {
+                foreach ($stdClasses as $entityName => $stdClass) {
+                    $entity = $entities[$entityName];
+                    /** @var ORMEntity $entityItem */
+                    $entityItem = new $entity($ormTables[$entityName]);
+                    $entityItem->constructWithStdclass(
+                        $stdClass,
+                        ['sqlString' => $this->sqlString, 'sqlDate' => $this->sqlDate, 'sqlNumeric' => $this->sqlNumeric]
+                    );
 
-                $stdClass = $stdClasses[$results[0]];
-
-                $att = $results[1];
-                $stdClass->$att = $value;
-
-                $stdClasses[$results[0]] = $stdClass;
+                    if (!in_array($entityItem, $allEntities)) {
+                        $allEntities[] = $entityItem;
+                    }
+                }
             }
-            $allStdClasses[] = $stdClasses;
-        }
-
-        //Construit les entités avec les données récupérées dans le statement
-        $allEntities = [];
-        foreach ($allStdClasses as $stdClasses) {
-            foreach ($stdClasses as $entityName => $stdClass) {
-                $entity = $entities[$entityName];
+        } else {
+            foreach ($items as $stdClass) {
+                $entity = $entities[$this->tableName];
                 /** @var ORMEntity $entityItem */
-                $entityItem = new $entity($ormTables[$entityName]);
+                $entityItem = new $entity($ormTables[$this->tableName]);
                 $entityItem->constructWithStdclass(
                     $stdClass,
                     ['sqlString' => $this->sqlString, 'sqlDate' => $this->sqlDate, 'sqlNumeric' => $this->sqlNumeric]
                 );
 
-                if (!in_array($entityItem, $allEntities)) {
-                    $allEntities[] = $entityItem;
-                }
+                $allEntities[] = $entityItem;
             }
         }
 
         //Insère les éléments les un dans les autres
-        $entitiesChild = [];
         if (isset($this->statement['innerOptions'])) {
-            foreach ($this->statement['innerOptions'] as $entityChild => $entityParent) {
-                foreach ($allEntities as $entity) {
-                    if ($entity->getTableName() === $entityChild) {
-                        $entitiesChild[] = $entity;
-                    } elseif ($entity->getTableName() === $entityParent) {
-                        $entitiesParent = $entity;
+            if ($this->statement['oneToMany']) {
+                $entitiesParent = [];
+                foreach ($this->statement['innerOptions'] as $entityChild => $entityParent) {
+                    foreach ($allEntities as $entity) {
+                        if ($entity->getTableName() === $entityChild) {
+                            $entitiesChild = $entity;
+                        } elseif ($entity->getTableName() === $entityParent) {
+                            $entitiesParent[] = $entity;
+                        }
                     }
                 }
-            }
 
-            $att = $entitiesChild[0]->getTableName();
-            $entitiesParent->$att = $entitiesChild;
-            return $entitiesParent;
+                foreach ($entitiesParent as $entityParent) {
+                    $att = 'set' . ucfirst($entitiesChild->getTableName());
+                    $attSingular = str_replace('s', '', $att);
+                    $attSingularIrregular = str_replace('ies', 'y', $att);
+                    if (is_callable([$entityParent, $att])) {
+                        $entityParent->$att($entitiesChild);
+                    } elseif (is_callable([$entityParent, $attSingular])) {
+                        $entityParent->$attSingular($entitiesChild);
+                    } elseif (is_callable([$entityParent, $attSingularIrregular])) {
+                        $entityParent->$attSingularIrregular($entitiesChild);
+                    }
+                }
+
+                //Réinitialise le statement pour pouvoir réutiliser le Select
+                $this->statement = [];
+                $this->statement['join'] = false;
+
+                return $entitiesParent;
+            } else {
+                $entitiesChild = [];
+                foreach ($this->statement['innerOptions'] as $entityChild => $entityParent) {
+                    foreach ($allEntities as $entity) {
+                        if ($entity->getTableName() === $entityChild) {
+                            $entitiesChild[] = $entity;
+                        } elseif ($entity->getTableName() === $entityParent) {
+                            $entitiesParent = $entity;
+                        }
+                    }
+                }
+
+                $att = $entitiesChild[0]->getTableName();
+                $entitiesParent->$att = $entitiesChild;
+
+                //Réinitialise le statement pour pouvoir réutiliser le Select
+                $this->statement = [];
+                $this->statement['join'] = false;
+
+                return $entitiesParent;
+            }
         }
+
+        //Réinitialise le statement pour pouvoir réutiliser le Select
+        $this->statement = [];
+        $this->statement['join'] = false;
 
         return $allEntities;
     }

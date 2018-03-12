@@ -4,6 +4,7 @@ namespace Core\Controller;
 
 use Core\Auth\DBAuth;
 use Core\Entity\EntityInterface;
+use Core\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
@@ -29,15 +30,21 @@ class Controller implements ControllerInterface
     protected $auth;
 
     /**
+     * @var ORMSelect
+     */
+    protected $select;
+
+    /**
      * Controller constructor.
      *
      * @param Twig_Environment $twig
      * @param ContainerInterface $container
      * @param array|null $models
+     * @param ORMSelect $select
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [])
+    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [], ?ORMSelect $select = null)
     {
         $this->twig = $twig;
         $this->container = $container;
@@ -47,6 +54,7 @@ class Controller implements ControllerInterface
         }
 
         $this->auth = $this->container->get(DBAuth::class);
+        $this->select = $select;
     }
 
     /**
@@ -156,7 +164,7 @@ class Controller implements ControllerInterface
 
         $pagination['id'] = $vars['id'];
 
-        $pagination['pageNb'] = ceil($nbItem / $pagination['limit']);
+        $pagination['pageNb'] = (int)ceil($nbItem / $pagination['limit']);
         $pagination['start'] = ($pagination['limit'] * ($pagination['id'] - 1));
 
         $pagination['next'] = ($pagination['id'] + 1 <= $pagination['pageNb']) ? $pagination['id'] + 1 : null;

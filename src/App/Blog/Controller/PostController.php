@@ -10,6 +10,7 @@ use App\Entity\Post;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
+use Core\ORM\Classes\ORMSelect;
 
 class PostController extends Controller implements ControllerInterface
 {
@@ -28,6 +29,7 @@ class PostController extends Controller implements ControllerInterface
      *
      * @param array $vars
      * @return void
+     * @throws \Core\ORM\Classes\ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -40,17 +42,15 @@ class PostController extends Controller implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
-        $posts = $this->postModel->findAll(
-            Post::class,
-            $paginationOptions['start'],
-            $paginationOptions['limit'],
-            true,
-            ' ORDER BY updatedAt DESC '
-        );
+        $posts = $this->select->from('posts')
+            ->limit($paginationOptions['limit'], $paginationOptions['start'])
+            ->orderBy(['updatedAt' => 'desc'])
+            ->execute($this->postModel);
 
-        $categories = $this->categoryModel->findAll(Category::class);
+        $categories = $this->select->from('categories')
+            ->execute($this->categoryModel);
 
-        if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
+        if ($paginationOptions['id'] <= $paginationOptions['pageNb'] ) {
             $this->render('blog/index.twig', compact('posts', 'paginationOptions', 'categories'));
         } else {
             $this->render404();
@@ -115,6 +115,7 @@ class PostController extends Controller implements ControllerInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws \Core\ORM\Classes\ORMException
      */
     public function category(array $vars): void
     {
@@ -122,16 +123,24 @@ class PostController extends Controller implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
-        /** @var Post[] $posts */
-        $posts = $this->postModel->findAllByCategory(
-            $vars['slug'],
-            $paginationOptions['start'],
-            $paginationOptions['limit'],
-            true,
-            ' ORDER BY updatedAt DESC '
-        );
+        $posts = $this->select->select(
+            'posts.id as posts_id,
+            posts.title as posts_title,
+            posts.content as posts_content,
+            posts.createdAt as posts_createdAt,
+            posts.updatedAt as posts_updatedAt,
+            categories.name as categories_name,
+            categories.slug as categories_slug'
+        )->from('posts')
+            ->innerJoin('categories', ['posts.category' => 'categories.id'])
+            ->where(['categories.slug' => $vars['slug']])
+            ->orderBy(['posts.updatedAt' => 'desc'])
+            ->limit($paginationOptions['limit'], $paginationOptions['start'])
+            ->innerOptions(['categories' => 'posts'], true)
+            ->execute($this->postModel, $this->categoryModel);
 
-        $categories = $this->categoryModel->findAll(Category::class);
+        $categories = $this->select->from('categories')
+            ->execute($this->categoryModel);
 
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render(

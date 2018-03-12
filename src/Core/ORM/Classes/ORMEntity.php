@@ -51,7 +51,7 @@ class ORMEntity
         $method = 'set' . ucfirst($name);
 
         if (is_callable([$this, $method])) {
-            if (!is_array($value)) {
+            if (!is_array($value) && !is_object($value)) {
                 $this->$method(htmlspecialchars($value));
             } else {
                 $this->$method($value);
