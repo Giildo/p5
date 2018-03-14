@@ -2,15 +2,15 @@
 
 namespace App\Blog\Controller;
 
+use App\Admin\Model\UserModel;
 use App\Blog\Model\CategoryModel;
+use App\Blog\Model\CommentModel;
 use App\Blog\Model\PostModel;
-use App\Entity\Category;
 use App\Entity\Comment;
-use App\Entity\Post;
+use App\Entity\User;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
-use Core\ORM\Classes\ORMSelect;
 
 class PostController extends Controller implements ControllerInterface
 {
@@ -123,21 +123,19 @@ class PostController extends Controller implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
-        $posts = $this->select->select(
-            'posts.id as posts_id,
-            posts.title as posts_title,
-            posts.content as posts_content,
-            posts.createdAt as posts_createdAt,
-            posts.updatedAt as posts_updatedAt,
-            categories.name as categories_name,
-            categories.slug as categories_slug'
-        )->from('posts')
+        $posts = $this->select->select([
+            'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
+            'categories' => ['name', 'slug'],
+            'users' => ['id', 'pseudo']
+        ])->from('posts')
             ->innerJoin('categories', ['posts.category' => 'categories.id'])
+            ->innerJoin('users', ['posts.user' => 'users.id'])
             ->where(['categories.slug' => $vars['slug']])
             ->orderBy(['posts.updatedAt' => 'desc'])
             ->limit($paginationOptions['limit'], $paginationOptions['start'])
-            ->innerOptions(['categories' => 'posts'], true)
-            ->execute($this->postModel, $this->categoryModel);
+            ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'oneToMany')
+            ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'manyToMany')
+            ->execute($this->postModel, $this->categoryModel, $this->container->get(UserModel::class));
 
         $categories = $this->select->from('categories')
             ->execute($this->categoryModel);
