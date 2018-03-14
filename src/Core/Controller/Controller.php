@@ -162,7 +162,7 @@ class Controller implements ControllerInterface
 
         $pagination['limit'] = $this->container->get($optionLimit);
 
-        $pagination['id'] = $vars['id'];
+        $pagination['id'] = (int)$vars['id'];
 
         $pagination['pageNb'] = (int)ceil($nbItem / $pagination['limit']);
         $pagination['start'] = ($pagination['limit'] * ($pagination['id'] - 1));

@@ -48,12 +48,11 @@ class ORMSelect
 
     /**
      * Récupère le nom des colonnes qui seront récupérées dans la BDD.
-     * Si non définies, met "*" pour tout récupérer.
      *
-     * @param array|null $columnsName
+     * @param array $columnsName
      * @return ORMSelect
      */
-    public function select(?array $columnsName = []): ORMSelect
+    public function select(array $columnsName): ORMSelect
     {
         $this->statement['select'] = $columnsName;
 
@@ -209,6 +208,30 @@ class ORMSelect
     }
 
     /**
+     * Indique qu'on attend en retour un élément unique.
+     *
+     * @return ORMSelect
+     */
+    public function singleItem(): ORMSelect
+    {
+        $this->statement['singleItem'] = true;
+
+        return $this;
+    }
+
+    /**
+     * Indique qu'on attend un nombre de résultat et non des entités.
+     *
+     * @return ORMSelect
+     */
+    public function countColumns(): ORMSelect
+    {
+        $this->statement['count'] = true;
+
+        return $this;
+    }
+
+    /**
      *
      * @uses $this->statementDefinition()
      * Récupère les différentes informations insérées dans les tableaux de l'objet, pour créer un statement.
@@ -260,13 +283,11 @@ class ORMSelect
 
         if (isset($this->statement['insertEntity'])) {
             $result = $this->insertEntityIntoAnotherEntity($allEntities);
-            $this->resetSelect();
-            return $result;
+
+            return $this->return($result);
         }
 
-        $this->resetSelect();
-
-        return $allEntities;
+        return $this->return($allEntities);
     }
 
     /**
@@ -295,7 +316,7 @@ class ORMSelect
                 }
             }
         } else {
-            $statement .= '* ';
+            throw new ORMException("Les colonnes à récupérer n'ont pas été définies.");
         }
 
         if (isset($this->statement['from'])) {
@@ -467,51 +488,37 @@ class ORMSelect
         $allStdClasses = [];
         $allEntities = [];
 
-        if ($this->statement['join']) {
-            foreach ($items as $item) {
-                foreach ($entities as $key => $entity) {
-                    $stdClasses[$key] = new stdClass();
-                }
-                foreach ($item as $columnName => $value) {
-                    $results = explode('_', $columnName);
-
-                    $stdClass = $stdClasses[$results[0]];
-
-                    $att = $results[1];
-                    $stdClass->$att = $value;
-
-                    $stdClasses[$results[0]] = $stdClass;
-                }
-                $allStdClasses[] = $stdClasses;
+        foreach ($items as $item) {
+            foreach ($entities as $key => $entity) {
+                $stdClasses[$key] = new stdClass();
             }
+            foreach ($item as $columnName => $value) {
+                $results = explode('_', $columnName);
 
-            $allEntities = [];
-            foreach ($allStdClasses as $stdClasses) {
-                foreach ($stdClasses as $entityName => $stdClass) {
-                    $entity = $entities[$entityName];
-                    /** @var ORMEntity $entityItem */
-                    $entityItem = new $entity($ormTables[$entityName]);
-                    $entityItem->constructWithStdclass(
-                        $stdClass,
-                        ['sqlString' => $this->sqlString, 'sqlDate' => $this->sqlDate, 'sqlNumeric' => $this->sqlNumeric]
-                    );
+                $stdClass = $stdClasses[$results[0]];
 
-                    if (!in_array($entityItem, $allEntities)) {
-                        $allEntities[] = $entityItem;
-                    }
-                }
+                $att = $results[1];
+                $stdClass->$att = $value;
+
+                $stdClasses[$results[0]] = $stdClass;
             }
-        } else {
-            foreach ($items as $stdClass) {
-                $entity = $entities[$this->tableName];
+            $allStdClasses[] = $stdClasses;
+        }
+
+        $allEntities = [];
+        foreach ($allStdClasses as $stdClasses) {
+            foreach ($stdClasses as $entityName => $stdClass) {
+                $entity = $entities[$entityName];
                 /** @var ORMEntity $entityItem */
-                $entityItem = new $entity($ormTables[$this->tableName]);
+                $entityItem = new $entity($ormTables[$entityName]);
                 $entityItem->constructWithStdclass(
                     $stdClass,
                     ['sqlString' => $this->sqlString, 'sqlDate' => $this->sqlDate, 'sqlNumeric' => $this->sqlNumeric]
                 );
 
-                $allEntities[] = $entityItem;
+                if (!in_array($entityItem, $allEntities)) {
+                    $allEntities[] = $entityItem;
+                }
             }
         }
 
@@ -650,6 +657,30 @@ class ORMSelect
         } elseif (is_callable([$entityParent, $attSingularIrregular])) {
             ($addEntity) ? $entityParent->$attSingularIrregular($entityChild) : $entityParent->$attSingularIrregular($entitiesChild);
 
+        }
+    }
+
+    /**
+     * Récupère les options pour savoir si on attend un élément unique et si on veut le nombre de colonnes.
+     * Réinitialise le statement pour pouvoir réutiliser ORMSelect tout de suite après sans le ré-instancier.
+     * Retourne :
+     * - int : Si $this->statement['count'] est à true
+     * - ORMEntity : Si $this->statement['singleItem'] est à true
+     * - ORMEntity[] : Si les deux sont à false
+     * @param array $items
+     * @return int|ORMEntity|ORMEntity[]
+     */
+    private function return(array $items)
+    {
+        $singleItem = $this->statement['singleItem'];
+        $count = $this->statement['count'];
+
+        $this->resetSelect();
+
+        if ($count) {
+            return count($items);
+        } else {
+            return ($singleItem) ? $items[0] : $items;
         }
     }
 

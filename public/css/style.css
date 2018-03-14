@@ -55,9 +55,16 @@ h1:before {
     margin-bottom: 15px;
 }
 
-.date {
+.date, .author {
     text-align: right;
     font-style: italic;
+}
+
+.author {
+    color: #484848;
+}
+
+.date {
     color: #747474;
 }
 
