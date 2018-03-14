@@ -25,6 +25,11 @@ class PostController extends Controller implements ControllerInterface
     protected $categoryModel;
 
     /**
+     * @var UserModel
+     */
+    protected $userModel;
+
+    /**
      * Affiche l'ensemble des Posts selon la LIMIT
      *
      * @param array $vars
@@ -67,6 +72,7 @@ class PostController extends Controller implements ControllerInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws \Core\ORM\Classes\ORMException
      */
     public function show(array $vars): void
     {
@@ -80,7 +86,17 @@ class PostController extends Controller implements ControllerInterface
 
         $commentController->updateCom($vars, $error);
 
-        $post = $this->postModel->findPostWithCategoryAndUser($vars['id']);
+        $post = $this->select->select([
+            'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt'],
+            'categories' => ['id', 'name', 'slug'],
+            'users' => ['id', 'pseudo']
+        ])->from('posts')
+            ->innerJoin('categories', ['posts.category' => 'categories.id'])
+            ->innerJoin('users', ['posts.user' => 'users.id'])
+            ->where(['posts.id' => $vars['id']])
+            ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'oneToOne')
+            ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'oneToOne')
+            ->execute($this->postModel, $this->categoryModel, $this->userModel);
 
         /** @var Comment[] $comments */
         $comments = $commentController->listComByPost($vars['id']);
@@ -125,16 +141,13 @@ class PostController extends Controller implements ControllerInterface
 
         $posts = $this->select->select([
             'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
-            'categories' => ['name', 'slug'],
-            'users' => ['id', 'pseudo']
+            'categories' => ['name', 'slug']
         ])->from('posts')
             ->innerJoin('categories', ['posts.category' => 'categories.id'])
-            ->innerJoin('users', ['posts.user' => 'users.id'])
             ->where(['categories.slug' => $vars['slug']])
             ->orderBy(['posts.updatedAt' => 'desc'])
             ->limit($paginationOptions['limit'], $paginationOptions['start'])
             ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'oneToMany')
-            ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'manyToMany')
             ->execute($this->postModel, $this->categoryModel, $this->container->get(UserModel::class));
 
         $categories = $this->select->from('categories')

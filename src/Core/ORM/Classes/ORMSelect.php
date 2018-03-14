@@ -260,7 +260,6 @@ class ORMSelect
 
         if (isset($this->statement['insertEntity'])) {
             $result = $this->insertEntityIntoAnotherEntity($allEntities);
-            var_dump($result);
             $this->resetSelect();
             return $result;
         }
@@ -350,8 +349,9 @@ class ORMSelect
      * Emboite les entités les unes dans les autres. A besoin de deux paramètres :
      * - Quelle entité s'emboite dans l'autre, ex. : $this->statement['insertEntity'] = ['comments' => 'posts']
      * - Si la relation est :
-     * -> une pour plusieurs (OneToMany), ex. on insère une catégorie (Category) dans plusieurs articles (posts)
-     * -> plusieurs pour une (ManyToOne), ex. on insère tous les commentaires (comments) dans l'article avec lequel ils sont liés (posts)
+     *      -> une pour plusieurs (OneToMany), ex. on insère une catégorie (Category) dans plusieurs articles (posts)
+     *      -> plusieurs pour une (ManyToOne), ex. on insère tous les commentaires (comments) dans l'article avec
+     *         lequel ils sont liés (posts)
      *
      * Dans les deux types de relation, on sépare dans "$allEntities" les entités récupérées dans $this->statement['insertEntity']
      * dans le tableau ou la variable "$entitiesChild" et "$entitiesParent".
@@ -367,28 +367,10 @@ class ORMSelect
     private function insertEntityIntoAnotherEntity(array $allEntities)
     {
         //Récupère les noms des entités à stocker les unes dans les autres
-        $entitiesLinked = [];
-        foreach ($this->statement['insertEntity'] as $options) {
-            foreach ($options['insertEntity'] as $entity1 => $entity2) {
-                if (!in_array($entity1, $entitiesLinked)) {
-                    $entitiesLinked[] = $entity1;
-                }
-
-                if (!in_array($entity2, $entitiesLinked)) {
-                    $entitiesLinked[] = $entity2;
-                }
-            }
-        }
+        $entitiesLinked = $this->searchEntitiesLinked();
 
         //Classe les entités par nom d'entité dans un tableau associatif
-        $entitiesStocked = [];
-        foreach ($allEntities as $entity) {
-            foreach ($entitiesLinked as $entityName) {
-                if ($entity->getTableName() === $entityName) {
-                    $entitiesStocked[$entityName][] = $entity;
-                }
-            }
-        }
+        $entitiesStocked = $this->sortEntities($allEntities, $entitiesLinked);
 
         //Parcours les options entrées dans le tableau d'options de la classe
         foreach ($this->statement['insertEntity'] as $options) {
@@ -402,21 +384,25 @@ class ORMSelect
 
                     //Parcours le tableau des entités stockés et rangés plus haut dans la fonction
                     foreach ($entitiesStocked[$parent] as $entityParent) {
-                        $att = 'set' . ucfirst($entityChild->getTableName());
-                        $attSingular = substr($att, 0, -1);
-                        $attSingularIrregular = str_replace('ies', 'y', $att);
-                        if (is_callable([$entityParent, $att])) {
-                            $entityParent->$att($entityChild);
-                        } elseif (is_callable([$entityParent, $attSingular])) {
-                            $entityParent->$attSingular($entityChild);
-                        } elseif (is_callable([$entityParent, $attSingularIrregular])) {
-                            $entityParent->$attSingularIrregular($entityChild);
-                        }
+                        $this->addEntity($entityChild, $entityParent);
+
                         $provisonialStock[] = $entityParent;
                     }
 
-                    $entitiesStocked[$parent] = $provisonialStock;
-                    unset($entitiesStocked[$child]);
+                    $this->storeEntities($entitiesStocked, $parent, $provisonialStock, $child);
+                }
+            } elseif ($options['relationType'] === 'oneToOne') {
+                foreach ($options['insertEntity'] as $child => $parent) {
+                    $entityParent = $entitiesStocked[$parent][0];
+                    $entityChild = $entitiesStocked[$child][0];
+
+                    $provisonialStock = [];
+
+                    $this->addEntity($entityChild, $entityParent);
+
+                    $provisonialStock[] = $entityParent;
+
+                    $this->storeEntities($entitiesStocked, $parent, $provisonialStock, $child);
                 }
             } elseif ($options['relationType'] === 'manyToOne') {
                 foreach ($options['insertEntity'] as $child => $parent) {
@@ -428,22 +414,12 @@ class ORMSelect
                         $provisonialStock[] = $entityChild;
                     }
 
-                    $att = 'set' . ucfirst($provisonialStock[0]->getTableName());
-                    $attSingular = substr($att, 0, -1);
-                    $attSingularIrregular = str_replace('ies', 'y', $att);
-                    if (is_callable([$entityParent, $att])) {
-                        $entityParent->$att($provisonialStock);
-                    } elseif (is_callable([$entityParent, $attSingular])) {
-                        $entityParent->$attSingular($provisonialStock);
-                    } elseif (is_callable([$entityParent, $attSingularIrregular])) {
-                        $entityParent->$attSingularIrregular($provisonialStock);
-                    }
+                    $this->addEntity($provisonialStock[0], $entityParent, false, $provisonialStock);
 
-                    $entitiesStocked[$parent] = [];
-                    $entitiesStocked[$parent] = $entityParent;
-                    unset($entitiesStocked[$child]);
+                    $this->storeEntities($entitiesStocked, $parent, $entityParent, $child);
                 }
             } elseif ($options['relationType'] === 'manyToMany') {
+                $childColumn = $parentColumn = '';
                 foreach ($options['insertEntity'] as $child => $parent) {
                     foreach ($options['columnsLinks'] as $c => $p) {
                         $childColumn = 'get' . ucfirst($c);
@@ -455,26 +431,14 @@ class ORMSelect
                     foreach ($entitiesStocked[$parent] as $entityParent) {
                         foreach ($entitiesStocked[$child] as $entityChild) {
                             if ($entityChild->$childColumn() === $entityParent->$parentColumn()) {
-                                $att = 'set' . ucfirst($entityChild->getTableName());
-                                $attSingular = substr($att, 0, -1);
-                                $attSingularIrregular = str_replace('ies', 'y', $att);
-                                if (is_callable([$entityParent, $att])) {
-                                    $entityParent->$att($entityChild);
-                                } elseif (is_callable([$entityParent, $attSingular])) {
-                                    $entityParent->$attSingular($entityChild);
-                                } elseif (is_callable([$entityParent, $attSingularIrregular])) {
-                                    $entityParent->$attSingularIrregular($entityChild);
-                                }
+                                $this->addEntity($entityChild, $entityParent);
 
                                 $provisonialStock[] = $entityParent;
                             }
                         }
                     }
 
-
-                    $entitiesStocked[$parent] = [];
-                    $entitiesStocked[$parent] = $provisonialStock;
-                    unset($entitiesStocked[$child]);
+                    $this->storeEntities($entitiesStocked, $parent, $provisonialStock, $child);
                 }
             }
         }
@@ -606,5 +570,104 @@ class ORMSelect
         }
 
         return $i;
+    }
+
+    /**
+     * Récupère les noms des tables qui vont être insérées les unes dans les autres,
+     * les insère dans un tableau et le retourne.
+     *
+     * @return array
+     */
+    private function searchEntitiesLinked(): array
+    {
+        $entitiesLinked = [];
+
+        foreach ($this->statement['insertEntity'] as $options) {
+            foreach ($options['insertEntity'] as $entity1 => $entity2) {
+                if (!in_array($entity1, $entitiesLinked)) {
+                    $entitiesLinked[] = $entity1;
+                }
+
+                if (!in_array($entity2, $entitiesLinked)) {
+                    $entitiesLinked[] = $entity2;
+                }
+            }
+        }
+
+        return $entitiesLinked;
+    }
+
+    /**
+     * Récupère toutes les entités récupérées en paramètre de la méthode, les classes par type d'entité,
+     * les stock par type dans un tableau et renvoie ce tableau
+     *
+     * @param array $allEntities
+     * @param array $entitiesLinked
+     * @return array
+     */
+    private function sortEntities(array $allEntities, array $entitiesLinked): array
+    {
+        $entitiesStocked = [];
+
+        foreach ($allEntities as $entity) {
+            foreach ($entitiesLinked as $entityName) {
+                if ($entity->getTableName() === $entityName) {
+                    $entitiesStocked[$entityName][] = $entity;
+                }
+            }
+        }
+
+        return $entitiesStocked;
+    }
+
+    /**
+     * Créer une fonction de type setter à partir du nom de l'entité enfant. Pour prendre tous les cas possibles (pluriel,
+     * singulier et pluriel irrégulier), création de trois variables différentes. On teste ensuit les trois variables
+     * au niveau de la classe pour vérifier si elle existe, si c'est le cas, on l'utilse.
+     * - $att => pluriel : ORMEntity posts->setComments car il peut y avoir plusieurs commentaire dans un post
+     * - $attSingular => singulier : ORMEntity posts->setUser car les posts ne peuvent avoir qu'un auteur
+     * - $attSingularIrregulier => singulier pour les pluriels irréguliers : ORMEntity posts->setCategory car il un post
+     * ne peut avoir qu'une seul catégorie et que category = categories
+     *
+     * Prise en compte des relation oneToMany ou ManyToOne ou ManyToMany avec le paramètre $addEntity. Ajout d'une entité
+     * simple ou d'un array selon le type de relation.
+     *
+     * @param ORMEntity $entityChild
+     * @param ORMEntity $entityParent
+     * @param bool|null $addEntity
+     * @param array $entitiesChild
+     */
+    private function addEntity(ORMEntity $entityChild, ORMEntity &$entityParent, ?bool $addEntity = true, ?array $entitiesChild = [])
+    {
+        $att = 'set' . ucfirst($entityChild->getTableName());
+        $attSingular = substr($att, 0, -1);
+        $attSingularIrregular = str_replace('ies', 'y', $att);
+
+        if (is_callable([$entityParent, $att])) {
+            ($addEntity) ? $entityParent->$att($entityChild) : $entityParent->$att($entitiesChild);
+        } elseif (is_callable([$entityParent, $attSingular])) {
+            ($addEntity) ? $entityParent->$attSingular($entityChild) : $entityParent->$attSingular($entitiesChild);
+        } elseif (is_callable([$entityParent, $attSingularIrregular])) {
+            ($addEntity) ? $entityParent->$attSingularIrregular($entityChild) : $entityParent->$attSingularIrregular($entitiesChild);
+
+        }
+    }
+
+    /**
+     * Récupère en référence le tableau qui stocke les entités de manière ordonnées.
+     * Réinitialise la partie qui concerne le stockage de l'entité parente pour éviter les doublons.
+     * Insère l'entité ou les entités parentes qu'on a complété·e·s.
+     * Supprime la partie avec les entités enfants qui ont été insérées dans les entités parentes.
+     *
+     * @param array $entitiesStock
+     * @param string $parentName
+     * @param ORMEntity|ORMEntity[] $itemsToStore
+     * @param string $childName
+     */
+    private function storeEntities(array &$entitiesStock, string $parentName, $itemsToStore, string $childName)
+    {
+        $entitiesStock[$parentName] = [];
+        $entitiesStock[$parentName] = $itemsToStore;
+        unset($entitiesStock[$childName]);
     }
 }

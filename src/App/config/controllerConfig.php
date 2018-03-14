@@ -13,7 +13,8 @@ return [
 
     'blog.post.models' => [
         'post'     => get(PostModel::class),
-        'category' => get(CategoryModel::class)
+        'category' => get(CategoryModel::class),
+        'user'     => get(UserModel::class)
     ],
 
     'blog.comment.models' => [
