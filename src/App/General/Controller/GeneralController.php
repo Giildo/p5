@@ -2,10 +2,11 @@
 
 namespace App\General\Controller;
 
-use Core\Controller\Controller;
+use App\Controller\AppController;
+use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
 
-class GeneralController extends Controller
+class GeneralController extends AppController implements ControllerInterface
 {
     /**
      * Renvoie la page d'accueil

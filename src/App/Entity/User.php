@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\various\appHash;
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 
@@ -56,6 +57,8 @@ class User extends Entity implements EntityInterface
      * @var Admin
      */
     protected $admin;
+
+    use appHash;
 
     /**
      * @return int
@@ -166,7 +169,7 @@ class User extends Entity implements EntityInterface
      */
     public function setPassword(string $password): void
     {
-        $this->password = $password;
+        $this->password = $this->appHash($password);
     }
 
     /**

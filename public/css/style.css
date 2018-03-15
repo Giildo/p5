@@ -158,6 +158,7 @@ header h1.col-sm-12:after, header h1.col-sm-12:before {
 
 .loginForm h4 {
     margin-bottom: 30px;
+    padding-left: 15px;
 }
 
 .loginForm h4.success {

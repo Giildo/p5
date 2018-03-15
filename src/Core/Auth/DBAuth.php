@@ -3,7 +3,9 @@
 namespace Core\Auth;
 
 use App\Entity\User;
+use App\various\appHash;
 use Core\Database\Database;
+use Core\ORM\Classes\ORMEntity;
 use Core\PSR7\HTTPRequest;
 
 class DBAuth
@@ -26,6 +28,8 @@ class DBAuth
         session_start();
     }
 
+    use appHash;
+
     public function logged(): bool
     {
         return ($this->request->getSessionParam('confirmConnect') !== null) ?
@@ -35,21 +39,16 @@ class DBAuth
     /**
      * Vérifie si le mot de passe est OK, créé la session si OK, sinon renvoie une erreur
      *
-     * @param User $user
+     * @param ORMEntity $user
      * @param string $password
      * @param array $results
      * @return void
      */
-    public function log(User $user, string $password, array &$results): void
+    public function log(ORMEntity $user, string $password, array &$results): void
     {
-        if ($user->getPassword() === $password) {
+        if ($user->password === $this->appHash($password)) {
             $_SESSION['confirmConnect'] = true;
-            $_SESSION['user'] = [
-                'id'        => $user->getId(),
-                'pseudo'    => $user->getPseudo(),
-                'firstName' => $user->getFirstName(),
-                'idAdmin'   => $user->getAdmin()
-            ];
+            $_SESSION['user'] = $user;
         } else {
             $results['c_error'] = true;
         }
@@ -73,6 +72,6 @@ class DBAuth
      */
     public function isAdmin(): bool
     {
-        return $_SESSION['user']['idAdmin'] === '1';
+        return $_SESSION['user']->admin->id === 1;
     }
 }

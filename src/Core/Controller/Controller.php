@@ -69,7 +69,8 @@ class Controller implements ControllerInterface
         if (is_callable([$this, $nameMethod])) {
             $this->$nameMethod($vars);
         } else {
-            throw new \Exception('The method called isn\'t a class method');
+            $className = get_class($this);
+            throw new \Exception("\"{$nameMethod}\" n'est pas une méthode de \"{$className}\"");
         }
     }
 
@@ -117,7 +118,7 @@ class Controller implements ControllerInterface
     protected function render(string $nameView, ?array $twigVariable = []): void
     {
         $twigVariable['sessionConfirmConnect'] = $this->auth->logged();
-        $twigVariable['sessionAdmin'] = $_SESSION['user']['idAdmin'] === '1';
+        $twigVariable['sessionAdmin'] = $_SESSION['user']->admin->id === 1;
 
         echo $this->twig->render($nameView, $twigVariable);
     }

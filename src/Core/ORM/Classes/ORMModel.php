@@ -78,9 +78,10 @@ class ORMModel implements ORMModelInterface
      * @param string $statement
      * @param string|null $entityType
      * @param array|null $whereOptions
+     * @param bool|null $inOption
      * @return array
      */
-    public function ORMFind(string $statement, ?string $entityType = null, ?array $whereOptions = []): array
+    public function ORMFind(string $statement, ?string $entityType = null, ?array $whereOptions = [], ?bool $inOption = false): array
     {
         $result = $this->pdo->prepare($statement);
 
@@ -88,13 +89,23 @@ class ORMModel implements ORMModelInterface
             $result->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $entityType);
         }
 
+        $i = 0;
         if (!empty($whereOptions)) {
-            foreach ($whereOptions as $key => $value) {
+            foreach ($whereOptions as $key => $values) {
                 if (preg_match('#\.#', $key)) {
                     $results = explode('.', $key);
                     $key = $results[0] . ucfirst(strtolower($results[1]));
                 }
-                $result->bindParam($key, $value);
+
+                if ($inOption) {
+                    foreach ($values as $value) {
+                        $i++;
+                        $key2 = $key . $i;
+                        $result->bindValue($key2, $value);
+                    }
+                } else {
+                    $result->bindParam($key, $values);
+                }
             }
         }
 

@@ -60,7 +60,7 @@ class ORMEntity
             if (array_key_exists($name, $this->ORMTable->getColumns())) {
                 throw new ORMException("Vous n'avez pas l'autorisation de modifier la propriété \"{$name}\".");
             } else {
-                throw new ORMException("La propriété \"{$name}\" n'existe pas.");
+                throw new ORMException("La propriété \"{$name}\" n'existe pas \"{$this->tableName}\".");
             }
         }
     }
@@ -81,7 +81,7 @@ class ORMEntity
             if (array_key_exists($name, $this->ORMTable->getColumns())) {
                 throw new ORMException("Vous n'avez pas l'autorisation d'accéder à la propriété \"{$name}\".");
             } else {
-                throw new ORMException("La propriété \"{$name}\" n'existe pas.");
+                throw new ORMException("La propriété \"{$name}\" n'existe pas dans l'objet \"{$this->tableName}\".");
             }
         }
     }
@@ -104,11 +104,12 @@ class ORMEntity
     {
         foreach ($class as $key => $value) {
             if (!is_null($key)) {
+                $keySet = 'set' . ucfirst($key);
                 if ($this->ORMTable->getColumns()[$key]['options']['foreign']) {
-                    $property = $key . 'Id';
-                    $this->$property = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes);
+                    $property = $keySet . 'Id';
+                    $this->$property($this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes));
                 } else {
-                    $this->$key = $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes);
+                    $this->$keySet($this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes));
                 }
 
                 if ($this->ORMTable->getColumns()[$key]['options']['primary']) {

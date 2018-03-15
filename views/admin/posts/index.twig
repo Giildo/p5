@@ -21,10 +21,10 @@
                 {% for post in posts %}
                     <tr>
                         <td>{{ post.title }}</td>
-                        <td>{{ post.category }}</td>
-                        <td>{{ post.user }}</td>
+                        <td>{{ post.category.name }}</td>
+                        <td>{{ post.user.pseudo }}</td>
                         <td>
-                            <a class="btn btn-info" href="/admin/post/ORMUpdate/{{ post.id }}">Modifier</a>
+                            <a class="btn btn-info" href="/admin/post/update/{{ post.id }}">Modifier</a>
                             <a class="btn btn-danger" href="">Supprimer</a>
                         </td>
                     </tr>

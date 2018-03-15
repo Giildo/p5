@@ -6,6 +6,11 @@ use Exception;
 
 class ORMException extends Exception
 {
+    /**
+     * @var int
+     */
+    const NO_ELEMENT = 1;
+
     public function __construct(string $message, ?int $code = 0)
     {
         parent::__construct($message, $code);

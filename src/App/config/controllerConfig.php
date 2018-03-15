@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\Model\AdminModel;
 use App\Admin\Model\UserModel;
 use App\Blog\Model\CategoryModel;
 use App\Blog\Model\CommentModel;
@@ -26,13 +27,15 @@ return [
     ],
 
     'admin.user.models' => [
-        'user' => get(UserModel::class)
+        'user'  => get(UserModel::class),
+        'admin' => get(AdminModel::class)
     ],
 
     'admin.post.models' => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class),
-        'user'     => get(UserModel::class)
+        'user'     => get(UserModel::class),
+        'admin'    => get(AdminModel::class)
     ],
 
     'admin.category.models' => [

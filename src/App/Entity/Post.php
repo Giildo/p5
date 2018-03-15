@@ -76,6 +76,14 @@ class Post extends Entity implements EntityInterface
     }
 
     /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return string
      */
     public function getTitle(): string

@@ -3,10 +3,10 @@
 namespace App\Admin\Controller;
 
 use App\Admin\Model\UserModel;
-use Core\Controller\Controller;
+use App\Controller\AppController;
 use Core\Controller\ControllerInterface;
 
-class AdminController extends Controller implements ControllerInterface
+class AdminController extends AppController implements ControllerInterface
 {
     /**
      * @var UserModel
@@ -20,9 +20,7 @@ class AdminController extends Controller implements ControllerInterface
      */
     public function index()
     {
-        $id = $_SESSION['user']['id'];
-
-        $user = $this->userModel->userByAdmin($id);
+        $user = $_SESSION['user'];
 
         $this->render('admin/index.twig', compact('user'));
     }

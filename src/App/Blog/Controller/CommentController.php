@@ -3,11 +3,11 @@
 namespace App\Blog\Controller;
 
 use App\Blog\Model\CommentModel;
+use App\Controller\AppController;
 use App\Entity\Comment;
-use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 
-class CommentController extends Controller implements ControllerInterface
+class CommentController extends AppController implements ControllerInterface
 {
     /**
      * @var CommentModel

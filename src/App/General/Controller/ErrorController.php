@@ -2,10 +2,10 @@
 
 namespace App\General\Controller;
 
-use Core\Controller\Controller;
+use App\Controller\AppController;
 use Core\Controller\ControllerInterface;
 
-class ErrorController extends Controller implements ControllerInterface
+class ErrorController extends AppController implements ControllerInterface
 {
     /**
      * @throws \Twig_Error_Loader

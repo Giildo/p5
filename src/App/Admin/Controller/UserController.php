@@ -3,17 +3,22 @@
 namespace App\Admin\Controller;
 
 use App\Admin\Model\UserModel;
-use Core\Controller\Controller;
+use App\Controller\AppController;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
-use Core\PSR7\HTTPRequest;
+use Core\ORM\Classes\ORMException;
 
-class UserController extends Controller implements ControllerInterface
+class UserController extends AppController implements ControllerInterface
 {
     /**
      * @var UserModel
      */
     protected $userModel;
+
+    /**
+     * @var UserModel
+     */
+    protected $adminModel;
 
     /**
      * Affiche la page de connexion pour un utilisateur
@@ -27,7 +32,28 @@ class UserController extends Controller implements ControllerInterface
     {
         $results = [];
 
-        $this->comparePass($results);
+
+        if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
+            try {
+                $user = $this->select->select([
+                    'users' => ['id', 'pseudo', 'firstName', 'lastName', 'mail', 'phone', 'password', 'admin'],
+                    'admin' => ['id', 'name']
+                ])->from('users')
+                    ->singleItem()
+                    ->where(['pseudo' => $_POST['c_pseudo']])
+                    ->innerJoin('admin', ['users.admin' => 'admin.id'])
+                    ->insertEntity(['admin' => 'users'], ['id' => 'admin'], 'oneToMany')
+                    ->execute($this->userModel, $this->adminModel);
+            } catch (ORMException $e) {
+                if ($e->getCode() === ORMException::NO_ELEMENT) {
+                    $results['c_error'] = true;
+                }
+            }
+
+            if (!$results['c_error']) {
+                $this->auth->log($user, $_POST['c_password'], $results);
+            }
+        }
 
         if (!$this->auth->logged()) {
             $keys = ['c_pseudo', 'c_password', 'r_pseudo', 'firstName', 'lastName', 'mail', 'phone', 'r_password',];
@@ -36,6 +62,7 @@ class UserController extends Controller implements ControllerInterface
 
             $this->addUser($results, $post);
 
+            // Création des formulaires de login
             $form1 = new BootstrapForm('col-sm-6 loginForm');
             $form1->fieldset('Connectez-vous');
             ($results['c_error']) ?
@@ -45,6 +72,7 @@ class UserController extends Controller implements ControllerInterface
             $form1->input('c_password', 'Mot de passe', $post['c_password'], 'password');
             $form1 = $form1->submit('Valider');
 
+            // Création du formulaire pour l'ajout d'utilisateur
             $form2 = new BootstrapForm(('col-sm-6 loginForm'));
             $form2->fieldset('Inscrivez-vous');
             ($results['r_error']) ?
@@ -63,8 +91,7 @@ class UserController extends Controller implements ControllerInterface
 
             $this->render('admin/login.twig', compact('form1', 'form2', 'error'));
         } else {
-            header('HTTP/1.1 301 Moved Permanently');
-            header('Location: /admin/accueil');
+            $this->redirection('/admin/accueil');
         }
     }
 
@@ -79,23 +106,7 @@ class UserController extends Controller implements ControllerInterface
 
         $uri = (isset($_SESSION['paths']['past'])) ? $_SESSION['paths']['past'] : '/accueil';
 
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: ' . $uri);
-    }
-
-    /**
-     * Compare grâce au UserModel si le password en Post est le même que celui en BD
-     *
-     * @param array $results
-     * @return void
-     */
-    private function comparePass(array &$results): void
-    {
-        if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
-            $user = $this->userModel->comparePass($_POST['c_pseudo']);
-
-            $this->auth->log($user, $_POST['c_password'], $results);
-        }
+        $this->redirection($uri);
     }
 
     /**

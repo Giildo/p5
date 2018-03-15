@@ -47,13 +47,7 @@ class PostController extends AppController implements ControllerInterface
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
         $posts = $this->select->select([
-            'posts' => [
-                'id',
-                'title',
-                'content',
-                'createdAt',
-                'updatedAt'
-            ]
+            'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt']
         ])->from('posts')
             ->limit($paginationOptions['limit'], $paginationOptions['start'])
             ->orderBy(['updatedAt' => 'desc'])
@@ -214,19 +208,5 @@ class PostController extends AppController implements ControllerInterface
         } else {
             $this->render404();
         }
-    }
-
-    /**
-     * Récupère toutes les catégories pour la gestion des catégories sur les pages du blog
-     *
-     * @return \Core\ORM\Classes\ORMEntity|\Core\ORM\Classes\ORMEntity[]
-     * @throws \Core\ORM\Classes\ORMException
-     * @return ORMEntity[]
-     */
-    private function findCategories(): array
-    {
-        return $this->select->select(['categories' => ['name', 'slug']])
-            ->from('categories')
-            ->execute($this->categoryModel);
     }
 }

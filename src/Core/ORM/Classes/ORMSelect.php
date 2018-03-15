@@ -78,12 +78,18 @@ class ORMSelect
      * Dans un tableau avec en clé la colonne qui servira de filtre et en valeur la donnée de filtre
      * Ex. : ['id' => '4']
      *
-     * @param array $whereOptions
+     * @param array|null $whereOptions
+     * @param bool|null $inOption
      * @return ORMSelect
      */
-    public function where(array $whereOptions): ORMSelect
+    public function where(?array $whereOptions = [], ?bool $inOption = false): ORMSelect
     {
-        $this->statement['where'] = $whereOptions;
+        if (!empty($whereOptions)) {
+            $this->statement['where'] = $whereOptions;
+            if ($inOption) {
+                $this->statement['inOption'] = true;
+            }
+        }
 
         return $this;
     }
@@ -117,14 +123,16 @@ class ORMSelect
      * En second paramètre le départ pour le filtrage.
      * (5, 10) => récupérer les 5 premières lignes de la BDD à partir de la 10ème ligne (exclue).
      *
-     * @param string $limit
+     * @param string|null $limit
      * @param null|string $offset
      * @return $this
      */
-    public function limit(string $limit, ?string $offset = '0'): ORMSelect
+    public function limit(?string $limit = null, ?string $offset = '0'): ORMSelect
     {
-        $this->statement['limit'] = $limit;
-        $this->statement['offset'] = $offset;
+        if (!is_null($limit) && !is_null($offset)) {
+            $this->statement['limit'] = $limit;
+            $this->statement['offset'] = $offset;
+        }
 
         return $this;
     }
@@ -210,11 +218,14 @@ class ORMSelect
     /**
      * Indique qu'on attend en retour un élément unique.
      *
+     * @param bool|null $single
      * @return ORMSelect
      */
-    public function singleItem(): ORMSelect
+    public function singleItem(?bool $single = true): ORMSelect
     {
-        $this->statement['singleItem'] = true;
+        if ($single) {
+            $this->statement['singleItem'] = true;
+        }
 
         return $this;
     }
@@ -276,8 +287,12 @@ class ORMSelect
         $this->ormAndEntitiesCreation($ormTables, $models, $entities, $entityList);
 
         $items = (isset($this->statement['where'])) ?
-            $models[0]->ORMFind($statement, null, $this->statement['where']) :
+            $models[0]->ORMFind($statement, null, $this->statement['where'], $this->statement['inOption']) :
             $models[0]->ORMFind($statement);
+
+        if (empty($items)) {
+            throw new ORMException("Aucun élément n'a été trouvé dans table \"{$this->tableName}\" avec ces paramètres.", ORMException::NO_ELEMENT);
+        }
 
         $allEntities = $this->constructEntityWithStdClass($items, $entities, $ormTables);
 
@@ -336,14 +351,38 @@ class ORMSelect
         }
 
         if (isset($this->statement['where'])) {
+            $i = 0;
             foreach ($this->statement['where'] as $key => $value) {
-                if (preg_match('#\.#', $key)) {
-                    $result = explode('.', $key);
-                    $key2 = ':' . $result[0] . ucfirst(strtolower($result[1]));
+                if ($this->statement['inOption']) {
+                    $end = count($value);
+                    foreach ($value as $item) {
+                        $i++;
+
+                        if (preg_match('#\.#', $key)) {
+                            $result = explode('.', $key);
+                            $key2 = ':' . $result[0] . ucfirst(strtolower($result[1])) . $i;
+                        } else {
+                            $key2 = ':' . $key . $i;
+                        }
+
+                        if ($i === 1) {
+                            $statement .= ' WHERE ' . $key . ' IN (' . $key2 . ', ';
+                        } elseif ($i < $end) {
+                            $statement .= $key2 . ', ';
+                        } elseif ($i === $end) {
+                            $statement .= $key2 . ')';
+                        }
+                    }
                 } else {
-                    $key2 = ':' . $key;
+                    if (preg_match('#\.#', $key)) {
+                        $result = explode('.', $key);
+                        $key2 = ':' . $result[0] . ucfirst(strtolower($result[1]));
+                    } else {
+                        $key2 = ':' . $key;
+                    }
+
+                    $statement .= ' WHERE ' . $key . "=" . $key2;
                 }
-                $statement .= ' WHERE ' . $key . "=" . $key2;
             }
         }
 
@@ -505,7 +544,6 @@ class ORMSelect
             $allStdClasses[] = $stdClasses;
         }
 
-        $allEntities = [];
         foreach ($allStdClasses as $stdClasses) {
             foreach ($stdClasses as $entityName => $stdClass) {
                 $entity = $entities[$entityName];

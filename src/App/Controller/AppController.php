@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
+use Core\ORM\Classes\ORMEntity;
 
 class AppController extends Controller implements ControllerInterface
 {
@@ -31,10 +32,10 @@ class AppController extends Controller implements ControllerInterface
      *
      * @param array $keys
      * @param array $posts
-     * @param EntityInterface $entity
+     * @param ORMEntity $entity
      * @return string[]
      */
-    protected function createPostWithEntity(array $keys, array $posts, EntityInterface $entity): array
+    protected function createPostWithEntity(array $keys, array $posts, ORMEntity $entity): array
     {
         foreach ($keys as $key) {
             $method = 'get' . ucfirst($key);
@@ -45,16 +46,30 @@ class AppController extends Controller implements ControllerInterface
     }
 
     /**
-     * @param EntityInterface[] $entities
-     * @param string $method
+     * @param ORMEntity[] $entities
+     * @param string $att
      * @return string[]
      */
-    protected function createSelectOptions(array $entities, string $method): array
+    protected function createSelectOptions(array $entities, string $att): array
     {
         $selectOptions = [];
         foreach ($entities as $entity) {
-            $selectOptions[] = $entity->$method();
+            $selectOptions[] = $entity->$att;
         }
         return $selectOptions;
+    }
+
+    /**
+     * Récupère toutes les catégories pour la gestion des catégories sur les pages du blog
+     *
+     * @return \Core\ORM\Classes\ORMEntity|\Core\ORM\Classes\ORMEntity[]
+     * @throws \Core\ORM\Classes\ORMException
+     * @return ORMEntity[]
+     */
+    protected function findCategories(): array
+    {
+        return $this->select->select(['categories' => ['id', 'name', 'slug']])
+            ->from('categories')
+            ->execute($this->categoryModel);
     }
 }

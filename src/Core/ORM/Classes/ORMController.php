@@ -213,6 +213,9 @@ class ORMController
 
                     $typeArray = explode('(', $typeColumn);
 
+                    if ($columnTable->Key === 'MUL') {
+                        $columnEntity = $columnEntity . 'Id';
+                    }
                     break;
                 }
             }
@@ -253,6 +256,11 @@ class ORMController
         //Vérifie toutes dans le tableau créé ci-dessus si une valeur est rentrée, si c'est le cas, ajoute dans un tableau le nom de la colonne
         foreach ($columnsEntity as $columnEntity) {
             $att = $columnEntity['columnName'];
+
+            //Ajoute "Id" à la fin du nom de la colonne si c'est une clé étrangère
+            if ($columnEntity['options']['foreign']) {
+                $att = $att . 'Id';
+            }
 
             if ($att === 'id' || !is_null($entity->$att)) {
                 $columnsEntityName[] = $columnEntity['columnName'];
@@ -376,7 +384,7 @@ class ORMController
         } elseif (in_array($valueTypeAndSize[0], $this->sqlNumeric)) {
             return (is_numeric($value)) ? (int)$value : null;
         } elseif (in_array($valueTypeAndSize[0], $this->sqlDate)) {
-            return ($value instanceof DateTime) ? new DateTime($value) : null;
+            return ($value instanceof DateTime) ? $value->format('"Y-m-d H:i:s"') : null;
         }
 
         throw new ORMException("Le format de \"{$columnName}\" n'existe pas");

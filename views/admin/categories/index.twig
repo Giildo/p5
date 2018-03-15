@@ -10,7 +10,6 @@
             <table class="table table-striped col-sm-8">
                 <thead>
                 <tr>
-                    <th scope="col">ID</th>
                     <th scope="col">Catégorie</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -19,10 +18,9 @@
                 <tbody>
                 {% for category in categories %}
                     <tr>
-                        <th scope="row">{{ category.id }}</th>
                         <td>{{ category.name }}</td>
                         <td>
-                            <a class="btn btn-info" href="/admin/category/ORMUpdate/{{ category.id }}">Modifier</a>
+                            <a class="btn btn-info" href="/admin/category/update/{{ category.id }}">Modifier</a>
                             <a class="btn btn-danger">Supprimer</a>
                         </td>
                     </tr>
