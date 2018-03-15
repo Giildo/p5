@@ -30,7 +30,7 @@
                     {% if posts.0.category.slug == category.slug %}
                         <button class="btn btn-primary" disabled>{{ category.name }}</button>
                     {% else %}
-                        <a href="/category/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
+                        <a href="/categorie/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
                     {% endif %}
                 {% endfor %}
             </div>

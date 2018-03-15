@@ -3,7 +3,6 @@
 namespace Core\Controller;
 
 use Core\Auth\DBAuth;
-use Core\Entity\EntityInterface;
 use Core\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
@@ -125,6 +124,8 @@ class Controller implements ControllerInterface
 
     /**
      * Méthode de redirection
+     *
+     * @param string $path
      */
     public function redirection(string $path): void
     {
@@ -146,79 +147,5 @@ class Controller implements ControllerInterface
                 $this->$key = $model;
             }
         }
-    }
-
-    /**
-     * @param array $vars
-     * @param int $nbItem
-     * @param null|string $optionLimit
-     * @return array
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    protected function pagination(array $vars, int $nbItem, ?string $optionLimit = 'blog.limit.post'): array
-    {
-        $pagination = [];
-
-        $pagination['limit'] = $this->container->get($optionLimit);
-
-        $pagination['id'] = (int)$vars['id'];
-
-        $pagination['pageNb'] = (int)ceil($nbItem / $pagination['limit']);
-        $pagination['start'] = ($pagination['limit'] * ($pagination['id'] - 1));
-
-        $pagination['next'] = ($pagination['id'] + 1 <= $pagination['pageNb']) ? $pagination['id'] + 1 : null;
-        $pagination['previous'] = ($pagination['id'] - 1 >= 1) ? $pagination['id'] - 1 : null;
-
-        return $pagination;
-    }
-
-    /**
-     * Génère un tableau qui va regrouper les éléments passés en post ou non
-     *
-     * @param array $keys
-     * @return string[]
-     */
-    protected function createPost(array $keys): array
-    {
-        $post = [];
-
-        foreach ($keys as $key) {
-            $post[$key] = (isset($_POST[$key])) ? $_POST[$key] : '';
-        }
-
-        return $post;
-    }
-
-    /**
-     * Génère un tableau qui va regrouper les éléments passés en post ou non
-     *
-     * @param array $keys
-     * @param array $posts
-     * @param EntityInterface $entity
-     * @return string[]
-     */
-    protected function createPostWithEntity(array $keys, array $posts, EntityInterface $entity): array
-    {
-        foreach ($keys as $key) {
-            $method = 'get' . ucfirst($key);
-            $posts[$key] = (empty($posts[$key])) ? $entity->$method() : $posts[$key];
-        }
-
-        return $posts;
-    }
-
-    /**
-     * @param EntityInterface[] $entities
-     * @param string $method
-     * @return string[]
-     */
-    protected function createSelectOptions(array $entities, string $method): array
-    {
-        $selectOptions = [];
-        foreach ($entities as $entity) {
-            $selectOptions[] = $entity->$method();
-        }
-        return $selectOptions;
     }
 }

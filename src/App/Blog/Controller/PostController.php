@@ -4,15 +4,14 @@ namespace App\Blog\Controller;
 
 use App\Admin\Model\UserModel;
 use App\Blog\Model\CategoryModel;
-use App\Blog\Model\CommentModel;
 use App\Blog\Model\PostModel;
 use App\Entity\Comment;
-use App\Entity\User;
-use Core\Controller\Controller;
+use App\Controller\AppController;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
+use Core\ORM\Classes\ORMEntity;
 
-class PostController extends Controller implements ControllerInterface
+class PostController extends AppController implements ControllerInterface
 {
     /**
      * @var PostModel
@@ -60,9 +59,7 @@ class PostController extends Controller implements ControllerInterface
             ->orderBy(['updatedAt' => 'desc'])
             ->execute($this->postModel);
 
-        $categories = $this->select->select(['categories' => ['name', 'slug']])
-            ->from('categories')
-            ->execute($this->categoryModel);
+        $categories = $this->findCategories();
 
         if ($paginationOptions['id'] <= $paginationOptions['pageNb'] ) {
             $this->render('blog/index.twig', compact('posts', 'paginationOptions', 'categories'));
@@ -160,9 +157,7 @@ class PostController extends Controller implements ControllerInterface
             ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'oneToMany')
             ->execute($this->postModel, $this->categoryModel, $this->container->get(UserModel::class));
 
-        $categories = $this->select->select(['categories' => ['name', 'slug']])
-            ->from('categories')
-            ->execute($this->categoryModel);
+        $categories = $this->findCategories();
 
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render(
@@ -209,9 +204,7 @@ class PostController extends Controller implements ControllerInterface
             ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'oneToMany')
             ->execute($this->postModel, $this->categoryModel, $this->userModel);
 
-        $categories = $this->select->select(['categories' => ['name', 'slug']])
-            ->from('categories')
-            ->execute($this->categoryModel);
+        $categories = $this->findCategories();
 
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render(
@@ -221,5 +214,19 @@ class PostController extends Controller implements ControllerInterface
         } else {
             $this->render404();
         }
+    }
+
+    /**
+     * Récupère toutes les catégories pour la gestion des catégories sur les pages du blog
+     *
+     * @return \Core\ORM\Classes\ORMEntity|\Core\ORM\Classes\ORMEntity[]
+     * @throws \Core\ORM\Classes\ORMException
+     * @return ORMEntity[]
+     */
+    private function findCategories(): array
+    {
+        return $this->select->select(['categories' => ['name', 'slug']])
+            ->from('categories')
+            ->execute($this->categoryModel);
     }
 }
