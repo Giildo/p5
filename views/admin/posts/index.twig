@@ -7,6 +7,8 @@
 
     <div class="row">
         <div class="offset-sm-2 col-sm-8">
+            <a href="/admin/post/add" class="btn btn-success">Nouvel article</a>
+            <br /><br />
             <table class="table table-striped col-sm-8">
                 <thead>
                 <tr>
@@ -20,12 +22,12 @@
                 <tbody>
                 {% for post in posts %}
                     <tr>
-                        <td>{{ post.title }}</td>
-                        <td>{{ post.category.name }}</td>
-                        <td>{{ post.user.pseudo }}</td>
+                        <td class="td-admin">{{ post.title }}</td>
+                        <td class="td-admin">{{ post.category.name }}</td>
+                        <td class="td-admin">{{ post.user.pseudo }}</td>
                         <td>
                             <a class="btn btn-info" href="/admin/post/update/{{ post.id }}">Modifier</a>
-                            <form action="/admin/post/delete" method="post" class="btn">
+                            <form action="/admin/post/delete" method="post" class="btn form-btn">
                                 <input type="hidden" id="id" name="id" value="{{ post.id }}" />
                                 <input type="hidden" id="indexId" name="indexId" value="{{ vars.id }}" />
                                 <input type="hidden" id="token" name="token" value="{{ formCode[post.id] }}" />

@@ -214,6 +214,14 @@ blockquote {
 
 /** Admin - index **/
 
+.td-admin {
+    line-height: 40px;
+}
+
+.form-btn {
+    padding: 0;
+}
+
 /** Footer **/
 
 footer {

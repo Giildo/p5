@@ -28,9 +28,9 @@ class Category extends Entity implements EntityInterface
     protected $slug;
 
     /**
-     * @return int
+     * @return int|
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -44,9 +44,9 @@ class Category extends Entity implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

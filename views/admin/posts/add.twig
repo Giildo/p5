@@ -1,0 +1,11 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Ajouter un nouvel article{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un nouvel article.</h1>
+
+    <div class="row">
+        {{ form | raw }}
+    </div>
+{% endblock %}
