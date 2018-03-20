@@ -222,6 +222,11 @@ blockquote {
     padding: 0;
 }
 
+.notSpecified {
+    font-style: italic;
+    font-size: 0.8rem;
+}
+
 /** Footer **/
 
 footer {

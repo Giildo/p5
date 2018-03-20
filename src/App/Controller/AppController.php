@@ -52,23 +52,6 @@ class AppController extends Controller implements ControllerInterface
      * Génère un tableau qui va regrouper les éléments passés en post ou non
      *
      * @param array $keys
-     * @return string[]
-     */
-    protected function createPost(array $keys): array
-    {
-        $post = [];
-
-        foreach ($keys as $key) {
-            $post[$key] = (isset($_POST[$key])) ? $_POST[$key] : '';
-        }
-
-        return $post;
-    }
-
-    /**
-     * Génère un tableau qui va regrouper les éléments passés en post ou non
-     *
-     * @param array $keys
      * @param array $posts
      * @param ORMEntity $entity
      * @return string[]

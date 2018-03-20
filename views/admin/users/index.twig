@@ -26,8 +26,20 @@
                     <tr>
                         <td class="td-admin">{{ user.pseudo }}</td>
                         <td class="td-admin">{{ user.firstName }} {{ user.lastName }}</td>
-                        <td class="td-admin">{{ user.mail }}</td>
-                        <td class="td-admin">{{ user.phone }}</td>
+                        <td class="td-admin">
+                            {% if user.mail == null %}
+                                <span class="notSpecified">Non renseigné</span>
+                            {% else %}
+                                {{ user.mail }}
+                            {% endif %}
+                        </td>
+                        <td class="td-admin">
+                            {% if user.phone == null %}
+                                <span class="notSpecified">Non renseigné</span>
+                            {% else %}
+                                {{ user.phone }}
+                            {% endif %}
+                        </td>
                         <td class="td-admin">{{ user.admin.name }}</td>
                         <td>
                             <a class="btn btn-info" href="/admin/user/update/{{ user.id }}">Modifier</a>
