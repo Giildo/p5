@@ -1,0 +1,429 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Curriculum vitae{% endblock %}
+
+{% block body %}
+    <section class="row" id="cv">
+        <div class="col-sm-12">
+            <div class="row">
+                <h1 class="col-sm-12">Jonathan Marco</h1>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3" id="contactInformation">
+                    <div id="phone" class="contact-group">
+                        <p><span class="material-icons">phone_android</span></p>
+                        <p>06 30 79 49 53</p>
+                    </div>
+
+                    <div id="mail" class="contact-group">
+                        <p><span class="material-icons">contact_mail</span></p>
+                        <p><a href="mailto:giildo.jm@gmail.com">giildo.jm@gmail.com</a></p>
+                    </div>
+
+                    <div id="website" class="contact-group">
+                        <p><span class="material-icons">computer</span></p>
+                        <p><a href="https://www.jojotique.fr" target="_blank">www.jojotique.fr</a></p>
+                    </div>
+
+                    <div id="adress" class="contact-group">
+                        <p><span class="material-icons">location_city</span></p>
+                        <p>
+                            <adress>138 Avenue du Rhin<br/>67100 Strasbourg, FRANCE</adress>
+                        </p>
+                    </div>
+
+                    <div id="spareTime" class="contact-group">
+                        <p><span class="material-icons">favorite</span></p>
+                        <ul id="listFavorite">
+                            <li>Nouvelles technologies</li>
+                            <li>Technologie et santé</li>
+                            <li>Jeux-vidéos</li>
+                            <li>Lecture</li>
+                            <li>Scoutisme</li>
+                        </ul>
+                    </div>
+
+                    <div id="birthDay" class="contact-group">
+                        <p><span class="material-icons">cake</span></p>
+                        <p>02/08/1986</p>
+                    </div>
+                </div>
+
+                <div class="col-sm-9">
+
+                    <div id="formation">
+                        <h2><span class="material-icons">school</span> Formations</h2>
+
+                        <div class="formation-block">
+                            <div class="formation-block-image" id="developpeur_appli_web">
+                                <img src="/img/cv/developpeur_appli_web.png" alt="Image de profil de la formation"/>
+                            </div>
+
+                            <div class="formation-block-definition">
+                                <h3><a href="https://openclassrooms.com/paths/developpeur-se-d-application-php-symfony"
+                                       target="_blank">En cours : Développeur·se d'application - PHP/Symphony</a></h3>
+                                <p>Formation pour apprendre à créer des applications web :</p>
+                                <p>Compétences développées :</p>
+                                <ul>
+                                    <li>Analyser les besoins à partir d'un cahier des charges</li>
+                                    <li>Définir les différentes étapes de fonctionnemen d'une application web</li>
+                                    <li>Etudier un ensemble de solutions techniques</li>
+                                    <li>Développer, tester et valider les fonctionnalités d'un site</li>
+                                    <li>Assurer le support technique du site et produire la documentation technique</li>
+                                    <li>Apporter des corrections de bugs et effectuer des mises à jour</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="formation-block">
+                            <div class="formation-block-image" id="integrateur_web">
+                                <img src="/img/cv/integrateur_web.png" alt="Image de profil de la formation"/>
+                            </div>
+                            <div class="formation-block-definition">
+                                <h3><a href="https://openclassrooms.com/learning-path-certificates/5598417851"
+                                       target="_blank">2017 : Intégrateur web</a></h3>
+                                <p>Formation pour apprendre à intégrer une maquette en HTML5 et CSS3</p>
+                            </div>
+                        </div>
+
+                        <div class="formation-block">
+                            <img src="/img/cv/lancer_site_web.png" alt="Image de profil de la formation"
+                                 id="lancer_site_web"/>
+                            <div class="formation-block-definition">
+                                <h3><a href="https://openclassrooms.com/learning-path-certificates/6247187101"
+                                       target="_blank">2015 : Lancer son propre site Web</a></h3>
+                                <p>Formation pour apprendre les bases de HTML5, CSS3, PHP et JavaScript.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="competence">
+                        <h2><span class="material-icons">poll</span> Compétences</h2>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <div id="html">
+                                    <img src="/img/cv/html.png" alt="Logo de HTLM5"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+
+                                <div id="css">
+                                    <img src="/img/cv/css.png" alt="Logo de CSS3"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+
+                                <div id="php">
+                                    <img src="/img/cv/php.png" alt="Logo de PHP"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+
+                                <div id="js">
+                                    <img src="/img/cv/javascript.png" alt="Logo de Javascript"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                    <span class="material-icons">star_border</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-sm-12">
+                                <div id="html">
+                                    <img src="/img/cv/mysql.png" alt="Logo de MySQL"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+
+                                <div id="css">
+                                    <img src="/img/cv/photoshop.png" alt="Logo de Photoshop"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_half</span>
+                                    <span class="material-icons">star_border</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+
+                                <div id="php">
+                                    <img src="/img/cv/linux.png" alt="Logo de Linux"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+
+                                <div id="js">
+                                    <img src="/img/cv/windows.png" alt="Logo de Windows"/>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star</span>
+                                    <span class="material-icons">star_border</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="achievement">
+                        <h2><span class="material-icons">account_balance</span> Cours validés</h2>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="bootstrap"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/9092510638"
+                                               target="_blank">Prenez
+                                                en main Bootstrap.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/prenez-en-main-bootstrap"
+                                           target="_blank">Voir
+                                            le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="comprendre_web"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/20107871"
+                                               target="_blank">Comprendre
+                                                le Web.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/comprendre-le-web" target="_blank">Voir
+                                            le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="creer_jeu_plateau_js"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/53041571"
+                                               target="_blank">Activité - Créez un jeu de plateau tout par tour en
+                                                Javascript.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/creez-un-jeu-de-plateau-tour-par-tour-en-javascript"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="decouper_maquette"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/4303853923"
+                                               target="_blank">Découper et intégrer une maquette.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/decouper-et-integrer-une-maquette"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="gestion_projet"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/5036363122"
+                                               target="_blank">Gérez votre projet informatique facilement.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/gerez-votre-projet-informatique-facilement"
+                                           target="_blank">Voir
+                                            le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="git"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/6934197197"
+                                               target="_blank">Gérez votre code avec Git et Github.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/gerer-son-code-avec-git-et-github"
+                                           target="_blank">Voir
+                                            le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="html_css"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/65556662"
+                                               target="_blank">Apprenez à créer votre site Web avec HTML5 et CSS3.</a>
+                                        </h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/apprenez-a-creer-votre-site-web-avec-html5-et-css3"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="javascript"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/50468994"
+                                               target="_blank">Apprenez à coder avec Javascript.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/apprenez-a-coder-avec-javascript"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="jquery"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/72189267"
+                                               target="_blank">Simplifiez vos développements JavaScript avec jQuery.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/simplifiez-vos-developpements-javascript-avec-jquery"
+                                           target="_blank">Voir
+                                            le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="mvc"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/9755963721"
+                                               target="_blank">Adoptez une architecture MVC en PHP.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/adoptez-une-architecture-mvc-en-php"
+                                           target="_blank">Voir
+                                            le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="php_mysql"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/535650455"
+                                               target="_blank">Concevez votre site Web avec PHP et MySQL.</a>
+                                        </h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/concevez-votre-site-web-avec-php-et-mysql"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="poo_php"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/8176789133"
+                                               target="_blank">Programmez en orienté objet en PHP.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/programmez-en-oriente-objet-en-php"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="referencement"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/47399979"
+                                               target="_blank">Les clés pour réussir son référencement Web.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/les-cles-pour-reussir-son-referencement-web"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="class-achievement">
+                                    <div class="class-achievement-header" id="wordpress"></div>
+
+                                    <div class="class-achievement-body">
+                                        <h5><a href="https://openclassrooms.com/course-certificates/2079695947"
+                                               target="_blank">Réalisez des sites modernes et beaux grâce à
+                                                WordPress.</a></h5>
+                                    </div>
+
+                                    <div class="class-achievement-footer">
+                                        <a href="https://openclassrooms.com/courses/realisez-des-sites-modernes-et-beaux-grace-a-wordpress"
+                                           target="_blank">Voir le cours</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
