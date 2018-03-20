@@ -17,6 +17,7 @@ return [
     'blog.limit.post'      => 9,
     'admin.limit.post'     => 10,
     'admin.limit.category' => 10,
+    'admin.limit.user'     => 10,
 
     'users'      => get(\App\Admin\Model\UserModel::class),
     'posts'      => get(\App\Blog\Model\PostModel::class),

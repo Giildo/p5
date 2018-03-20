@@ -1,0 +1,11 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Modification de l'utilisateur {{ user.pseudo }}{% endblock %}
+
+{% block body %}
+    <h1>Modification de l'utilisateur {{ user.pseudo }}</h1>
+
+    <div class="row">
+        {{ form | raw }}
+    </div>
+{% endblock %}
