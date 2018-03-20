@@ -64,8 +64,10 @@ class DBAuth
      */
     public function log(ORMEntity $user, string $password, array &$results): void
     {
-        if ($user->password === $this->appHash($password)) {
+        if ($user->password === $password) {
             $_SESSION['confirmConnect'] = true;
+
+            $user->password = $this->appHash($user->password);
             $_SESSION['user'] = $user;
 
             $code1 = strlen($user->pseudo);

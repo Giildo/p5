@@ -61,9 +61,9 @@ class User extends Entity implements EntityInterface
     use appHash;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -125,9 +125,9 @@ class User extends Entity implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMail(): string
+    public function getMail(): ?string
     {
         return $this->mail;
     }
@@ -141,9 +141,9 @@ class User extends Entity implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -169,7 +169,7 @@ class User extends Entity implements EntityInterface
      */
     public function setPassword(string $password): void
     {
-        $this->password = $this->appHash($password);
+        $this->password = $password;
     }
 
     /**

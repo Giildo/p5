@@ -15,6 +15,11 @@
     <route name="admin_user_login" path="^/user/login" controller="user" method="login" />
     <route name="admin_user_logout" path="^/user/logout" controller="user" method="logout" />
 
+    <route name="admin_user_index" path="^/admin/users/{id: \d+}" controller="user" method="index" />
+    <route name="admin_user_update" path="^/admin/user/update/{id: \d+}" controller="user" method="update" />
+    <route name="admin_user_add" path="^/admin/user/add" controller="user" method="add" />
+    <route name="admin_user_delete" path="^/admin/user/delete" controller="user" method="delete" />
+
     <route name="admin_post_index" path="^/admin/posts/{id: \d+}" controller="post" method="index" />
     <route name="admin_post_update" path="^/admin/post/update/{id: \d+}" controller="post" method="update" />
     <route name="admin_post_add" path="^/admin/post/add" controller="post" method="add" />
