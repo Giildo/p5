@@ -10,6 +10,7 @@ use Core\Form\BootstrapForm;
 use Core\ORM\Classes\ORMController;
 use Core\ORM\Classes\ORMException;
 use Core\ORM\Classes\ORMTable;
+use Exception;
 
 class UserController extends AppController implements ControllerInterface
 {
@@ -27,7 +28,6 @@ class UserController extends AppController implements ControllerInterface
      * Affiche la page de connexion pour un utilisateur
      *
      * @return void
-     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -36,7 +36,11 @@ class UserController extends AppController implements ControllerInterface
      */
     public function login(): void
     {
-        $results = [];
+        $c_error = false;
+        $c_errorMessage = '';
+        $r_error = false;
+        $r_success = false;
+        $r_errorMessage = '';
 
         if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
             try {
@@ -51,49 +55,68 @@ class UserController extends AppController implements ControllerInterface
                     ->execute($this->userModel, $this->adminModel);
             } catch (ORMException $e) {
                 if ($e->getCode() === ORMException::NO_ELEMENT) {
-                    $results['c_error'] = true;
+                    $c_error = true;
+                    $c_errorMessage = "Aucun utilisateur n'a été trouvé avec cet identifiant !";
                 }
             }
 
-            if (!$results['c_error']) {
-                $this->auth->log($user, $_POST['c_password'], $results);
+            if (!$c_error) {
+                try {
+                    $this->auth->log($user, $_POST['c_password']);
+                } catch (Exception $e) {
+                    $c_error = true;
+                    $c_errorMessage = $e->getMessage();
+                }
             }
         }
 
         $user = $this->findUserConnected();
 
         if (!$this->auth->logged($user)) {
-            $keys = ['c_pseudo', 'c_password', 'r_pseudo', 'firstName', 'lastName', 'mail', 'phone', 'r_password',];
+            if (!empty($_POST) &&
+                isset($_POST['pseudo']) &&
+                isset($_POST['firstName']) &&
+                isset($_POST['lastName']) &&
+                isset($_POST['password'])
+            ) {
+                try {
+                    $_POST['admin'] = 'Utilisateur';
+                    $user = $this->addUser();
+                } catch (ORMException $e) {
+                    $r_error = true;
+                    $r_errorMessage = $e->getMessage();
+                }
 
-            $post = $this->createPost($keys);
-
-            $this->addUser($results, $post);
+                if (!$r_error) {
+                    $r_success = true;
+                }
+            }
 
             // Création des formulaires de login
             $form1 = new BootstrapForm('col-sm-6 loginForm');
             $form1->fieldset('Connectez-vous');
-            ($results['c_error']) ?
-                $form1->item("<h4 class='error'>Identifiant ou mot de passe incorrect !</h4>") :
+            ($c_error) ?
+                $form1->item("<h4 class='error'>{$c_errorMessage}</h4>") :
                 null;
-            $form1->input('c_pseudo', 'Pseudo', $post['c_pseudo']);
-            $form1->input('c_password', 'Mot de passe', $post['c_password'], 'password');
+            $form1->input('c_pseudo', 'Pseudo', $user->pseudo);
+            $form1->input('c_password', 'Mot de passe', $user->password, 'password');
             $form1 = $form1->submit('Valider');
 
             // Création du formulaire pour l'ajout d'utilisateur
             $form2 = new BootstrapForm(('col-sm-6 loginForm'));
             $form2->fieldset('Inscrivez-vous');
-            ($results['r_error']) ?
-                $form2->item("<h4 class='error'>Tous les champs doivent être renseignés !</h4>") :
+            ($r_error) ?
+                $form2->item("<h4 class='error'>{$r_errorMessage}</h4>") :
                 null;
-            ($results['r_success']) ?
+            ($r_success) ?
                 $form2->item("<h4 class='success'>Utilisateur ajouté avec succès, veuillez vous connecter.</h4>") :
                 null;
-            $form2->input('r_pseudo', 'Pseudo', $post['r_pseudo']);
-            $form2->input('firstName', 'Prénom', $post['firstName']);
-            $form2->input('lastName', 'Nom', $post['lastName'], 'text');
-            $form2->input('mail', 'Adresse mail', $post['mail'], 'email');
-            $form2->input('phone', 'Téléphone', $post['phone'], 'tel');
-            $form2->input('r_password', 'Mot de passe', $post['r_password'], 'password', null, 'new-password');
+            $form2->input('pseudo', 'Pseudo', $user->pseudo);
+            $form2->input('firstName', 'Prénom', $user->firstName);
+            $form2->input('lastName', 'Nom', $user->lastName, 'text');
+            $form2->input('mail', 'Adresse mail', $user->mail, 'email');
+            $form2->input('phone', 'Téléphone', $user->phone, 'tel');
+            $form2->input('password', 'Mot de passe', $user->password, 'password', null, 'new-password');
             $form2 = $form2->submit('Valider');
 
             $this->render('admin/login.twig', compact('form1', 'form2', 'error'));
@@ -289,7 +312,7 @@ class UserController extends AppController implements ControllerInterface
      * Si tout OK supprime la catégorie.
      *
      * @throws ORMException
-     * @throws \Exception
+     * @throws Exception
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -324,11 +347,11 @@ class UserController extends AppController implements ControllerInterface
                     $this->index($vars);
                 } else {
                     $this->render('admin/users/index.twig', []);
-                    throw new \Exception("Une erreur est survenue lors de la suppression de l'utilisaeur, veuillez réessayer.");
+                    throw new Exception("Une erreur est survenue lors de la suppression de l'utilisaeur, veuillez réessayer.");
                 }
             } else {
                 $this->render('admin/users/index.twig', []);
-                throw new \Exception("Une erreur est survenue lors de la suppression de l'utilisaeur, veuillez réessayer.");
+                throw new Exception("Une erreur est survenue lors de la suppression de l'utilisaeur, veuillez réessayer.");
             }
         } else {
             $this->renderErrorNotAdmin();
@@ -386,7 +409,7 @@ class UserController extends AppController implements ControllerInterface
         $user->adminId = $admin->id;
         $user->admin = $admin;
 
-        $user->password = $_POST['pseudo'];
+        $user->password = (isset($_POST['password'])) ? $_POST['password'] : $_POST['pseudo'];
 
         $user->phone = (isset($_POST['phone'])) ? $_POST['phone'] : null;
         $user->mail = (isset($_POST['mail'])) ? $_POST['mail'] : null;

@@ -7,6 +7,7 @@ use App\various\appHash;
 use Core\Database\Database;
 use Core\ORM\Classes\ORMEntity;
 use Core\PSR7\HTTPRequest;
+use Exception;
 
 class DBAuth
 {
@@ -59,10 +60,10 @@ class DBAuth
      *
      * @param ORMEntity $user
      * @param string $password
-     * @param array $results
      * @return void
+     * @throws Exception
      */
-    public function log(ORMEntity $user, string $password, array &$results): void
+    public function log(ORMEntity $user, string $password): void
     {
         if ($user->password === $password) {
             $_SESSION['confirmConnect'] = true;
@@ -75,7 +76,7 @@ class DBAuth
             $codeVerif = $this->appHash($code1 . $user->pseudo . $user->admin->name . $code2);
             $_SESSION['time'] = $codeVerif;
         } else {
-            $results['c_error'] = true;
+            throw new Exception("Le mot de passe est incorrect !");
         }
     }
 

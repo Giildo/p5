@@ -44,4 +44,16 @@ class GeneralController extends AppController implements ControllerInterface
     {
         $this->render('general/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
     }
+
+    /**
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function cv(): void
+    {
+        $this->render('general/cv.twig', []);
+    }
 }

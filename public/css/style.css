@@ -39,7 +39,7 @@ h1 {
     padding: 30px 0;
 }
 
-h1:after, h1:before {
+h1::after, h1::before {
     content: '';
     display: block;
     height: 1px;
@@ -47,11 +47,11 @@ h1:after, h1:before {
     background: linear-gradient(to right, white, black, white);
 }
 
-h1:after {
+h1::after {
     margin-top: 15px;
 }
 
-h1:before {
+h1::before {
     margin-bottom: 15px;
 }
 
@@ -107,6 +107,11 @@ header img {
     position: relative;
 }
 
+#col-header {
+    padding: 0;
+}
+
+
 header h1.col-sm-12 {
     color: white;
     position: absolute;
@@ -116,7 +121,7 @@ header h1.col-sm-12 {
     font-family: 'Crafty Girls', cursive;
 }
 
-header h1.col-sm-12:after, header h1.col-sm-12:before {
+header h1.col-sm-12::after, header h1.col-sm-12:before {
     background: linear-gradient(to right, black, white, black);
 }
 
@@ -157,12 +162,195 @@ blockquote {
     margin-bottom: 15px;
 }
 
-.generalForm legend:after {
+.generalForm legend::after {
     content: '';
     height: 1px;
     width: 100%;
     display: block;
     background: linear-gradient(to right, black, #b6b6b6 30%, white 75%);
+}
+
+/** Accueil - CV **/
+
+#cv {
+    background: radial-gradient(ellipse, #ffffff, #c9c9c9);
+}
+
+#cv h1::after, #cv h1:before {
+    display: none;
+}
+
+#contactInformation {
+    text-align: center;
+}
+
+#contactInformation p {
+    text-indent: 0;
+}
+
+.contact-group {
+    padding-top: 15px;
+}
+
+.contact-group::after {
+    content: '';
+    height: 1px;
+    width: 50%;
+    display: inline-block;
+    background: linear-gradient(to right, rgba(255,255,255,0), rgba(0,0,0,1), rgba(255,255,255,0));
+}
+
+#listFavorite {
+    list-style: none;
+    padding: 0;
+}
+
+#competence, #formation, #achievement {
+    margin-bottom: 50px;
+}
+
+#competence h2::after, #formation h2::after, #achievement h2::after {
+    content: '';
+    height: 1px;
+    width: 50%;
+    display: block;
+    background: linear-gradient(to right, rgba(0,0,0,1), rgba(255,255,255,0));
+}
+
+#competence img {
+    width: 75px;
+}
+
+#competence div div div {
+    padding: 20px 40px;
+}
+
+#competence div .material-icons {
+    line-height: 75px;
+    vertical-align: middle;
+    font-size: 2em;
+}
+
+.formation-block {
+    display: flex;
+    margin: 20px 40px;
+    border: 1px solid black;
+    border-radius: 15px;
+}
+
+.formation-block-image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 15px 0 0 15px;
+}
+
+.formation-block-definition {
+    padding-left: 20px;
+}
+
+#integrateur_web {
+    background-color: #9a5e7a;
+}
+
+#lancer_site_web {
+    background-color: #aebd9b;
+}
+
+#developpeur_appli_web {
+    background-color: #65caff;
+    background-size: 100% 100%;
+}
+
+.class-achievement {
+    border: 1px solid black;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.class-achievement-header {
+    height: 150px;
+    background-size: 100%;
+    border-radius: 15px 15px 0 0;
+}
+
+.class-achievement-body {
+    height: 150px;
+    text-align: center;
+}
+
+.class-achievement-body {
+    padding: 20px;
+    background: linear-gradient(to bottom, #d7d7d7, white);
+    border-top: 1px solid black;
+}
+
+.class-achievement-footer {
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: white;
+    border-radius: 0 0 15px 15px;
+}
+
+.class-achievement-footer a {
+    line-height: 50px;
+}
+
+#decouper_maquette {
+    background-image: url("/img/cv/achievement/decouper_maquette.jpg");
+}
+
+#bootstrap {
+    background-image: url("/img/cv/achievement/bootstrap.png");
+}
+
+#comprendre_web {
+    background-image: url("/img/cv/achievement/comprendre_web.jpg");
+}
+
+#creer_jeu_plateau_js {
+    background-image: url("/img/cv/achievement/creer_jeu_plateau_js.png");
+}
+
+#gestion_projet {
+    background-image: url("/img/cv/achievement/gestion_projet.jpg");
+}
+
+#git {
+    background-image: url("/img/cv/achievement/git.jpg");
+}
+
+#html_css {
+    background-image: url("/img/cv/achievement/html_css.jpg");
+}
+
+#javascript {
+    background-image: url("/img/cv/achievement/javascript.png");
+}
+
+#jquery {
+    background-image: url("/img/cv/achievement/jquery.png");
+}
+
+#mvc {
+    background-image: url("/img/cv/achievement/mvc.png");
+}
+
+#php_mysql {
+    background-image: url("/img/cv/achievement/php_mysql.jpg");
+}
+
+#poo_php {
+    background-image: url("/img/cv/achievement/poo_php.png");
+}
+
+#referencement {
+    background-image: url("/img/cv/achievement/referencement.jpg");
+}
+
+#wordpress {
+    background-image: url("/img/cv/achievement/wordpress.jpg");
 }
 
 /** Connexion - Form **/
@@ -185,22 +373,22 @@ blockquote {
     color: green;
 }
 
-.loginForm h4.error , .loginForm h4.error:after, .loginForm h4.error:before {
+.loginForm h4.error , .loginForm h4.error::after, .loginForm h4.error:before {
     color: red;
 }
 
-.loginForm h4:after, .loginForm h4:before {
+.loginForm h4::after, .loginForm h4:before {
     content: '';
     display: block;
     height: 1px;
     width: 100%;
 }
 
-.loginForm h4.success:after, .loginForm h4.success:before {
+.loginForm h4.success::after, .loginForm h4.success:before {
     background: linear-gradient(to right, white, green 2%, white);
 }
 
-.loginForm h4.error:after, .loginForm h4.error:before {
+.loginForm h4.error::after, .loginForm h4.error:before {
     background: linear-gradient(to right, white, red 2%, white);
 }
 
@@ -208,7 +396,7 @@ blockquote {
     margin-bottom: 15px;
 }
 
-.loginForm h4:after {
+.loginForm h4::after {
     margin-top: 15px;
 }
 
@@ -220,6 +408,11 @@ blockquote {
 
 .form-btn {
     padding: 0;
+}
+
+.notSpecified {
+    font-style: italic;
+    font-size: 0.8rem;
 }
 
 /** Footer **/
