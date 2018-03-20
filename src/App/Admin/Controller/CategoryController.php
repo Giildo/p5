@@ -68,17 +68,21 @@ class CategoryController extends AppController implements ControllerInterface
     {
         $u_success = false;
         $u_error = false;
+        $errorMessage = '';
 
         if (!empty($_POST) &&
             isset($_POST['name']) &&
             isset($_POST['slug'])
         ) {
-            $resultUpdate = $this->categoryModel->updateCategory($_POST, $vars['id']);
-
-            if ($resultUpdate) {
-                $u_success = true;
-            } else {
+            try {
+                $this->updateCategory($vars['id']);
+            } catch (ORMException $e) {
                 $u_error = true;
+                $errorMessage = $e->getMessage();
+            }
+
+            if (!$u_error) {
+                $u_success = true;
             }
         }
 
@@ -94,7 +98,7 @@ class CategoryController extends AppController implements ControllerInterface
         if ($u_success) {
             $form->item("<h4 class='success'>Modification réalisée avec succés !</h4>");
         } elseif ($u_error) {
-            $form->item("<h4 class='error'>Une erreur est survenue !</h4>");
+            $form->item("<h4 class='error'>{$errorMessage}</h4>");
         }
 
         $form->input('name', 'Nom de la catégorie', $category->name);
@@ -105,7 +109,6 @@ class CategoryController extends AppController implements ControllerInterface
     }
 
     /**
-     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -213,53 +216,23 @@ class CategoryController extends AppController implements ControllerInterface
      */
     private function updateCategory(string $id)
     {
-        if (empty($_POST['title'])) {
-            throw new ORMException("Le champ \"Titre de l'article\" doit être renseigné !");
+        if (empty($_POST['name'])) {
+            throw new ORMException('Le champ "Nom de la catégorie" doit être renseigné !');
         }
-        if (empty($_POST['content'])) {
-            throw new ORMException("Le champ \"Contenu de l'article\" doit être renseigné !");
-        }
-        if (empty($_POST['user'])) {
-            throw new ORMException("Le champ \"Catégorie associée\" doit être renseigné !");
-        }
-        if (empty($_POST['category'])) {
-            throw new ORMException("Le champ \"Auteur de l'article\" doit être renseigné !");
+        if (empty($_POST['slug'])) {
+            throw new ORMException('Le champ "Slug de la catégorie" doit être renseigné !');
         }
 
-        $ormTable = new ORMTable('posts');
-        $ormTable->constructWithStdclass($this->postModel->ORMShowColumns());
+        $ormTable = new ORMTable('categories');
+        $ormTable->constructWithStdclass($this->categoryModel->ORMShowColumns());
 
-        $originalPost = $this->select->select(['posts' => ['createdAt']])
-            ->from('posts')
-            ->where(['id' => $id])
-            ->singleItem()
-            ->execute($this->postModel);
+        $category = new Category($ormTable, true);
+        $category->id = $id;
+        $category->name = $_POST['name'];
+        $category->slug = $_POST['slug'];
+        $category->setPrimaryKey(['id']);
 
-        $post = new Post($ormTable, true);
-        $stdClass = new stdClass();
-        $post->constructWithStdclass($stdClass);
-        $post->id = $id;
-        $post->title = $_POST['title'];
-        $post->content = $_POST['content'];
-        $post->createdAt = $originalPost->createdAt;
-        $post->updatedAt = new DateTime('now');
-
-        $user = $this->select->select(['users' => ['id']])
-            ->from('users')
-            ->where(['pseudo' => $_POST['user']])
-            ->singleItem()
-            ->execute($this->userModel);
-        $post->userId = $user->id;
-
-        $category = $this->select->select(['categories' => ['id']])
-            ->from('categories')
-            ->where(['name' => $_POST['category']])
-            ->singleItem()
-            ->execute($this->categoryModel);
-        $post->categoryId = $category->id;
-        $post->setPrimaryKey(['id']);
-
-        (new ORMController())->save($post, $this->postModel);
+        (new ORMController())->save($category, $this->categoryModel);
     }
 
     /**

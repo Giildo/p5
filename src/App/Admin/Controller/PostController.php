@@ -304,9 +304,10 @@ class PostController extends AppController implements ControllerInterface
 
     /**
      * @param string $id
+     * @return void
      * @throws ORMException
      */
-    private function updatePost(string $id)
+    private function updatePost(string $id): void
     {
         if (empty($_POST['title'])) {
             throw new ORMException("Le champ \"Titre de l'article\" doit être renseigné !");

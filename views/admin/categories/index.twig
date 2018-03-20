@@ -3,11 +3,11 @@
 {% block title %}Administration des articles{% endblock %}
 
 {% block body %}
-    <h1>Bonjour, bienvenue sur les catégories</h1>
+    <h1>Administration des catégories</h1>
 
     <div class="row">
         <div class="offset-sm-2 col-sm-8">
-            <a href="/admin/category/add" class="btn btn-success">Nouvel article</a>
+            <a href="/admin/category/add" class="btn btn-success">Nouvelle catégorie</a>
             <br /><br />
             <table class="table table-striped col-sm-8">
                 <thead>
@@ -37,27 +37,29 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="btn-group">
-            {% if paginationOptions.previous != null %}
-                <a href="/admin/categories/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
-            {% else %}
-                <button class="btn btn-warning" disabled><</button>
-            {% endif %}
-
-            {% for i in 1..paginationOptions.pageNb %}
-                {% if i != paginationOptions.id %}
-                    <a href="/admin/categories/{{ i }}" class="btn btn-warning">{{ i }}</a>
+    {% if paginationOptions.pageNb > 1 %}
+        <div class="row">
+            <div class="btn-group">
+                {% if paginationOptions.previous != null %}
+                    <a href="/admin/categories/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
                 {% else %}
-                    <button class="btn btn-warning" disabled>{{ i }}</button>
+                    <button class="btn btn-warning" disabled><</button>
                 {% endif %}
-            {% endfor %}
 
-            {% if paginationOptions.next != null %}
-                <a href="/admin/categories/{{ paginationOptions.next }}" class="btn btn-warning">></a>
-            {% else %}
-                <button class="btn btn-warning" disabled>></button>
-            {% endif %}
+                {% for i in 1..paginationOptions.pageNb %}
+                    {% if i != paginationOptions.id %}
+                        <a href="/admin/categories/{{ i }}" class="btn btn-warning">{{ i }}</a>
+                    {% else %}
+                        <button class="btn btn-warning" disabled>{{ i }}</button>
+                    {% endif %}
+                {% endfor %}
+
+                {% if paginationOptions.next != null %}
+                    <a href="/admin/categories/{{ paginationOptions.next }}" class="btn btn-warning">></a>
+                {% else %}
+                    <button class="btn btn-warning" disabled>></button>
+                {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
