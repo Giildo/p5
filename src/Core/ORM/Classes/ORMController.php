@@ -81,7 +81,7 @@ class ORMController
      * @param ORMModelInterface $model
      * @throws ORMException
      */
-    public function save($entity, ORMModelInterface $model): void
+    public function save(ORMEntity $entity, ORMModelInterface $model): void
     {
         //Récupère la définition des colonnes depuis la BDD
         $columnsBDD = $model->ORMShowColumns();
@@ -101,6 +101,11 @@ class ORMController
         } else {
             $this->insert($entity, $model, $columnsBDD);
         }
+    }
+
+    public function delete(ORMEntity $entity, ORMModelInterface $model): void
+    {
+        $model->ORMDelete($entity);
     }
 
     /**

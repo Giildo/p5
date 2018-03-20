@@ -110,6 +110,7 @@ class ORMSelect
             if ($directionMaj === 'DESC' || $directionMaj === 'ASC') {
                 $this->statement['orderBy'] = $orderByOptions;
             } else {
+                $this->resetSelect();
                 throw new ORMException("\"{$direction}\" n'est pas un sens de trie autorisé, veuillez indiquer \"ASC\" ou \"DESC\".");
             }
         }
@@ -291,6 +292,7 @@ class ORMSelect
             $models[0]->ORMFind($statement);
 
         if (empty($items)) {
+            $this->resetSelect();
             throw new ORMException("Aucun élément n'a été trouvé dans table \"{$this->tableName}\" avec ces paramètres.", ORMException::NO_ELEMENT);
         }
 
@@ -306,6 +308,9 @@ class ORMSelect
     }
 
     /**
+     * Récupère les différents éléments stockés dans le $this->statement et construit le "statement" qu'on fera
+     * passer à PDO pour récupérer l'élément.
+     *
      * @param string $statement
      * @throws ORMException
      */
@@ -331,12 +336,14 @@ class ORMSelect
                 }
             }
         } else {
+            $this->resetSelect();
             throw new ORMException("Les colonnes à récupérer n'ont pas été définies.");
         }
 
         if (isset($this->statement['from'])) {
             $statement .= 'FROM ' . $this->statement['from'];
         } else {
+            $this->resetSelect();
             throw new ORMException("La table n'a pas été définie.");
         }
 
@@ -510,6 +517,7 @@ class ORMSelect
 
     private function resetSelect(): void
     {
+        unset($this->statement);
         $this->statement = [];
         $this->statement['join'] = false;
     }
@@ -596,6 +604,7 @@ class ORMSelect
 
         //Renvoie une erreur si le tableau des entités est vide
         if (empty($entities)) {
+            $this->resetSelect();
             throw new ORMException("L'entité n'a pas été trouvée dans le fichier de configuration \"{$this->configFiles}\".");
         }
     }

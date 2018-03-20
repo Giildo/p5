@@ -46,6 +46,8 @@ class PostController extends AppController implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
+        $this->paginationMax($paginationOptions, '/blog/');
+
         $posts = $this->select->select([
             'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt']
         ])->from('posts')
@@ -76,6 +78,8 @@ class PostController extends AppController implements ControllerInterface
      */
     public function show(array $vars): void
     {
+        $userConnected = $this->findUserConnected();
+
         $submitMessage = 'Valider';
         $textareaValue = '';
         $error = false;
@@ -103,15 +107,15 @@ class PostController extends AppController implements ControllerInterface
         $comments = $commentController->listComByPost($vars['id']);
 
         $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
-        if (!$this->auth->logged()) {
+        if (!$this->auth->logged($userConnected)) {
             $form->item('<em>Vous devez être connecté·e pour laisser un commentaire : <a href="/user/login">se connecter</a>.</em>');
         } elseif ($error) {
             $form->item('<h4 class="error">Une erreur est survenue lors de l\'envoi du commentaire.</h4>');
         }
         $form->textarea('comment', 'Votre commentaire', 5, $textareaValue);
         $form->input('postId', '', $post->id, 'hidden');
-        if ($this->auth->logged()) {
-            $form->input('userId', '', $_SESSION['user']['id'], 'hidden');
+        if ($this->auth->logged($userConnected)) {
+            $form->input('userId', '', $_SESSION['user']->id, 'hidden');
         }
         $form = $form->submit($submitMessage);
 
@@ -139,6 +143,8 @@ class PostController extends AppController implements ControllerInterface
         $nbPosts = $this->postModel->countPostByCategory($vars['slug']);
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
+
+        $this->paginationMax($paginationOptions, "/categorie/{$vars['slug']}-");
 
         $posts = $this->select->select([
             'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
@@ -186,6 +192,8 @@ class PostController extends AppController implements ControllerInterface
         $nbPosts = $this->postModel->countPostsByUser($user->id);
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
+
+        $this->paginationMax($paginationOptions, "/auteur/{$vars['pseudo']}-");
 
         $posts = $this->select->select([
             'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],

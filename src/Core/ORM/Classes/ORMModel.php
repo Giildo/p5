@@ -112,4 +112,11 @@ class ORMModel implements ORMModelInterface
         $result->execute();
         return $result->fetchAll();
     }
+
+    public function ORMDelete(ORMEntity $entity): void
+    {
+        $result = $this->pdo->prepare("DELETE FROM {$entity->tableName} WHERE id=:id");
+        $result->bindValue('id', $entity->id);
+        $result->execute();
+    }
 }

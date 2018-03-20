@@ -18,8 +18,10 @@
     <route name="admin_post_index" path="^/admin/posts/{id: \d+}" controller="post" method="index" />
     <route name="admin_post_update" path="^/admin/post/update/{id: \d+}" controller="post" method="update" />
     <route name="admin_post_add" path="^/admin/post/add" controller="post" method="add" />
+    <route name="admin_post_delete" path="^/admin/post/delete" controller="post" method="delete" />
 
     <route name="admin_category_index" path="^/admin/categories/{id: \d+}" controller="category" method="index" />
     <route name="admin_category_update" path="^/admin/category/update/{id: \d+}" controller="category" method="update" />
     <route name="admin_category_add" path="^/admin/category/add" controller="category" method="add" />
+    <route name="admin_category_delete" path="^/admin/category/delete" controller="category" method="delete" />
 </routes>

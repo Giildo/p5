@@ -25,7 +25,12 @@
                         <td>{{ post.user.pseudo }}</td>
                         <td>
                             <a class="btn btn-info" href="/admin/post/update/{{ post.id }}">Modifier</a>
-                            <a class="btn btn-danger" href="">Supprimer</a>
+                            <form action="/admin/post/delete" method="post" class="btn">
+                                <input type="hidden" id="id" name="id" value="{{ post.id }}" />
+                                <input type="hidden" id="indexId" name="indexId" value="{{ vars.id }}" />
+                                <input type="hidden" id="token" name="token" value="{{ formCode[post.id] }}" />
+                                <input type="submit" name="submit" value="Supprimer" class="btn btn-danger" />
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}

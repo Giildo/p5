@@ -21,7 +21,12 @@
                         <td>{{ category.name }}</td>
                         <td>
                             <a class="btn btn-info" href="/admin/category/update/{{ category.id }}">Modifier</a>
-                            <a class="btn btn-danger">Supprimer</a>
+                            <form action="/admin/category/delete" method="post" class="btn">
+                                <input type="hidden" id="id" name="id" value="{{ category.id }}" />
+                                <input type="hidden" id="indexId" name="indexId" value="{{ vars.id }}" />
+                                <input type="hidden" id="token" name="token" value="{{ formCode[category.id] }}" />
+                                <input type="submit" name="submit" value="Supprimer" class="btn btn-danger" />
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}

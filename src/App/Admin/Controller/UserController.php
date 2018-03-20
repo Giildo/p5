@@ -24,6 +24,8 @@ class UserController extends AppController implements ControllerInterface
      * Affiche la page de connexion pour un utilisateur
      *
      * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -31,7 +33,6 @@ class UserController extends AppController implements ControllerInterface
     public function login(): void
     {
         $results = [];
-
 
         if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
             try {
@@ -55,7 +56,9 @@ class UserController extends AppController implements ControllerInterface
             }
         }
 
-        if (!$this->auth->logged()) {
+        $user = $this->findUserConnected();
+
+        if (!$this->auth->logged($user)) {
             $keys = ['c_pseudo', 'c_password', 'r_pseudo', 'firstName', 'lastName', 'mail', 'phone', 'r_password',];
 
             $post = $this->createPost($keys);

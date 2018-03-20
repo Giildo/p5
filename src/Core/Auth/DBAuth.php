@@ -30,10 +30,28 @@ class DBAuth
 
     use appHash;
 
-    public function logged(): bool
+    /**
+     * Récupère en paramètre l'utilisateur qui est censé être connecté avec l'ID stocké en SESSION
+     * Utilise le même hashage
+     * @param User|null $user
+     * @return bool
+     */
+    public function logged(?User $user = null): bool
     {
-        return ($this->request->getSessionParam('confirmConnect') !== null) ?
-            $this->request->getSessionParam('confirmConnect') : false;
+        $codeVerif = '';
+
+        if (!is_null($user)) {
+            $code1 = strlen($user->pseudo);
+            $code2 = strlen($user->admin->name);
+            $codeVerif = $this->appHash($code1 . $user->pseudo . $user->admin->name . $code2);
+        }
+
+        if (!isset($_SESSION['time']) || $codeVerif !== $_SESSION['time']) {
+            $this->logout();
+            return false;
+        }
+
+        return (isset($_SESSION['confirmConnect'])) ? $_SESSION['confirmConnect']: false;
     }
 
     /**
@@ -49,6 +67,11 @@ class DBAuth
         if ($user->password === $this->appHash($password)) {
             $_SESSION['confirmConnect'] = true;
             $_SESSION['user'] = $user;
+
+            $code1 = strlen($user->pseudo);
+            $code2 = strlen($user->admin->name);
+            $codeVerif = $this->appHash($code1 . $user->pseudo . $user->admin->name . $code2);
+            $_SESSION['time'] = $codeVerif;
         } else {
             $results['c_error'] = true;
         }
@@ -63,15 +86,22 @@ class DBAuth
     {
         unset($_SESSION['confirmConnect']);
         unset($_SESSION['user']);
+        unset($_SESSION['time']);
     }
 
     /**
-     * Vérifie que le User est un admin et renvoie true ou false
+     * @uses $this->logged() Vérifie que le User est connecté
+     * puis vérifie qu'il est admin et renvoie le résultat de la vérification.
      *
+     * @param User|null $user
      * @return bool
      */
-    public function isAdmin(): bool
+    public function isAdmin(?User $user = null): bool
     {
-        return $_SESSION['user']->admin->id === 1;
+        if ($this->logged($user)) {
+            return $_SESSION['user']->admin->id === 1;
+        }
+
+        return false;
     }
 }

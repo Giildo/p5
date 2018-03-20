@@ -15,6 +15,7 @@ use Core\ORM\Classes\ORMEntity;
 use Core\ORM\Classes\ORMException;
 use Core\ORM\Classes\ORMTable;
 use DateTime;
+use Exception;
 use stdClass;
 
 class PostController extends AppController implements ControllerInterface
@@ -47,13 +48,13 @@ class PostController extends AppController implements ControllerInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws ORMException
+     * @throws Exception
      */
     public function index(array $vars): void
     {
         $user = $_SESSION['user'];
 
-        if ($this->auth->isAdmin()) {
+        if ($this->auth->isAdmin($user)) {
             $nbPage = $this->postModel->count();
         } else {
             $nbPage = $this->postModel->countPostsByUser($_SESSION['user']->id);
@@ -61,22 +62,40 @@ class PostController extends AppController implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.post');
 
-        if ($this->auth->isAdmin()) {
-            $posts = $this->findPostsWithCategoryAndUser([], $paginationOptions['limit'], $paginationOptions['start']);
-        } else {
-            $posts = $this->findPostsWithCategoryAndUser(['users.id' => $user->id], $paginationOptions['limit'], $paginationOptions['start']);
+        $this->paginationMax($paginationOptions, '/admin/posts/');
+
+        try {
+            if ($this->auth->isAdmin($user)) {
+                $posts = $this->findPostsWithCategoryAndUser([], $paginationOptions['limit'], $paginationOptions['start']);
+            } else {
+                $posts = $this->findPostsWithCategoryAndUser(['users.id' => $user->id], $paginationOptions['limit'], $paginationOptions['start']);
+            }
+        } catch (ORMException $e) {
+            $message = "Vous n'avez encore écrit aucun article";
+            $this->render('admin/noElement.twig', compact('message'));
+            die();
         }
 
-        $this->render('admin/posts/index.twig', compact('posts', 'paginationOptions', 'user'));
+        $formCode = [];
+        $code1 = strlen($user->pseudo);
+        foreach ($posts as $post) {
+            $code2 = strlen($post->title);
+            $token = $this->auth->appHash($code2 . $post->title . $user->pseudo . $code1);
+            $formCode[$post->id] = $token;
+        }
+
+        $this->render('admin/posts/index.twig', compact('posts', 'paginationOptions', 'user', 'formCode', 'vars'));
     }
 
     /**
      * @param array $vars
      * @return void
+     * @throws ORMException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws ORMException
      */
     public function update(array $vars):void
     {
@@ -128,7 +147,7 @@ class PostController extends AppController implements ControllerInterface
         $form->textarea('content', 'Contenu de l\'article', 10, $post->content);
         $form->select('category', $categoriesSelect, $post->category->name, 'Catégorie associée');
 
-        if ($this->auth->isAdmin()) {
+        if ($this->auth->isAdmin($_SESSION['user'])) {
             $form->select('user', $usersSelect, $post->user->pseudo, 'Auteur de l\'article');
         } else {
             $form->item("<p>Auteur : {$post->user->pseudo}</p>");
@@ -138,6 +157,52 @@ class PostController extends AppController implements ControllerInterface
         $form = $form->submit('Valider');
 
         $this->render('admin/posts/update.twig', compact('form', 'post'));
+    }
+
+    /**
+     * @throws ORMException
+     * @throws Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function delete(): void
+    {
+        $userConnected = $_SESSION['user'];
+
+        if ($this->auth->logged($userConnected)) {
+            if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
+
+                $post = $this->select->select(['posts' => ['id', 'title']])
+                    ->from('posts')
+                    ->where(['id' => $_POST['id']])
+                    ->singleItem()
+                    ->execute($this->postModel);
+
+                $code1 = strlen($userConnected->pseudo);
+                $code2 = strlen($post->title);
+                $token = $this->auth->appHash($code2 . $post->title . $userConnected->pseudo . $code1);
+
+                if ($token === $_POST['token']) {
+                    (new ORMController())->delete($post, $this->postModel);
+
+                    /*Renvoie vers la page d'administration des posts soit
+                    --> à la page en cours s'il est envoyé en POST
+                    --> sinon vers la 1ère page*/
+                    $vars = [];
+                    $vars['id'] = (isset($_POST['indexId'])) ? $_POST['id'] : '1';
+                    $this->index($vars);
+                } else {
+                    $this->render('admin/categories/index.twig', []);
+                    throw new Exception("Une erreur est survenue lors de la suppression de la catégorie, veuillez réessayer.");
+                }
+            } else {
+                $this->render('admin/categories/index.twig', []);
+                throw new Exception("Une erreur est survenue lors de la suppression de la catégorie, veuillez réessayer.");
+            }
+        }
     }
 
     /**
@@ -160,7 +225,7 @@ class PostController extends AppController implements ControllerInterface
             ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'manyToMany')
             ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'manyToMany')
             ->limit($limit, $start)
-            ->orderBy(['updatedAt' => 'desc'])
+            ->orderBy(['posts.updatedAt' => 'desc'])
             ->where($where)
             ->singleItem($singleItem)
             ->execute($this->postModel, $this->categoryModel, $this->userModel);

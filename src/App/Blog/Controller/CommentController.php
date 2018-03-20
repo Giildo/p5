@@ -35,9 +35,11 @@ class CommentController extends AppController implements ControllerInterface
 
             $ids = $this->commentModel->correctPostIdAndCommentId($vars['commentId']);
 
+            $user = $_SESSION['user'];
+
             if ($ids->id !== $vars['commentId'] || !(
-                    $this->auth->isAdmin() ||
-                    $ids->user !== $_SESSION['user']['id']
+                    $this->auth->isAdmin($user) ||
+                    $ids->user !== $user->id
                 ) ||
                 $ids->post !== $vars['id'] ||
                 !$this->auth->logged()

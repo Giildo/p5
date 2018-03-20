@@ -2,6 +2,8 @@
 
 namespace Core\Controller;
 
+use App\Entity\Admin;
+use App\Entity\User;
 use Core\Auth\DBAuth;
 use Core\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
@@ -117,9 +119,6 @@ class Controller implements ControllerInterface
      */
     protected function render(string $nameView, ?array $twigVariable = []): void
     {
-        $twigVariable['sessionConfirmConnect'] = $this->auth->logged();
-        $twigVariable['sessionAdmin'] = $_SESSION['user']->admin->id === 1;
-
         echo $this->twig->render($nameView, $twigVariable);
     }
 
@@ -148,5 +147,13 @@ class Controller implements ControllerInterface
                 $this->$key = $model;
             }
         }
+    }
+
+    /**
+     * @param ORMSelect $select
+     */
+    public function setSelect(ORMSelect $select): void
+    {
+        $this->select = $select;
     }
 }

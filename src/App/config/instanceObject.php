@@ -1,5 +1,6 @@
 <?php
 
+use App\Admin\Model\UserModel;
 use App\Blog\Controller\CommentController;
 use Core\App;
 use Core\Auth\DBAuth;

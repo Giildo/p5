@@ -120,6 +120,26 @@ header h1.col-sm-12:after, header h1.col-sm-12:before {
     background: linear-gradient(to right, black, white, black);
 }
 
+blockquote, .blockquote {
+    font-family: 'Caveat', cursive;
+}
+
+blockquote {
+    margin: 30px 0 0 0;
+    text-align: center;
+    font-size: 3.5em;
+}
+
+.blockquote {
+    font-size: 2.5em;
+    text-align: right;
+}
+
+#blockquote {
+    background: linear-gradient(to bottom, #c9c9c9, white);
+    padding-bottom: 150px;
+}
+
 /** Accueil - Form **/
 
 .generalForm, .loginForm {
