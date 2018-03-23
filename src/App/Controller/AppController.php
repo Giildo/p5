@@ -24,16 +24,18 @@ class AppController extends Controller implements ControllerInterface
         $userModel = $this->container->get(UserModel::class);
         $adminModel = $this->container->get(AdminModel::class);
 
-        if (!empty($_SESSION['user'])) {
+        $userConnected = $_SESSION['user'];
+
+        if (!empty($userConnected)) {
             try {
                 $user = $this->select->select([
-                    'users' => ['pseudo', 'admin'],
+                    'users' => ['id', 'pseudo', 'firstName', 'lastName', 'mail', 'phone', 'password', 'admin'],
                     'admin' => ['id', 'name']
                 ])
                     ->from('users')
                     ->innerJoin('admin', ['admin.id' => 'users.admin'])
                     ->singleItem()
-                    ->where(['users.id' => $_SESSION['user']->id])
+                    ->where(['users.id' => $userConnected->id])
                     ->insertEntity(['admin' => 'users'], ['id' => 'admin'], 'oneToOne')
                     ->execute($userModel, $adminModel);
             } catch (ORMException $e) {
@@ -107,7 +109,7 @@ class AppController extends Controller implements ControllerInterface
     {
         $user = $this->findUserConnected();
         $twigVariable['sessionConfirmConnect'] = (!is_null($user)) ? $this->auth->logged($user) : false;
-        $twigVariable['sessionAdmin'] = $_SESSION['user']->admin->id === 1;
+        $twigVariable['sessionAdmin'] = $this->findUserConnected()->admin->id === 1;
 
         parent::render($nameView, $twigVariable);
     }

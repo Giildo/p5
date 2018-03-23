@@ -44,7 +44,7 @@ class Comment extends Entity implements EntityInterface
     protected $postId;
 
     /**
-     * @var User[]
+     * @var User
      */
     protected $user;
 
@@ -65,9 +65,9 @@ class Comment extends Entity implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getComment(): string
+    public function getComment(): ?string
     {
         return $this->comment;
     }
@@ -145,17 +145,17 @@ class Comment extends Entity implements EntityInterface
     }
 
     /**
-     * @return User[]
+     * @return User
      */
-    public function getUser(): array
+    public function getUser(): User
     {
         return $this->user;
     }
 
     /**
-     * @param User[] $user
+     * @param User $user
      */
-    public function setUser(array $user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

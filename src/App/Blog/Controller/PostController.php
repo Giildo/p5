@@ -2,14 +2,22 @@
 
 namespace App\Blog\Controller;
 
+use App\Admin\Model\AdminModel;
 use App\Admin\Model\UserModel;
 use App\Blog\Model\CategoryModel;
+use App\Blog\Model\CommentModel;
 use App\Blog\Model\PostModel;
 use App\Entity\Comment;
 use App\Controller\AppController;
+use App\Entity\User;
+use App\various\appHash;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
-use Core\ORM\Classes\ORMEntity;
+use Core\ORM\Classes\ORMController;
+use Core\ORM\Classes\ORMException;
+use Core\ORM\Classes\ORMTable;
+use DateTime;
+use Exception;
 
 class PostController extends AppController implements ControllerInterface
 {
@@ -27,6 +35,18 @@ class PostController extends AppController implements ControllerInterface
      * @var UserModel
      */
     protected $userModel;
+
+    /**
+     * @var AdminModel
+     */
+    protected $adminModel;
+
+    /**
+     * @var CommentModel
+     */
+    protected $commentModel;
+
+    use appHash;
 
     /**
      * Affiche l'ensemble des Posts selon la LIMIT
@@ -57,7 +77,7 @@ class PostController extends AppController implements ControllerInterface
 
         $categories = $this->findCategories();
 
-        if ($paginationOptions['id'] <= $paginationOptions['pageNb'] ) {
+        if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render('blog/index.twig', compact('posts', 'paginationOptions', 'categories'));
         } else {
             $this->render404();
@@ -69,31 +89,26 @@ class PostController extends AppController implements ControllerInterface
      *
      * @param array $vars
      * @return void
+     * @throws Exception
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws \Core\ORM\Classes\ORMException
      */
     public function show(array $vars): void
     {
         $userConnected = $this->findUserConnected();
 
         $submitMessage = 'Valider';
-        $textareaValue = '';
         $error = false;
-
-        $commentController = $this->container->get(CommentController::class);
-
-        $commentController->pathUpdateComExistsAndIsCorrect($vars, $submitMessage, $textareaValue);
-
-        $commentController->updateCom($vars, $error);
+        $noComment = false;
 
         $post = $this->select->select([
-            'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt'],
+            'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt'],
             'categories' => ['id', 'name', 'slug'],
-            'users' => ['id', 'pseudo']
+            'users'      => ['id', 'pseudo']
         ])->from('posts')
             ->innerJoin('categories', ['posts.category' => 'categories.id'])
             ->innerJoin('users', ['posts.user' => 'users.id'])
@@ -103,24 +118,50 @@ class PostController extends AppController implements ControllerInterface
             ->singleItem()
             ->execute($this->postModel, $this->categoryModel, $this->userModel);
 
-        /** @var Comment[] $comments */
-        $comments = $commentController->listComByPost($vars['id']);
+        if (isset($_POST['comment'])) {
+            try {
+                $this->updateComment($vars['id'], $userConnected, $vars['commentId']);
+            } catch (Exception $e) {
 
+            }
+        }
+
+        $comments = $this->allComments($noComment, $vars['id']);
+
+        //FINIR MODULE SUPPRESSION COM
+        if (!empty($comments)) {
+            $tokens = [];
+            foreach ($comments as $comment) {
+                $code1 = strlen($comment->id);
+                $code2 = strlen($comment->user->pseudo);
+                $code3 = strlen($post->id);
+
+                $tokens[$comment->id] = $this->appHash($code3 . $comment->id . $code1 . $post->id . $code2 . $comment->user->pseudo);
+            }
+        }
+
+        $commentUpdated = new Comment();
+        if (!empty($vars['commentId'])) {
+            $commentUpdated = $this->findCommentUpdated($vars['commentId'], $vars['id']);
+
+            if (is_null($commentUpdated)) {
+                $this->redirection('/post/' . $vars['id']);
+            }
+        }
+
+        //Form
         $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
-        if (!$this->auth->logged($userConnected)) {
-            $form->item('<em>Vous devez être connecté·e pour laisser un commentaire : <a href="/user/login">se connecter</a>.</em>');
-        } elseif ($error) {
+        if ($error) {
             $form->item('<h4 class="error">Une erreur est survenue lors de l\'envoi du commentaire.</h4>');
         }
-        $form->textarea('comment', 'Votre commentaire', 5, $textareaValue);
-        $form->input('postId', '', $post->id, 'hidden');
-        if ($this->auth->logged($userConnected)) {
-            $form->input('userId', '', $_SESSION['user']->id, 'hidden');
+        $form->textarea('comment', 'Votre commentaire', 5, $commentUpdated->comment);
+        if (isset($_POST['token'])) {
+            $form->input('token', '', $_POST['token'], 'hidden');
         }
         $form = $form->submit($submitMessage);
 
         if ($post) {
-            $this->render('blog/show.twig', compact('post', 'comments', 'form'));
+            $this->render('blog/show.twig', compact('post', 'comments', 'form', 'noComment', 'userConnected', 'tokens'));
         } else {
             $this->render404();
         }
@@ -147,7 +188,7 @@ class PostController extends AppController implements ControllerInterface
         $this->paginationMax($paginationOptions, "/categorie/{$vars['slug']}-");
 
         $posts = $this->select->select([
-            'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
+            'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
             'categories' => ['name', 'slug']
         ])->from('posts')
             ->innerJoin('categories', ['posts.category' => 'categories.id'])
@@ -215,6 +256,124 @@ class PostController extends AppController implements ControllerInterface
             );
         } else {
             $this->render404();
+        }
+    }
+
+    /**
+     * @param bool $noComment
+     * @param int $postId
+     * @return Comment[]|null
+     */
+    private function allComments(bool &$noComment, int $postId): ?array
+    {
+        $comments = null;
+
+        try {
+            $comments = $this->select->select([
+                'comments' => ['id', 'comment', 'updatedAt', 'createdAt', 'user', 'post'],
+                'users'    => ['id', 'pseudo', 'firstName', 'lastName', 'mail', 'phone', 'password', 'admin'],
+                'admin'    => ['id', 'name']
+            ])->from('comments')
+                ->innerJoin('users', ['users.id' => 'comments.user'])
+                ->innerJoin('admin', ['admin.id' => 'users.admin'])
+                ->insertEntity(['admin' => 'users'], ['id' => 'admin'], 'manyToMany')
+                ->insertEntity(['users' => 'comments'], ['id' => 'user'], 'manyToMany')
+                ->where(['comments.post' => $postId])
+                ->orderBy(['comments.updatedAt' => 'desc'])
+                ->execute($this->commentModel, $this->userModel, $this->adminModel);
+        } catch (ORMException $e) {
+            if ($e->getCode() === ORMException::NO_ELEMENT) {
+                $noComment = true;
+            }
+        }
+
+        return $comments;
+    }
+
+    /**
+     * @param int $commentId
+     * @param int $postId
+     * @return Comment|null
+     */
+    private function findCommentUpdated(int $commentId, int $postId): ?Comment
+    {
+        try {
+            /** @var Comment|null $comment */
+            $comment = $this->select->select([
+                'comments' => ['id', 'comment', 'post']
+            ])->from('comments')
+                ->where(['id' => $commentId])
+                ->singleItem()
+                ->execute($this->commentModel);
+        } catch (ORMException $e) {
+            if ($e->getCode() === ORMException::NO_ELEMENT) {
+                $comment = null;
+            }
+        }
+
+        if ($postId !== $comment->postId) {
+            $comment = null;
+        }
+
+        return $comment;
+    }
+
+    /**
+     * @param int $postId
+     * @param User $user
+     * @param int|null $commentId
+     * @throws Exception
+     * @throws ORMException
+     */
+    private function updateComment(int $postId, User $user, ?int $commentId = null)
+    {
+        if (!empty($_POST) && isset($_POST['comment']) && isset($_POST['token'])) {
+            $ormTable = new ORMTable('comments');
+            $ormTable->constructWithStdclass($this->commentModel->ORMShowColumns());
+
+            $comment = new Comment($ormTable, true);
+            $comment->id = $commentId;
+            $comment->comment = $_POST['comment'];
+
+            $originalComment = $this->select->select(['comments' => ['id', 'createdAt', 'user', 'post']])
+                ->from('comments')
+                ->singleItem()
+                ->where(['id' => $commentId])
+                ->execute($this->commentModel);
+            $comment->createdAt = $originalComment->createdAt;
+            $comment->updatedAt = new DateTime();
+            $comment->postId = $originalComment->postId;
+            $comment->userId = $originalComment->userId;
+
+            $comment->setPrimaryKey(['id']);
+
+            $code1 = strlen($comment->id);
+            $code2 = strlen($user->pseudo);
+            $code3 = strlen($postId);
+            $token = $this->appHash($code3 . $comment->id . $code1 . $postId . $code2 . $user->pseudo);
+
+            if ($token === $_POST['token']) {
+                $ormController = new ORMController();
+                $ormController->save($comment, $this->commentModel);
+
+                $this->redirection('/post/' . $postId);
+            } else {
+                throw new Exception("Une erreur est survenue lors de l'enregistrement du commentaire veuillez réessayer.");
+            }
+        } elseif (!empty($_POST) && isset($_POST['comment'])) {
+            $ormTable = new ORMTable('comments');
+            $ormTable->constructWithStdclass($this->commentModel->ORMShowColumns());
+
+            $comment = new Comment($ormTable, true);
+            $comment->comment = $_POST['comment'];
+            $comment->createdAt = $comment->updatedAt = new DateTime();
+            $comment->postId = $postId;
+            $comment->userId = $user->id;
+
+            $ormController = new ORMController();
+            $ormController->save($comment, $this->commentModel);
+        } else {
+            throw new Exception("Une erreur est survenue lors de l'envoi du commentaire. Veuillez réessayer.");
         }
     }
 }

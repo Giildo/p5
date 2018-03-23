@@ -2,6 +2,7 @@
 
 namespace Core\Auth;
 
+use App\Admin\Model\UserModel;
 use App\Entity\User;
 use App\various\appHash;
 use Core\Database\Database;
@@ -33,13 +34,22 @@ class DBAuth
 
     /**
      * Récupère en paramètre l'utilisateur qui est censé être connecté avec l'ID stocké en SESSION
-     * Utilise le même hashage
+     * Vérifie que le paramètre reçu n'est pas nul et s'il est bien une instance de notre classe User,
+     * --> Vérification pour voir si une personne de l'extérieur n'a pas crée un objet semblable
+     * Utilise le même hashage pour crée un code de vérification qu'il va comparer à celui en SESSION
+     * Si tout est OK, renvoie un true stocké normalement dans la SESSION.
+     *
      * @param User|null $user
      * @return bool
      */
     public function logged(?User $user = null): bool
     {
         $codeVerif = '';
+
+        if (is_null($user) || !($user instanceof User)) {
+            $this->logout();
+            return false;
+        }
 
         if (!is_null($user)) {
             $code1 = strlen($user->pseudo);

@@ -15,11 +15,9 @@ return [
     'blog.post.models' => [
         'post'     => get(PostModel::class),
         'category' => get(CategoryModel::class),
-        'user'     => get(UserModel::class)
-    ],
-
-    'blog.comment.models' => [
-        'comment' => get(CommentModel::class)
+        'user'     => get(UserModel::class),
+        'admin'    => get(AdminModel::class),
+        'comment'  => get(CommentModel::class)
     ],
 
     'admin.models' => [

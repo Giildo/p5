@@ -22,7 +22,7 @@ class AdminController extends AppController implements ControllerInterface
      */
     public function index()
     {
-        $user = $_SESSION['user'];
+        $user = $this->findUserConnected();
 
         $this->render('admin/index.twig', compact('user'));
     }

@@ -2,6 +2,8 @@
 
 namespace App\Blog\Controller;
 
+use App\Admin\Model\AdminModel;
+use App\Admin\Model\UserModel;
 use App\Blog\Model\CommentModel;
 use App\Controller\AppController;
 use App\Entity\Comment;
@@ -13,6 +15,17 @@ class CommentController extends AppController implements ControllerInterface
      * @var CommentModel
      */
     protected $commentModel;
+
+    /**
+     * @var UserModel
+     */
+    protected $userModel;
+
+    /**
+     * @var AdminModel
+     */
+    protected $adminModel;
+
 
     /**
      * Vérifie si
@@ -83,15 +96,23 @@ class CommentController extends AppController implements ControllerInterface
      *
      * @param int $idPost
      * @return array
+     * @throws \Core\ORM\Classes\ORMException
      */
     public function listComByPost(int $idPost): array
     {
-        return $this->commentModel->findAllByPost(
-            $idPost,
-            null,
-            null,
-            true,
-            ' ORDER BY c.updatedAt DESC'
-        );
+        var_dump($this->select);
+        die();
+        $this->select->select([
+            'comments' => ['id', 'comment', 'updatedAt', 'createdAt', 'user', 'post'],
+            'users'    => ['id', 'pseudo', 'firstName', 'lastName', 'mail', 'phone', 'password', 'admin'],
+            'admin'    => ['id', 'name']
+        ])->from('comments')
+            ->innerJoin('users', ['users.id' => 'comments.user'])
+            ->innerJoin('admin', ['admin.id' => 'users.admin'])
+            ->insertEntity(['admin' => 'users'], ['id' => 'admin'], 'manyToMany')
+            ->insertEntity(['users' => 'comments'], ['id' => 'user'], 'manyToMany')
+            ->where(['comments.post' => $idPost])
+            ->orderBy(['comments.updatedAt' => 'desc'])
+            ->execute($this->commentModel, $this->userModel, $this->adminModel);
     }
 }

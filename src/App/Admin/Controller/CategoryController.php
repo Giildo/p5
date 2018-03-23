@@ -30,7 +30,7 @@ class CategoryController extends AppController implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $user = $_SESSION['user'];
+        $user = $this->findUserConnected();
 
         if ($this->auth->isAdmin($user)) {
             $nbPage = $this->categoryModel->count();
@@ -117,7 +117,7 @@ class CategoryController extends AppController implements ControllerInterface
      */
     public function add(): void
     {
-        if ($this->auth->logged($_SESSION['user'])) {
+        if ($this->auth->logged($this->findUserConnected())) {
 
             $u_error = false;
             $u_success = false;
@@ -175,7 +175,7 @@ class CategoryController extends AppController implements ControllerInterface
      */
     public function delete(): void
     {
-        $userConnected = $_SESSION['user'];
+        $userConnected = $this->findUserConnected();
 
         if ($this->auth->isAdmin($userConnected)) {
             if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {

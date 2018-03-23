@@ -53,12 +53,12 @@ class PostController extends AppController implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $user = $_SESSION['user'];
+        $user = $this->findUserConnected();
 
         if ($this->auth->isAdmin($user)) {
             $nbPage = $this->postModel->count();
         } else {
-            $nbPage = $this->postModel->countPostsByUser($_SESSION['user']->id);
+            $nbPage = $this->postModel->countPostsByUser($user->id);
         }
 
         $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.post');
@@ -148,7 +148,7 @@ class PostController extends AppController implements ControllerInterface
         $form->textarea('content', 'Contenu de l\'article', 10, $post->content);
         $form->select('category', $categoriesSelect, $post->category->name, 'Catégorie associée');
 
-        if ($this->auth->isAdmin($_SESSION['user'])) {
+        if ($this->auth->isAdmin($this->findUserConnected())) {
             $form->select('user', $usersSelect, $post->user->pseudo, 'Auteur de l\'article');
         } else {
             $form->item("<p>Auteur : {$post->user->pseudo}</p>");
@@ -170,7 +170,7 @@ class PostController extends AppController implements ControllerInterface
      */
     public function add(): void
     {
-        if ($this->auth->logged($_SESSION['user'])) {
+        if ($this->auth->logged($this->findUserConnected())) {
 
             $u_error = false;
             $u_success = false;
@@ -239,7 +239,7 @@ class PostController extends AppController implements ControllerInterface
      */
     public function delete(): void
     {
-        $userConnected = $_SESSION['user'];
+        $userConnected = $this->findUserConnected();
 
         if ($this->auth->logged($userConnected)) {
             if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
@@ -361,6 +361,8 @@ class PostController extends AppController implements ControllerInterface
     /**
      * @return Post
      * @throws ORMException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function addPost(): Post
     {
@@ -381,7 +383,7 @@ class PostController extends AppController implements ControllerInterface
         $post->title = $_POST['title'];
         $post->content = $_POST['content'];
         $post->createdAt = $post->updatedAt = new DateTime('now');
-        $post->userId = $_SESSION['user']->id;
+        $post->userId = $this->findUserConnected()->id;
 
         $category = $this->select->select(['categories' => ['id']])
             ->from('categories')

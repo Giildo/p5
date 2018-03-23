@@ -22,3 +22,28 @@
     margin-top: 30px;
     background: linear-gradient(to right, rgba(33,37,41,0), rgba(33,37,41,1), rgba(33,37,41,0));
 }
+
+.commentBlock {
+    position: relative;
+}
+
+.editComment {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.editComment a {
+    margin: 0 5px;
+    color: #000;
+}
+
+.editComment form {
+    display: inline-block;
+}
+
+.editComment form button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}

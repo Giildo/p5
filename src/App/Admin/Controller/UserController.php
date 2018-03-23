@@ -137,7 +137,7 @@ class UserController extends AppController implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $userConnected = $_SESSION['user'];
+        $userConnected = $this->findUserConnected();
 
         if ($this->auth->isAdmin($userConnected)) {
             $nbPage = $this->userModel->count();
@@ -180,7 +180,7 @@ class UserController extends AppController implements ControllerInterface
      */
     public function update(array $vars): void
     {
-        if ($this->auth->isAdmin($_SESSION['user'])) {
+        if ($this->auth->isAdmin($this->findUserConnected())) {
             $u_success = false;
             $u_error = false;
             $errorMessage = '';
@@ -251,7 +251,7 @@ class UserController extends AppController implements ControllerInterface
      */
     public function add(): void
     {
-        if ($this->auth->isAdmin($_SESSION['user'])) {
+        if ($this->auth->isAdmin($this->findUserConnected())) {
 
             $u_error = false;
             $u_success = false;
@@ -321,7 +321,7 @@ class UserController extends AppController implements ControllerInterface
      */
     public function delete(): void
     {
-        $userConnected = $_SESSION['user'];
+        $userConnected = $this->findUserConnected();
 
         if ($this->auth->isAdmin($userConnected)) {
             if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {

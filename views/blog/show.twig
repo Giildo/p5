@@ -27,19 +27,49 @@
                 <h2 class="offset-sm-2 col-sm-8">Commentaires :</h2>
             </div>
 
-            <div class="row">
-                {{ form | raw }}
-            </div>
-
-            {% for comment in comments %}
-                <div class="row commentBlock">
-                    <div class="offset-sm-2 col-sm-8">
-                        <span class="pseudo">{{ comment.user }}</span>
-                        <span class="date">{{ comment.getCreatedAt(false) }}, a écrit :</span><br />
-                        <span class="comment">{{ comment.comment }}</span>
+            {% if userConnected != null %}
+                <div class="row">
+                    {{ form | raw }}
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="offset-sm-2 col-sm-6">
+                        <em>Vous devez être connecté·e pour laisser un commentaire : <a href="/user/login">se connecter</a>.</em>
+                        <br /><br /><br />
                     </div>
                 </div>
-            {% endfor %}
+            {% endif %}
+
+            {% if noComment == true %}
+                <div class="row">
+                    <div class="offset-sm-3 col-sm-6">
+                        <em>Il n'y pas de commentaire, soyer le premier à poster le votre</em>
+                        <br /><br /><br />
+                    </div>
+                </div>
+            {% else %}
+                {% for comment in comments %}
+                    <div class="row commentBlock">
+                        <div class="offset-sm-2 col-sm-8 blockComment">
+                            <span class="pseudo">{{ comment.user.pseudo }}</span>
+                            <span class="date">{{ comment.createdAt | date("d/m/Y à H:m:i") }}, a écrit :</span><br />
+                            <span class="comment">{{ comment.comment }}</span>
+                            {% if userConnected.admin.id == '1' or comment.user == userConnected %}
+                                <span class="editComment">
+                                    <form action="/post/{{ post.id }}-{{ comment.id }}" method="post">
+                                        <input type="hidden" name="token" id="token" value="{{ tokens[comment.id] }}" />
+                                        <button type="submit"><span class="material-icons">create</span></button>
+                                    </form>
+                                    <form action="/post/{{ post.id }}-{{ comment.id }}" method="post">
+                                        <input type="hidden" name="token" id="token" value="{{ tokens[comment.id] }}" />
+                                        <button type="submit"><span class="material-icons">delete</span></button>
+                                    </form>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
