@@ -46,6 +46,11 @@ class DBAuth
     {
         $codeVerif = '';
 
+        if (is_null($user) || !($user instanceof User)) {
+            $this->logout();
+            return false;
+        }
+
         if (!is_null($user)) {
             $code1 = strlen($user->pseudo);
             $code2 = strlen($user->admin->name);
