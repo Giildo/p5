@@ -60,7 +60,7 @@
                                         <input type="hidden" name="token" id="token" value="{{ tokens[comment.id] }}" />
                                         <button type="submit"><span class="material-icons">create</span></button>
                                     </form>
-                                    <form action="/post/{{ post.id }}-{{ comment.id }}" method="post">
+                                    <form action="/post/delete/{{ post.id }}-{{ comment.id }}" method="post">
                                         <input type="hidden" name="token" id="token" value="{{ tokens[comment.id] }}" />
                                         <button type="submit"><span class="material-icons">delete</span></button>
                                     </form>

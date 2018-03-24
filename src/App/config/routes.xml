@@ -7,6 +7,7 @@
 
     <route name="blog_post_index" path="^/blog/{id: \d+}" controller="post" method="index" />
     <route name="blog_post_showCom" path="^/post/{id: \d+}-{commentId: \d+}" controller="post" method="show" />
+    <route name="blog_post_showDeleteCom" path="^/post/delete/{id: \d+}-{deletedCommentId: \d+}" controller="post" method="show" />
     <route name="blog_post_show" path="^/post/{id: \d+}" controller="post" method="show" />
     <route name="blog_post_category" path="^/categorie/{slug: \w+}-{id: \d+}" controller="post" method="category" />
     <route name="blog_post_author" path="^/auteur/{pseudo: \w+}-{id: \d+}" controller="post" method="author" />

@@ -128,7 +128,6 @@ class PostController extends AppController implements ControllerInterface
 
         $comments = $this->allComments($noComment, $vars['id']);
 
-        //FINIR MODULE SUPPRESSION COM
         if (!empty($comments)) {
             $tokens = [];
             foreach ($comments as $comment) {
@@ -137,6 +136,15 @@ class PostController extends AppController implements ControllerInterface
                 $code3 = strlen($post->id);
 
                 $tokens[$comment->id] = $this->appHash($code3 . $comment->id . $code1 . $post->id . $code2 . $comment->user->pseudo);
+            }
+        }
+
+        $errorDeleteComment = null;
+        if (isset($vars['deletedCommentId'])) {
+            try {
+                $this->deleteComment($vars['id'], $vars['deletedCommentId'], $userConnected);
+            } catch (Exception $e) {
+                $errorDeleteComment = $e->getMessage();
             }
         }
 
@@ -153,6 +161,8 @@ class PostController extends AppController implements ControllerInterface
         $form = new BootstrapForm(' offset-sm-2 col-sm-8 loginForm');
         if ($error) {
             $form->item('<h4 class="error">Une erreur est survenue lors de l\'envoi du commentaire.</h4>');
+        } elseif (!is_null($errorDeleteComment)) {
+            $form->item("<h4 class='error'>{$errorDeleteComment}</h4>");
         }
         $form->textarea('comment', 'Votre commentaire', 5, $commentUpdated->comment);
         if (isset($_POST['token'])) {
@@ -279,7 +289,7 @@ class PostController extends AppController implements ControllerInterface
                 ->insertEntity(['admin' => 'users'], ['id' => 'admin'], 'manyToMany')
                 ->insertEntity(['users' => 'comments'], ['id' => 'user'], 'manyToMany')
                 ->where(['comments.post' => $postId])
-                ->orderBy(['comments.updatedAt' => 'desc'])
+                ->orderBy(['comments.createdAt' => 'desc'])
                 ->execute($this->commentModel, $this->userModel, $this->adminModel);
         } catch (ORMException $e) {
             if ($e->getCode() === ORMException::NO_ELEMENT) {
@@ -319,6 +329,11 @@ class PostController extends AppController implements ControllerInterface
     }
 
     /**
+     * Vérifie si un "token" est envoyé :
+     * --> Si oui, c'est que c'est une modification de commentaire. Vérifie si le "token" est valide si oui modifie
+     * --> Si non, c'est un ajout
+     * --> Sinon renvoie une erreur.
+     *
      * @param int $postId
      * @param User $user
      * @param int|null $commentId
@@ -374,6 +389,52 @@ class PostController extends AppController implements ControllerInterface
             $ormController->save($comment, $this->commentModel);
         } else {
             throw new Exception("Une erreur est survenue lors de l'envoi du commentaire. Veuillez réessayer.");
+        }
+    }
+
+    /**
+     * @param int $postId
+     * @param int $deletedCommentId
+     * @param User $user
+     * @throws Exception
+     * @throws ORMException
+     */
+    private function deleteComment(int $postId, int $deletedCommentId, User $user)
+    {
+        if (!empty($_POST) && isset($_POST['token'])) {
+            $code1 = strlen($deletedCommentId);
+            $code2 = strlen($user->pseudo);
+            $code3 = strlen($postId);
+            $token = $this->appHash($code3 . $deletedCommentId . $code1 . $postId . $code2 . $user->pseudo);
+
+            if ($token === $_POST['token']) {
+                $comment = $this->select->select(['comments' => ['id']])
+                    ->from('comments')
+                    ->where(['id' => $deletedCommentId])
+                    ->singleItem()
+                    ->execute($this->commentModel);
+                $ormController = new ORMController();
+                $ormController->delete($comment, $this->commentModel);
+                $this->redirection('/post/' . $postId);
+            } elseif ($this->auth->isAdmin($user)) {
+                $comment = $this->select->select(['comments' => ['id', 'post']])
+                    ->singleItem()
+                    ->where(['id' => $deletedCommentId])
+                    ->from('comments')
+                    ->execute($this->commentModel);
+
+                if ($comment->postId === $postId) {
+                    $ormController = new ORMController();
+                    $ormController->delete($comment, $this->commentModel);
+                    $this->redirection('/post/' . $postId);
+                } else {
+                    throw new Exception("Une erreur est survenue lors de la suppression du commentaire.");
+                }
+            } else {
+                throw new Exception("Vos droits ne vous permettent pas de supprimer ce commentaire.");
+            }
+        } else {
+            $this->redirection('/post/' . $postId);
         }
     }
 }
