@@ -415,6 +415,10 @@ blockquote {
     font-size: 0.8rem;
 }
 
+.inputEmpty {
+    box-shadow: red 0 0 10px;
+}
+
 /** Footer **/
 
 footer {

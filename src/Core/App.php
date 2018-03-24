@@ -4,11 +4,12 @@ namespace Core;
 
 use App\Controller\AppController;
 use App\Entity\User;
+use App\General\Controller\GeneralController;
 use Core\Auth\DBAuth;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
+use Core\Exception\JojotiqueException;
 use Core\ORM\Classes\ORMSelect;
-use Core\PSR7\HTTPRequest;
 use Core\Router\Route;
 use Core\Router\Router;
 use Psr\Container\ContainerInterface;
@@ -20,11 +21,6 @@ use Twig_Environment;
  */
 class App
 {
-    /**
-     * @var HTTPRequest
-     */
-    private $request;
-
     /**
      * @var Router
      */
@@ -43,18 +39,14 @@ class App
     /**
      * App constructor.
      * @param Router $router
-     * @param HTTPRequest $request
      * @param ContainerInterface $container
      * @param DBAuth $auth
      */
-    public function __construct(Router $router, HTTPRequest $request, ContainerInterface $container, DBAuth $auth)
+    public function __construct(Router $router, ContainerInterface $container, DBAuth $auth)
     {
-        $this->request = $request;
         $this->router = $router;
         $this->container = $container;
         $this->auth = $auth;
-
-        $this->request->paths();
     }
 
     /**
@@ -62,19 +54,23 @@ class App
      *
      * Récupère le Router, lui fait trouver le bon controlleur, l'instancie et lance la vue
      *
-     * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function run(): void
     {
-        $uri = $this->request->getServerParam('REQUEST_URI');
+        $uri = $_SERVER['REQUEST_URI'];
 
         $route = $this->router->getRoute($uri);
 
         $controller = $this->newController($route);
 
-        $controller->run($route->getNameMethod(), $route->getVars());
+        try {
+            $controller->run($route->getNameMethod(), $route->getVars());
+        } catch (JojotiqueException $e) {
+            $_SESSION['flash'] = $e->getMessage();
+            $controller->redirection('/error');
+        }
     }
 
     /**
@@ -121,14 +117,6 @@ class App
             $models,
             new ORMSelect(dirname(__DIR__) . '/App/config/orm_config.php')
         );
-    }
-
-    /**
-     * @return HTTPRequest
-     */
-    public function getRequest(): HTTPRequest
-    {
-        return $this->request;
     }
 
     /**

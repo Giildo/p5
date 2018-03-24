@@ -1,0 +1,18 @@
+{% extends 'layout.twig' %}
+
+{% block title %}Une erreur est survenue{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-6 p404">
+            <h1>OUPS une erreur est survenue !</h1>
+
+            <div class="row">
+                {{ form | raw }}
+            </div>
+        </div>
+        <div class="col-sm-6 p404">
+            <img src="/img/error.gif" alt="Image montrant un personnage blanc dans un rond barré symbolisant une erreur" />
+        </div>
+    </div>
+{% endblock %}

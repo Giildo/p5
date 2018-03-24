@@ -12,49 +12,6 @@ class CommentModel extends Model
     protected $table = 'comments';
 
     /**
-     * Récupère tous les commentaire d'un article
-     *
-     * @param int $postId
-     * @param int|null $start
-     * @param int|null $limit
-     * @param bool|null $order
-     * @param null|string $orderBy
-     * @return array
-     */
-    public function findAllByPost(
-        int $postId,
-        ?int $start = null,
-        ?int $limit = null,
-        ?bool $order = false,
-        ?string $orderBy = null
-    ): array {
-        $statement = "
-                SELECT  c.id,
-                        c.comment,
-                        c.createdAt,
-                        c.updatedAt,
-                        c.user AS userId,
-                        c.post AS postId,
-                        u.pseudo AS user,
-                        p.title AS post
-                FROM comments c
-                LEFT JOIN users u ON c.user = u.id
-                LEFT JOIN posts p ON c.post = p.id
-                WHERE c.post=:postId";
-
-        return $this->findAllByColumn(
-            $statement,
-            ':postId',
-            $postId,
-            Comment::class,
-            $start,
-            $limit,
-            $order,
-            $orderBy
-        );
-    }
-
-    /**
      * Ajoute un commentaire à la base de données
      *
      * @param string $comment

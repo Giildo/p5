@@ -29,7 +29,6 @@ return [
     ),
     Form::class              => object(),
     DBAuth::class            => object(),
-    HTTPRequest::class       => object(),
     Database::class          => object()->constructor(get(PDO::class)),
     Model::class             => object(),
     Controller::class        => object(),

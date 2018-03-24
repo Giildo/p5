@@ -2,9 +2,8 @@
 
 namespace Core\Controller;
 
-use App\Entity\Admin;
-use App\Entity\User;
 use Core\Auth\DBAuth;
+use Core\Exception\JojotiqueException;
 use Core\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
@@ -59,7 +58,8 @@ class Controller implements ControllerInterface
     }
 
     /**
-     * Lance la méthode passée en paramètres en lui ajoutant si besoin des les paramètres
+     * Lit la méthode récupérée dans la route, vérifie que celle-ci est bien présente dans le contrôleur,
+     * sinon renvoie une erreur.
      *
      * @param string $nameMethod
      * @param array|null $vars
@@ -72,7 +72,7 @@ class Controller implements ControllerInterface
             $this->$nameMethod($vars);
         } else {
             $className = get_class($this);
-            throw new \Exception("\"{$nameMethod}\" n'est pas une méthode de \"{$className}\"");
+            throw new JojotiqueException("\"{$nameMethod}\" n'est pas une méthode de \"{$className}\"", JojotiqueException::ROUTE_METHOD_ERROR);
         }
     }
 

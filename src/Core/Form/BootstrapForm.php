@@ -90,12 +90,12 @@ class BootstrapForm extends Form implements FormInterface
     /**
      * Retourne un bouton de validation
      *
-     * @param string $text
+     * @param null|string $text
      * @param null|string $type
      * @param null|string $class
      * @return string
      */
-    public function submit(string $text, ?string $type = 'button', ?string $class = ''): string
+    public function submit(?string $text = 'Valider', ?string $type = 'button', ?string $class = ''): string
     {
         $class .= ' btn btn-primary';
 

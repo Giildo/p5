@@ -5,7 +5,9 @@ namespace App\Admin\Controller;
 use App\Admin\Model\UserModel;
 use App\Controller\AppController;
 use App\Entity\User;
+use Core\Auth\DBAuth;
 use Core\Controller\ControllerInterface;
+use Core\Exception\JojotiqueException;
 use Core\Form\BootstrapForm;
 use Core\ORM\Classes\ORMController;
 use Core\ORM\Classes\ORMException;
@@ -25,7 +27,16 @@ class UserController extends AppController implements ControllerInterface
     protected $adminModel;
 
     /**
-     * Affiche la page de connexion pour un utilisateur
+     * Affiche la page de connexion pour un utilisateur.
+     * Si "c_pseudo" et "c_password" sont passés en POST c'est qu'il y a une tentative de connexion.
+     * Essaye de récupérer dans la BDD l'utilisateur dont le pseudo est passé en POST. S'il n'y arrive pas, envoie une erreur.
+     * @uses DBAuth::log() avec l'utilisateur trouvé dans la BDD.
+     *
+     * Récupère ensuite l'utilisateur stocké en session.
+     * @uses DBAuth::logged() avec l'utilisateur récupéré s'il est connecté, pas besoin de charger la page,
+     * renvoie vers l'accueil.
+     *
+     * Sinon,
      *
      * @return void
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -36,11 +47,8 @@ class UserController extends AppController implements ControllerInterface
      */
     public function login(): void
     {
-        $c_error = false;
-        $c_errorMessage = '';
-        $r_error = false;
-        $r_success = false;
-        $r_errorMessage = '';
+        $c_error = null;
+        $c_errorCode = 0;
 
         if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
             try {
@@ -55,24 +63,25 @@ class UserController extends AppController implements ControllerInterface
                     ->execute($this->userModel, $this->adminModel);
             } catch (ORMException $e) {
                 if ($e->getCode() === ORMException::NO_ELEMENT) {
-                    $c_error = true;
-                    $c_errorMessage = "Aucun utilisateur n'a été trouvé avec cet identifiant !";
+                    $c_error = "Aucun utilisateur n'a été trouvé avec cet identifiant !";
                 }
             }
 
-            if (!$c_error) {
-                try {
-                    $this->auth->log($user, $_POST['c_password']);
-                } catch (Exception $e) {
-                    $c_error = true;
-                    $c_errorMessage = $e->getMessage();
-                }
+            try {
+                $this->auth->log($user, $_POST['c_password']);
+            } catch (Exception $e) {
+                $c_error = $e->getMessage();
+                $c_errorCode = $e->getCode();
             }
         }
 
         $user = $this->findUserConnected();
 
         if (!$this->auth->logged($user)) {
+            $r_error = false;
+            $r_success = false;
+            $r_errorMessage = '';
+
             if (!empty($_POST) &&
                 isset($_POST['pseudo']) &&
                 isset($_POST['firstName']) &&
@@ -95,12 +104,23 @@ class UserController extends AppController implements ControllerInterface
             // Création des formulaires de login
             $form1 = new BootstrapForm('col-sm-6 loginForm');
             $form1->fieldset('Connectez-vous');
-            ($c_error) ?
-                $form1->item("<h4 class='error'>{$c_errorMessage}</h4>") :
-                null;
-            $form1->input('c_pseudo', 'Pseudo', $user->pseudo);
-            $form1->input('c_password', 'Mot de passe', $user->password, 'password');
-            $form1 = $form1->submit('Valider');
+
+            if (!is_null($c_error)) {
+                $form1->item("<h4 class='error'>{$c_error}</h4>");
+            }
+
+            if ($c_errorCode === JojotiqueException::USER_IS_NULL) {
+                    $form1->input('c_pseudo', 'Pseudo', $user->pseudo, 'text', 'inputEmpty');
+            } else {
+                $form1->input('c_pseudo', 'Pseudo', $user->pseudo);
+            }
+
+            if ($c_errorCode === JojotiqueException::PASSWORD_IS_NULL) {
+                $form1->input('c_password', 'Mot de passe', $user->password, 'password', 'inputEmpty');
+            } else {
+                $form1->input('c_password', 'Mot de passe', $user->password, 'password');
+            }
+            $form1 = $form1->submit();
 
             // Création du formulaire pour l'ajout d'utilisateur
             $form2 = new BootstrapForm(('col-sm-6 loginForm'));
