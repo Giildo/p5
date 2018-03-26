@@ -16,28 +16,19 @@ use Psr\Container\ContainerInterface;
 use Core\ORM\Classes\ORMController;
 
 return [
-
-    App::class               => object(),
-    Router::class            => object()->constructor(
+    Router::class => object()->constructor(
         get('app.prefix'),
         get('app.routes'),
         get(ContainerInterface::class)
     ),
-    ORMController::class     => object()->constructor(
+
+    ORMController::class => object()->constructor(
         get(ContainerInterface::class),
         get(PDO::class)
     ),
-    Form::class              => object(),
-    DBAuth::class            => object(),
-    Database::class          => object()->constructor(get(PDO::class)),
-    Model::class             => object(),
-    Controller::class        => object(),
-    CommentController::class => object()->constructor(
-        get(Twig_Environment::class),
-        get(ContainerInterface::class),
-        get('blog.comment.models')
-    ),
-    PDO::class               => function (ContainerInterface $c) {
+
+    Database::class => object()->constructor(get(PDO::class)),
+    PDO::class      => function (ContainerInterface $c) {
         return new PDO(
             'mysql:host=' . $c->get('db.host') . ';dbname=' . $c->get('db.name') . ';charset=utf8',
             $c->get('db.user'),

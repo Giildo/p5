@@ -6,6 +6,8 @@ return [
     'app.prefix' => '\App',
     'app.routes' => __DIR__ . '/routes.xml',
 
+    'orm.config' => __DIR__ . '/orm_config.php',
+
     'db.name'     => 'app',
     'db.user'     => 'root',
     'db.password' => 'jOn79613226',
