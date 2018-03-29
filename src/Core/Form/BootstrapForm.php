@@ -8,7 +8,7 @@ class BootstrapForm extends Form implements FormInterface
      * @param string $legend
      * @param null|string $class
      */
-    public function fieldset(string $legend, ?string $class = ' form-group'): void
+    public function fieldset(string $legend, string $class = ' form-group'): void
     {
 
         parent::fieldset($legend, $class);
@@ -27,11 +27,11 @@ class BootstrapForm extends Form implements FormInterface
      */
     public function input(
         string $name,
-        ?string $label = null,
-        ?string $value = null,
-        ?string $type = 'text',
-        ?string $class = null,
-        ?string $autocompletion = ''
+        string $label = null,
+        string $value = null,
+        string $type = 'text',
+        string $class = null,
+        string $autocompletion = ''
     ): void {
         $class .= ' form-control';
 
@@ -52,10 +52,10 @@ class BootstrapForm extends Form implements FormInterface
      */
     public function textarea(
         string $name,
-        ?string $label = null,
-        ?int $rows = 10,
-        ?string $value = null,
-        ?string $class = null
+        string $label = null,
+        int $rows = 10,
+        string $value = null,
+        string $class = null
     ): void {
         $class .= ' form-control';
 
@@ -76,9 +76,9 @@ class BootstrapForm extends Form implements FormInterface
     public function select(
         string $name,
         array $options,
-        ?string $optionCurrent = '',
-        ?string $label = '',
-        ?string $class = ''
+        string $optionCurrent = '',
+        string $label = '',
+        string $class = ''
     ): void {
         $class .= ' form-control';
 
@@ -95,7 +95,7 @@ class BootstrapForm extends Form implements FormInterface
      * @param null|string $class
      * @return string
      */
-    public function submit(?string $text = 'Valider', ?string $type = 'button', ?string $class = ''): string
+    public function submit(string $text = 'Valider', string $type = 'button', string $class = ''): string
     {
         $class .= ' btn btn-primary';
 

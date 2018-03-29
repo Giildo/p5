@@ -28,13 +28,13 @@ class Router
     /**
      * Router constructor.
      * @param string $namespace
-     * @param null|string $configFile
      * @param ContainerInterface $container
+     * @param null|string $configFile
      * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(string $namespace, ?string $configFile = null, ContainerInterface $container)
+    public function __construct(string $namespace, ContainerInterface $container, string $configFile = null)
     {
         $this->namespace = $namespace;
         $this->container = $container;

@@ -50,7 +50,7 @@ class DBAuth
      * @param User|null $user
      * @return bool
      */
-    public function logged(?User $user = null): bool
+    public function logged(User $user = null): bool
     {
         $codeVerif = '';
 
@@ -86,7 +86,7 @@ class DBAuth
      * @return void
      * @throws JojotiqueException
      */
-    public function log(?ORMEntity $user = null, ?string $password = null): void
+    public function log(ORMEntity $user = null, string $password = null): void
     {
         if (is_null($user)) {
             throw new JojotiqueException("Le nom d'utilisateur doit être renseigné.", JojotiqueException::USER_IS_NULL);
@@ -127,7 +127,7 @@ class DBAuth
      * @param User|null $user
      * @return bool
      */
-    public function isAdmin(?User $user = null): bool
+    public function isAdmin(User $user = null): bool
     {
         if ($this->logged($user)) {
             return $_SESSION['user']->admin->id === 1;

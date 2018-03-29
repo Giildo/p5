@@ -12,7 +12,7 @@ class JojotiqueException extends Exception
 
     public const ROUTE_METHOD_ERROR = 20;
 
-    public function __construct(string $message = "", ?int $code = 0)
+    public function __construct(string $message = "", int $code = 0)
     {
         parent::__construct($message, $code);
     }

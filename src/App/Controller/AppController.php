@@ -86,7 +86,7 @@ class AppController extends Controller implements ControllerInterface
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    protected function render(string $nameView, ?array $twigVariable = []): void
+    protected function render(string $nameView, array $twigVariable = []): void
     {
         $user = $this->findUserConnected();
         $twigVariable['sessionConfirmConnect'] = (!is_null($user)) ? $this->auth->logged($user) : false;
@@ -103,7 +103,7 @@ class AppController extends Controller implements ControllerInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    protected function pagination(array $vars, int $nbItem, ?string $optionLimit = 'blog.limit.post'): array
+    protected function pagination(array $vars, int $nbItem, string $optionLimit = 'blog.limit.post'): array
     {
         $pagination = [];
 

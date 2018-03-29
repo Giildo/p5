@@ -292,10 +292,10 @@ class PostController extends AppController implements ControllerInterface
      * @throws ORMException
      */
     private function findPostsWithCategoryAndUser(
-        ?array $where = [],
-        ?int $limit = null,
-        ?int $start = null,
-        ?bool $singleItem = false
+        array $where = [],
+        int $limit = null,
+        int $start = null,
+        bool $singleItem = false
     ) {
         return $this->select->select([
             'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user', 'category'],

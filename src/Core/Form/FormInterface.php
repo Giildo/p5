@@ -10,7 +10,7 @@ interface FormInterface
      * @param string $legend
      * @param null|string $class
      */
-    public function fieldset(string $legend, ?string $class = ''): void;
+    public function fieldset(string $legend, string $class = ''): void;
 
     /**
      * Retourne un champ de type input
@@ -25,11 +25,11 @@ interface FormInterface
      */
     public function input(
         string $name,
-        ?string $label = '',
-        ?string $value = '',
-        ?string $type = 'text',
-        ?string $class = '',
-        ?string $autocompletion = ''
+        string $label = '',
+        string $value = '',
+        string $type = 'text',
+        string $class = '',
+        string $autocompletion = ''
     );
 
     /**
@@ -44,10 +44,10 @@ interface FormInterface
      */
     public function textarea(
         string $name,
-        ?string $label = '',
-        ?int $rows = 10,
-        ?string $value = '',
-        ?string $class = ''
+        string $label = '',
+        int $rows = 10,
+        string $value = '',
+        string $class = ''
     );
 
     /**
@@ -58,5 +58,5 @@ interface FormInterface
      * @param null|string $class
      * @return string
      */
-    public function submit(string $text, ?string $type = 'input', ?string $class = ''): string;
+    public function submit(string $text, string $type = 'input', string $class = ''): string;
 }

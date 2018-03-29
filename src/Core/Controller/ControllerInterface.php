@@ -24,8 +24,8 @@ interface ControllerInterface
     public function __construct(
         Twig_Environment $twig,
         ContainerInterface $container,
-        ?array $models = [],
-        ?ORMSelect $select = null
+        array $models = [],
+        ORMSelect $select = null
     );
 
     /**
@@ -36,7 +36,7 @@ interface ControllerInterface
      * @return void
      * @throws JojotiqueException
      */
-    public function run(string $nameMethod, ?array $vars = []): void;
+    public function run(string $nameMethod, array $vars = []): void;
 
     /**
      * Envoie une vue Twig pour la page 404

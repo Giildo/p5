@@ -18,7 +18,7 @@ class Form implements FormInterface
      * @param null|string $method
      * @param null|string $action
      */
-    public function __construct(?string $class = '', ?string $method = 'POST', ?string $action = '')
+    public function __construct(string $class = '', string $method = 'POST', string $action = '')
     {
         $this->form = "<form action='{$action}' method='{$method}' class='{$class}'>";
     }
@@ -29,7 +29,7 @@ class Form implements FormInterface
      * @param string $legend
      * @param null|string $class
      */
-    public function fieldset(string $legend, ?string $class = ''): void
+    public function fieldset(string $legend, string $class = ''): void
     {
         $this->fieldset = true;
 
@@ -50,11 +50,11 @@ class Form implements FormInterface
      */
     public function input(
         string $name,
-        ?string $label = '',
-        ?string $value = '',
-        ?string $type = 'text',
-        ?string $class = '',
-        ?string $autocompletion = ''
+        string $label = '',
+        string $value = '',
+        string $type = 'text',
+        string $class = '',
+        string $autocompletion = ''
     ): void {
         $label = $this->labelConstruct($name, $label);
 
@@ -85,10 +85,10 @@ class Form implements FormInterface
      */
     public function textarea(
         string $name,
-        ?string $label = '',
-        ?int $rows = 10,
-        ?string $value = '',
-        ?string $class = ''
+        string $label = '',
+        int $rows = 10,
+        string $value = '',
+        string $class = ''
     ): void {
         $label = $this->labelConstruct($name, $label);
 
@@ -119,9 +119,9 @@ class Form implements FormInterface
     public function select(
         string $name,
         array $options,
-        ?string $optionCurrent = '',
-        ?string $label = '',
-        ?string $class = ''
+        string $optionCurrent = '',
+        string $label = '',
+        string $class = ''
     ): void {
         $selected = '';
 
@@ -153,7 +153,7 @@ class Form implements FormInterface
      * @param null|string $class
      * @return string
      */
-    public function submit(string $text, ?string $type = 'input', ?string $class = ''): string
+    public function submit(string $text, string $type = 'input', string $class = ''): string
     {
         $text = ucfirst($text);
 
@@ -179,7 +179,7 @@ class Form implements FormInterface
      * @param null|string $label
      * @return string
      */
-    protected function labelConstruct(string $name, ?string $label = ''): string
+    protected function labelConstruct(string $name, string $label = ''): string
     {
         if ($label === null) {
             return ucfirst($name);

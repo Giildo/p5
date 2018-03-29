@@ -343,7 +343,7 @@ class PostController extends AppController implements ControllerInterface
      * @throws Exception
      * @throws ORMException
      */
-    private function updateComment(int $postId, User $user, ?int $commentId = null)
+    private function updateComment(int $postId, User $user, int $commentId = null)
     {
         if (!empty($_POST) && isset($_POST['comment']) && isset($_POST['token'])) {
             $ormTable = new ORMTable('comments');

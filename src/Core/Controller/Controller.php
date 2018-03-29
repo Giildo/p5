@@ -47,8 +47,8 @@ class Controller implements ControllerInterface
     public function __construct(
         Twig_Environment $twig,
         ContainerInterface $container,
-        ?array $models = [],
-        ?ORMSelect $select = null
+        array $models = [],
+        ORMSelect $select = null
     ) {
         $this->twig = $twig;
         $this->container = $container;
@@ -70,7 +70,7 @@ class Controller implements ControllerInterface
      * @return void
      * @throws \Exception
      */
-    public function run(string $nameMethod, ?array $vars = []): void
+    public function run(string $nameMethod, array $vars = []): void
     {
         if (is_callable([$this, $nameMethod])) {
             $this->$nameMethod($vars);
@@ -110,7 +110,7 @@ class Controller implements ControllerInterface
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    protected function render(string $nameView, ?array $twigVariable = []): void
+    protected function render(string $nameView, array $twigVariable = []): void
     {
         echo $this->twig->render($nameView, $twigVariable);
     }
