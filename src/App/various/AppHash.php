@@ -2,7 +2,7 @@
 
 namespace App\various;
 
-trait appHash
+trait AppHash
 {
     /**
      * @param string $text

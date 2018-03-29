@@ -44,5 +44,10 @@ interface ORMModelInterface
      * @param bool|null $inOption
      * @return array
      */
-    public function ORMFind(string $statement, ?string $entityType = null, ?array $whereOptions = [], ?bool $inOption = false): array;
+    public function ORMFind(
+        string $statement,
+        ?string $entityType = null,
+        ?array $whereOptions = [],
+        ?bool $inOption = false
+    ): array;
 }

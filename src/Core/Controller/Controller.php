@@ -44,8 +44,12 @@ class Controller implements ControllerInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [], ?ORMSelect $select = null)
-    {
+    public function __construct(
+        Twig_Environment $twig,
+        ContainerInterface $container,
+        ?array $models = [],
+        ?ORMSelect $select = null
+    ) {
         $this->twig = $twig;
         $this->container = $container;
 
@@ -72,7 +76,10 @@ class Controller implements ControllerInterface
             $this->$nameMethod($vars);
         } else {
             $className = get_class($this);
-            throw new JojotiqueException("\"{$nameMethod}\" n'est pas une méthode de \"{$className}\"", JojotiqueException::ROUTE_METHOD_ERROR);
+            throw new JojotiqueException(
+                "\"{$nameMethod}\" n'est pas une méthode de \"{$className}\"",
+                JojotiqueException::ROUTE_METHOD_ERROR
+            );
         }
     }
 

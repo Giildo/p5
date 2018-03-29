@@ -3,7 +3,7 @@
 namespace Core\Auth;
 
 use App\Entity\User;
-use App\various\appHash;
+use App\various\AppHash;
 use Core\Database\Database;
 use Core\Exception\JojotiqueException;
 use Core\ORM\Classes\ORMEntity;
@@ -15,7 +15,7 @@ use Core\ORM\Classes\ORMEntity;
  * - vérifier si l'utilisateur est connecté
  * - vérifier si l'utilisateur est administrateur
  * Class DBAuth
- * @uses appHash
+ * @uses AppHash
  * @package Core\Auth
  */
 class DBAuth
@@ -32,7 +32,7 @@ class DBAuth
         session_start();
     }
 
-    use appHash;
+    use AppHash;
 
     /**
      * Récupère l'utilisateur stocké en variable de session.

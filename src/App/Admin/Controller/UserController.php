@@ -29,7 +29,8 @@ class UserController extends AppController implements ControllerInterface
     /**
      * Affiche la page de connexion pour un utilisateur.
      * Si "c_pseudo" et "c_password" sont passés en POST c'est qu'il y a une tentative de connexion.
-     * Essaye de récupérer dans la BDD l'utilisateur dont le pseudo est passé en POST. S'il n'y arrive pas, envoie une erreur.
+     * Essaye de récupérer dans la BDD l'utilisateur dont le pseudo est passé en POST.
+     * S'il n'y arrive pas, envoie une erreur.
      * @uses DBAuth::log() avec l'utilisateur trouvé dans la BDD.
      *
      * Récupère ensuite l'utilisateur stocké en session.
@@ -272,7 +273,6 @@ class UserController extends AppController implements ControllerInterface
     public function add(): void
     {
         if ($this->auth->isAdmin($this->findUserConnected())) {
-
             $u_error = false;
             $u_success = false;
             $errorMessage = '';
@@ -344,8 +344,7 @@ class UserController extends AppController implements ControllerInterface
         $userConnected = $this->findUserConnected();
 
         if ($this->auth->isAdmin($userConnected)) {
-            if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
-
+            if (!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
                 $user = $this->select->select(['users' => ['id', 'firstName']])
                     ->from('users')
                     ->where(['id' => $_POST['id']])
@@ -367,11 +366,13 @@ class UserController extends AppController implements ControllerInterface
                     $this->index($vars);
                 } else {
                     $this->render('admin/users/index.twig', []);
-                    throw new Exception("Une erreur est survenue lors de la suppression de l'utilisaeur, veuillez réessayer.");
+                    throw new Exception("Une erreur est survenue lors de la suppression de l'utilisaeur,
+                        veuillez réessayer.");
                 }
             } else {
                 $this->render('admin/users/index.twig', []);
-                throw new Exception("Une erreur est survenue lors de la suppression de l'utilisaeur, veuillez réessayer.");
+                throw new Exception("Une erreur est survenue lors de la suppression de l'utilisaeur,
+                    veuillez réessayer.");
             }
         } else {
             $this->renderErrorNotAdmin();

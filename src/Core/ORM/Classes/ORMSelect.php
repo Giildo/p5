@@ -111,7 +111,8 @@ class ORMSelect
                 $this->statement['orderBy'] = $orderByOptions;
             } else {
                 $this->resetSelect();
-                throw new ORMException("\"{$direction}\" n'est pas un sens de trie autorisé, veuillez indiquer \"ASC\" ou \"DESC\".");
+                throw new ORMException("\"{$direction}\" n'est pas un sens de trie autorisé,
+                    veuillez indiquer \"ASC\" ou \"DESC\".");
             }
         }
 
@@ -250,22 +251,23 @@ class ORMSelect
      *
      * @uses $this->ormAndEntitiesCreation()
      * Crée :
-     *  ->  les ORMTables qui seront insérés dans les entités qu'on va crée plus loin, car ils sont nécessaire à la méthode
-     *      ORMEntity->constructWithStdClass().
+     *  ->  les ORMTables qui seront insérés dans les entités qu'on va crée plus loin,
+     *      car ils sont nécessaire à la méthode ORMEntity->constructWithStdClass().
      *  ->  les entités dont les noms sont tirés de l'appel à "From" et de l'appel à "join". Ex : utilisation de
      *      ORMSelect->from('posts'), la méthode va crée un objet de type 'Post' de 'Entity'.
      *
      * @uses ORMModel->ORMFind()
-     * Fonction appelée depuis le modèle pour récupérer les informations depuis la base de données sous forme de StdClass
+     * Fonction appelée depuis le modèle pour récupérer les informations
+     * depuis la base de données sous forme de StdClass.
      * Données récupérées à partir du statement crée plus haut.
      *
      * @uses $this->constructEntityWithStdClass()
-     * Utilisation de la méthode ORMEntity->constructWithStdClass pour créer les objets à partir des informations récupérées
-     * juste au-dessus.
+     * Utilisation de la méthode ORMEntity->constructWithStdClass pour créer les objets
+     * à partir des informations récupérées juste au-dessus.
      *
      * @uses $this->insertEntityIntoAnotherEntity()
-     * Va insérer un ensemble d'entités enfants dans l'entité parent ou une entité enfant dans un ensemble d'entités parents,
-     * selon $this->statement['innerOption'] qui détermine l'entité enfant et l'entité parent,
+     * Va insérer un ensemble d'entités enfants dans l'entité parent ou une entité enfant dans un ensemble
+     * d'entités parents, selon $this->statement['innerOption'] qui détermine l'entité enfant et l'entité parent,
      * et l'option $this->statement['onToMany'] qui détermine le type de relation.
      *
      * @uses $this->resetSelect()
@@ -293,7 +295,8 @@ class ORMSelect
 
         if (empty($items)) {
             $this->resetSelect();
-            throw new ORMException("Aucun élément n'a été trouvé dans table \"{$this->tableName}\" avec ces paramètres.", ORMException::NO_ELEMENT);
+            throw new ORMException("Aucun élément n'a été trouvé dans table \"{$this->tableName}\"
+                avec ces paramètres.", ORMException::NO_ELEMENT);
         }
 
         $allEntities = $this->constructEntityWithStdClass($items, $entities, $ormTables);
@@ -420,8 +423,8 @@ class ORMSelect
      *      -> plusieurs pour une (ManyToOne), ex. on insère tous les commentaires (comments) dans l'article avec
      *         lequel ils sont liés (posts)
      *
-     * Dans les deux types de relation, on sépare dans "$allEntities" les entités récupérées dans $this->statement['insertEntity']
-     * dans le tableau ou la variable "$entitiesChild" et "$entitiesParent".
+     * Dans les deux types de relation, on sépare dans "$allEntities" les entités récupérées
+     * dans $this->statement['insertEntity'] dans le tableau ou la variable "$entitiesChild" et "$entitiesParent".
      *
      * Dans le cas de la relation "OneToMany" on parcourt le tableau "$entitiesParents" pour y ajouter l'entité enfant.
      * Dans le cas de la relation "ManyToOne" on insère le tableau "$entitiesChild" dans l'entité parent.
@@ -605,7 +608,8 @@ class ORMSelect
         //Renvoie une erreur si le tableau des entités est vide
         if (empty($entities)) {
             $this->resetSelect();
-            throw new ORMException("L'entité n'a pas été trouvée dans le fichier de configuration \"{$this->configFiles}\".");
+            throw new ORMException("L'entité n'a pas été trouvée dans le fichier de
+                configuration \"{$this->configFiles}\".");
         }
     }
 
@@ -675,15 +679,18 @@ class ORMSelect
     }
 
     /**
-     * Créer une fonction de type setter à partir du nom de l'entité enfant. Pour prendre tous les cas possibles (pluriel,
-     * singulier et pluriel irrégulier), création de trois variables différentes. On teste ensuit les trois variables
-     * au niveau de la classe pour vérifier si elle existe, si c'est le cas, on l'utilse.
+     * Créer une fonction de type setter à partir du nom de l'entité enfant.
+     * Pour prendre tous les cas possibles (pluriel,singulier et pluriel irrégulier),
+     * création de trois variables différentes.
+     * On teste ensuit les trois variables au niveau de la classe pour vérifier si elle existe,
+     * si c'est le cas, on l'utilse.
      * - $att => pluriel : ORMEntity posts->setComments car il peut y avoir plusieurs commentaire dans un post
      * - $attSingular => singulier : ORMEntity posts->setUser car les posts ne peuvent avoir qu'un auteur
      * - $attSingularIrregulier => singulier pour les pluriels irréguliers : ORMEntity posts->setCategory car il un post
      * ne peut avoir qu'une seul catégorie et que category = categories
      *
-     * Prise en compte des relation oneToMany ou ManyToOne ou ManyToMany avec le paramètre $addEntity. Ajout d'une entité
+     * Prise en compte des relation oneToMany ou ManyToOne ou ManyToMany avec le paramètre $addEntity.
+     * Ajout d'une entité
      * simple ou d'un array selon le type de relation.
      *
      * @param ORMEntity $entityChild
@@ -691,8 +698,12 @@ class ORMSelect
      * @param bool|null $addEntity
      * @param array $entitiesChild
      */
-    private function addEntity(ORMEntity $entityChild, ORMEntity &$entityParent, ?bool $addEntity = true, ?array $entitiesChild = [])
-    {
+    private function addEntity(
+        ORMEntity $entityChild,
+        ORMEntity &$entityParent,
+        ?bool $addEntity = true,
+        ?array $entitiesChild = []
+    ) {
         $att = 'set' . ucfirst($entityChild->getTableName());
         $attSingular = substr($att, 0, -1);
         $attSingularIrregular = str_replace('ies', 'y', $att);
@@ -702,8 +713,9 @@ class ORMSelect
         } elseif (is_callable([$entityParent, $attSingular])) {
             ($addEntity) ? $entityParent->$attSingular($entityChild) : $entityParent->$attSingular($entitiesChild);
         } elseif (is_callable([$entityParent, $attSingularIrregular])) {
-            ($addEntity) ? $entityParent->$attSingularIrregular($entityChild) : $entityParent->$attSingularIrregular($entitiesChild);
-
+            ($addEntity) ?
+                $entityParent->$attSingularIrregular($entityChild) :
+                $entityParent->$attSingularIrregular($entitiesChild);
         }
     }
 

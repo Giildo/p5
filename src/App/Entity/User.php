@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\various\appHash;
+use App\various\AppHash;
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 
@@ -58,7 +58,7 @@ class User extends Entity implements EntityInterface
      */
     protected $admin;
 
-    use appHash;
+    use AppHash;
 
     /**
      * @return int|null

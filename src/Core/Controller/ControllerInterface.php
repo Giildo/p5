@@ -21,7 +21,12 @@ interface ControllerInterface
      * @param array|null $models
      * @param ORMSelect $select
      */
-    public function __construct(Twig_Environment $twig, ContainerInterface $container, ?array $models = [], ?ORMSelect $select = null);
+    public function __construct(
+        Twig_Environment $twig,
+        ContainerInterface $container,
+        ?array $models = [],
+        ?ORMSelect $select = null
+    );
 
     /**
      * Lance la méthode passée en paramètres en lui ajoutant si besoin des les paramètres

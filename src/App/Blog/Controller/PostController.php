@@ -10,7 +10,7 @@ use App\Blog\Model\PostModel;
 use App\Entity\Comment;
 use App\Controller\AppController;
 use App\Entity\User;
-use App\various\appHash;
+use App\various\AppHash;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
 use Core\ORM\Classes\ORMController;
@@ -46,7 +46,7 @@ class PostController extends AppController implements ControllerInterface
      */
     protected $commentModel;
 
-    use appHash;
+    use AppHash;
 
     /**
      * Affiche l'ensemble des Posts selon la LIMIT
@@ -122,7 +122,6 @@ class PostController extends AppController implements ControllerInterface
             try {
                 $this->updateComment($vars['id'], $userConnected, $vars['commentId']);
             } catch (Exception $e) {
-
             }
         }
 
@@ -135,7 +134,9 @@ class PostController extends AppController implements ControllerInterface
                 $code2 = strlen($comment->user->pseudo);
                 $code3 = strlen($post->id);
 
-                $tokens[$comment->id] = $this->appHash($code3 . $comment->id . $code1 . $post->id . $code2 . $comment->user->pseudo);
+                $tokens[$comment->id] = $this->appHash(
+                    $code3 . $comment->id . $code1 . $post->id . $code2 . $comment->user->pseudo
+                );
             }
         }
 
@@ -171,7 +172,10 @@ class PostController extends AppController implements ControllerInterface
         $form = $form->submit($submitMessage);
 
         if ($post) {
-            $this->render('blog/show.twig', compact('post', 'comments', 'form', 'noComment', 'userConnected', 'tokens'));
+            $this->render(
+                'blog/show.twig',
+                compact('post', 'comments', 'form', 'noComment', 'userConnected', 'tokens')
+            );
         } else {
             $this->render404();
         }
@@ -373,7 +377,8 @@ class PostController extends AppController implements ControllerInterface
 
                 $this->redirection('/post/' . $postId);
             } else {
-                throw new Exception("Une erreur est survenue lors de l'enregistrement du commentaire veuillez réessayer.");
+                throw new Exception("Une erreur est survenue lors de l'enregistrement du commentaire,
+                    veuillez réessayer.");
             }
         } elseif (!empty($_POST) && isset($_POST['comment'])) {
             $ormTable = new ORMTable('comments');

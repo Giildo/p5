@@ -81,8 +81,12 @@ class ORMModel implements ORMModelInterface
      * @param bool|null $inOption
      * @return array
      */
-    public function ORMFind(string $statement, ?string $entityType = null, ?array $whereOptions = [], ?bool $inOption = false): array
-    {
+    public function ORMFind(
+        string $statement,
+        ?string $entityType = null,
+        ?array $whereOptions = [],
+        ?bool $inOption = false
+    ): array {
         $result = $this->pdo->prepare($statement);
 
         if (!is_null($entityType)) {

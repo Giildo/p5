@@ -107,9 +107,13 @@ class ORMEntity
                 $keySet = 'set' . ucfirst($key);
                 if ($this->ORMTable->getColumns()[$key]['options']['foreign']) {
                     $property = $keySet . 'Id';
-                    $this->$property($this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes));
+                    $this->$property(
+                        $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes)
+                    );
                 } else {
-                    $this->$keySet($this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes));
+                    $this->$keySet(
+                        $this->valuesType($this->ORMTable->getColumns()[$key]['columnType'], $value, $sqlTypes)
+                    );
                 }
 
                 if ($this->ORMTable->getColumns()[$key]['options']['primary']) {
@@ -154,7 +158,8 @@ class ORMEntity
         if ($this->tableName === $ORMTable->getTableName()) {
             $this->ORMTable = $ORMTable;
         } else {
-            throw new ORMException("La Table \"{$ORMTable->getTableName()}\" passée en argument ne correspond par à l'entité créée.");
+            throw new ORMException("La Table \"{$ORMTable->getTableName()}\" passée en argument
+                ne correspond par à l'entité créée.");
         }
     }
 

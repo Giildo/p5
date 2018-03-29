@@ -2,13 +2,8 @@
 
 namespace Core\ORM\Classes;
 
-use Core\Model\Model;
 use Core\ORM\Interfaces\ORMModelInterface;
 use DateTime;
-use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
-use PDO;
 
 class ORMController
 {
@@ -110,7 +105,8 @@ class ORMController
 
     /**
      * Récupère l'entité de type ORMEntity qu'il va devoir sauvegarder
-     * Lance la fonction columnsDefinition() pour créer les colonnes qui se trouve dans l'ORMEntity et récupérer les valeurs
+     * Lance la fonction columnsDefinition() pour créer les colonnes
+     * qui se trouve dans l'ORMEntity et récupérer les valeurs
      * --> cette dernière vérifie également que les valeurs correspondent à la définition des colonnes
      * Vérifie ensuite que les colonnes existe dans la Table
      * Si tout est OK enregistre l'objet dans la table
@@ -141,10 +137,16 @@ class ORMController
     private function update(ORMEntity $entity, ORMModelInterface $model, array $columnsBDD): void
     {
         $columns = $values = '';
-        $columnsAndValues = $this->columnsDefinition($entity->getORMTable()->getColumns(), $entity, $columnsBDD, $columns, $values);
+        $columnsAndValues = $this->columnsDefinition(
+            $entity->getORMTable()->getColumns(),
+            $entity,
+            $columnsBDD,
+            $columns,
+            $values
+        );
 
         $statement = "UPDATE {$entity->getTableName()} SET ";
-        for ($i = 0 ; $i < count($columnsAndValues[0]) ; $i++) {
+        for ($i = 0; $i < count($columnsAndValues[0]); $i++) {
             if ($i !== 0) {
                 $statement .= ', ';
             }
@@ -172,8 +174,13 @@ class ORMController
      * @return array
      * @throws ORMException
      */
-    private function columnsDefinition(array $columns, ORMEntity $entity, array $columnsBDD, string &$columnsString, string &$valuesString): array
-    {
+    private function columnsDefinition(
+        array $columns,
+        ORMEntity $entity,
+        array $columnsBDD,
+        string &$columnsString,
+        string &$valuesString
+    ): array {
         $columnsEntity = [];
 
         //Parcours les colonnes de l'entité et les ajoute toute dans un tableau vide, sauf l'ID
@@ -205,8 +212,12 @@ class ORMController
      * @return array
      * @throws ORMException
      */
-    private function valuesDefinition(array $columnsEntity, ORMEntity $entity, array $columnsBDD, string &$valuesString): array
-    {
+    private function valuesDefinition(
+        array $columnsEntity,
+        ORMEntity $entity,
+        array $columnsBDD,
+        string &$valuesString
+    ): array {
         $values = [];
 
         foreach ($columnsEntity as $columnEntity) {
@@ -225,13 +236,16 @@ class ORMController
                 }
             }
 
-            //Vérifie si $typeArray est vide, si c'est le cas ça veut dire que la colonne n'est pas définie dans la base de données
+            /* Vérifie si $typeArray est vide, si c'est le cas ça veut dire que la colonne
+            n'est pas définie dans la base de données*/
             if (!empty($typeArray)) {
-                //Vérifie la valeur, si OK la renvoie en forçant le type (par sécurité) et en échappant les caractères HTML (sécurité pour les string)
+                /* Vérifie la valeur, si OK la renvoie en forçant le type (par sécurité)
+                et en échappant les caractères HTML (sécurité pour les string)*/
                 $result = $this->verifValue($typeArray, $entity->$columnEntity, $columnEntity);
 
                 if (is_null($result)) {
-                    throw new ORMException("La valeur de la colonne \"{$columnEntity}\" ne correspond pas au type inscrit dans la base de données");
+                    throw new ORMException("La valeur de la colonne \"{$columnEntity}\"
+                        ne correspond pas au type inscrit dans la base de données");
                 } else {
                     $values[] = $result;
                 }
@@ -246,8 +260,11 @@ class ORMController
     }
 
     /**
-     * Récupère toutes les colonnes de l'ORMEntity, vérifie si elles ont une valeur et les ajoute à un tableau
-     * Récupère toutes les colonnes de la table et les ajoute à un tableau
+     * Récupère toutes les colonnes de l'ORMEntity, vérifie si elles ont une valeur et les ajoute à un tableau ;
+     *      Si la colonne est une clé étrangère ajoute "Id" (convention d'écriture dans ce framework).
+     *
+     * Récupère toutes les colonnes de la table qui sont notées "NOT NULL" et les ajoute à un tableau.
+     *
      * Compare les deux tableaux et si des éléments de la Table ne se trouvent pas dans l'ORMEntity renvoie une erreur
      *
      * @param array $columnsEntity Colonnes récupérées dans l'ORMEntity à sauvegarder
@@ -258,11 +275,9 @@ class ORMController
      */
     private function verifAllColumnsIsDefined(array $columnsEntity, array $columnsBDD, $entity): void
     {
-        //Vérifie toutes dans le tableau créé ci-dessus si une valeur est rentrée, si c'est le cas, ajoute dans un tableau le nom de la colonne
         foreach ($columnsEntity as $columnEntity) {
             $att = $columnEntity['columnName'];
 
-            //Ajoute "Id" à la fin du nom de la colonne si c'est une clé étrangère
             if ($columnEntity['options']['foreign']) {
                 $att = $att . 'Id';
             }
@@ -272,14 +287,12 @@ class ORMController
             }
         }
 
-        //Récupère toutes les colonnes qui sont notées "NOT NULL" dans la base de données
         foreach ($columnsBDD as $columnBDD) {
             if ($columnBDD->Null === 'NO') {
                 $columnsResultsNotNull[] = $columnBDD->Field;
             }
         }
 
-        //Compare les deux tableaux, au moins toutes les colonnes notées "NOT NULL" doivent être définies, sinon renvoie une erreur
         if (!empty($result = array_diff($columnsResultsNotNull, $columnsEntityName))) {
             $columns = implode(', ', $result);
 

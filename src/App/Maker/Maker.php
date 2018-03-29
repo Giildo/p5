@@ -12,7 +12,7 @@ class Maker
         $posts = [];
         $faker = Factory::create();
 
-        for ($i = 0 ; $i < 150 ; $i++) {
+        for ($i = 0; $i < 150; $i++) {
             $date = $faker->date('Y-m-d H:i:s');
             $posts[] = [
                 'title' => $faker->sentence(6),
@@ -25,9 +25,13 @@ class Maker
         }
 
         foreach ($posts as $post) {
-            $pdo->query(
-                "INSERT INTO posts (title, content, createdAt, updatedAt, category, user) 
-                          VALUES ('{$post['title']}', '{$post['content']}', '{$post['createdAt']}', '{$post['updatedAt']}', '{$post['category']}', '{$post['user']}')");
+            $pdo->query("INSERT INTO posts (title, content, createdAt, updatedAt, category, user)
+                          VALUES ('{$post['title']}',
+                                  '{$post['content']}',
+                                  '{$post['createdAt']}',
+                                  '{$post['updatedAt']}',
+                                  '{$post['category']}',
+                                  '{$post['user']}')");
         }
     }
 }

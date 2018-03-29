@@ -49,7 +49,10 @@ class CategoryController extends AppController implements ControllerInterface
                 $formCode[$category->id] = $token;
             }
 
-            $this->render('admin/categories/index.twig', compact('categories', 'paginationOptions', 'formCode', 'vars'));
+            $this->render(
+                'admin/categories/index.twig',
+                compact('categories', 'paginationOptions', 'formCode', 'vars')
+            );
         } else {
             $this->renderErrorNotAdmin();
         }
@@ -118,7 +121,6 @@ class CategoryController extends AppController implements ControllerInterface
     public function add(): void
     {
         if ($this->auth->logged($this->findUserConnected())) {
-
             $u_error = false;
             $u_success = false;
             $errorMessage = '';
@@ -178,8 +180,7 @@ class CategoryController extends AppController implements ControllerInterface
         $userConnected = $this->findUserConnected();
 
         if ($this->auth->isAdmin($userConnected)) {
-            if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
-
+            if (!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
                 $category = $this->select->select(['categories' => ['id', 'slug']])
                     ->from('categories')
                     ->where(['id' => $_POST['id']])
@@ -201,11 +202,13 @@ class CategoryController extends AppController implements ControllerInterface
                     $this->index($vars);
                 } else {
                     $this->render('admin/categories/index.twig', []);
-                    throw new \Exception("Une erreur est survenue lors de la suppression de la catégorie, veuillez réessayer.");
+                    throw new \Exception("Une erreur est survenue lors de la suppression de la catégorie,
+                        veuillez réessayer.");
                 }
             } else {
                 $this->render('admin/categories/index.twig', []);
-                throw new \Exception("Une erreur est survenue lors de la suppression de la catégorie, veuillez réessayer.");
+                throw new \Exception("Une erreur est survenue lors de la suppression de la catégorie,
+                    veuillez réessayer.");
             }
         }
     }

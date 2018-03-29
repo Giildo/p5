@@ -67,9 +67,17 @@ class PostController extends AppController implements ControllerInterface
 
         try {
             if ($this->auth->isAdmin($user)) {
-                $posts = $this->findPostsWithCategoryAndUser([], $paginationOptions['limit'], $paginationOptions['start']);
+                $posts = $this->findPostsWithCategoryAndUser(
+                    [],
+                    $paginationOptions['limit'],
+                    $paginationOptions['start']
+                );
             } else {
-                $posts = $this->findPostsWithCategoryAndUser(['users.id' => $user->id], $paginationOptions['limit'], $paginationOptions['start']);
+                $posts = $this->findPostsWithCategoryAndUser(
+                    ['users.id' => $user->id],
+                    $paginationOptions['limit'],
+                    $paginationOptions['start']
+                );
             }
         } catch (ORMException $e) {
             $message = "Vous n'avez encore écrit aucun article";
@@ -171,7 +179,6 @@ class PostController extends AppController implements ControllerInterface
     public function add(): void
     {
         if ($this->auth->logged($this->findUserConnected())) {
-
             $u_error = false;
             $u_success = false;
             $errorMessage = '';
@@ -242,8 +249,7 @@ class PostController extends AppController implements ControllerInterface
         $userConnected = $this->findUserConnected();
 
         if ($this->auth->logged($userConnected)) {
-            if(!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
-
+            if (!empty($_POST) && isset($_POST['token']) && isset($_POST['id'])) {
                 $post = $this->select->select(['posts' => ['id', 'title']])
                     ->from('posts')
                     ->where(['id' => $_POST['id']])
@@ -265,11 +271,13 @@ class PostController extends AppController implements ControllerInterface
                     $this->index($vars);
                 } else {
                     $this->render('admin/categories/index.twig', []);
-                    throw new Exception("Une erreur est survenue lors de la suppression de la catégorie, veuillez réessayer.");
+                    throw new Exception("Une erreur est survenue lors de la suppression de la catégorie,
+                        veuillez réessayer.");
                 }
             } else {
                 $this->render('admin/categories/index.twig', []);
-                throw new Exception("Une erreur est survenue lors de la suppression de la catégorie, veuillez réessayer.");
+                throw new Exception("Une erreur est survenue lors de la suppression de la catégorie,
+                    veuillez réessayer.");
             }
         } else {
             $this->renderNotLog();
@@ -284,8 +292,12 @@ class PostController extends AppController implements ControllerInterface
      * @return ORMEntity[]|ORMEntity
      * @throws ORMException
      */
-    private function findPostsWithCategoryAndUser(?array $where = [], ?int $limit = null, ?int $start = null, ?bool $singleItem = false)
-    {
+    private function findPostsWithCategoryAndUser(
+        ?array $where = [],
+        ?int $limit = null,
+        ?int $start = null,
+        ?bool $singleItem = false
+    ) {
         return $this->select->select([
             'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user', 'category'],
             'categories' => ['id', 'name'],
