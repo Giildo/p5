@@ -21,9 +21,9 @@ return [
     'admin.limit.category' => 10,
     'admin.limit.user'     => 10,
 
-    'users'      => get(\App\Admin\Model\UserModel::class),
-    'posts'      => get(\App\Blog\Model\PostModel::class),
-    'categories' => get(\App\Blog\Model\CategoryModel::class),
-    'comments'   => get(\App\Blog\Model\CommentModel::class),
-    'admin'      => get(\App\Admin\Model\AdminModel::class)
+    'users'      => get(App\Models\UserModel::class),
+    'posts'      => get(App\Models\PostModel::class),
+    'categories' => get(App\Models\CategoryModel::class),
+    'comments'   => get(App\Models\CommentModel::class),
+    'admin'      => get(App\Models\AdminModel::class)
 ];

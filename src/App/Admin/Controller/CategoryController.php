@@ -2,9 +2,9 @@
 
 namespace App\Admin\Controller;
 
-use App\Blog\Model\CategoryModel;
+use App\Models\CategoryModel;
 use App\Controller\AppController;
-use App\Entity\Category;
+use App\Entities\Category;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
 use Jojotique\ORM\Classes\ORMController;
@@ -112,6 +112,7 @@ class CategoryController extends AppController implements ControllerInterface
     }
 
     /**
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -124,6 +125,7 @@ class CategoryController extends AppController implements ControllerInterface
             $u_error = false;
             $u_success = false;
             $errorMessage = '';
+            $category = new Category();
 
             if (!empty($_POST) &&
                 isset($_POST['name']) &&

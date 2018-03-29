@@ -3,8 +3,6 @@
 use Core\App;
 use Core\Twig\TextExtension;
 use DI\ContainerBuilder;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 require_once(dirname(__DIR__) . '/vendor/autoload.php');
 
@@ -14,6 +12,7 @@ $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/config.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/controllerConfig.php');
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/instanceObject.php');
 $container = $builder->build();
+
 
 // Initialisation de Twig via le Container
 $twig = $container->get(Twig_Environment::class);

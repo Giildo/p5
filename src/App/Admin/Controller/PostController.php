@@ -2,13 +2,13 @@
 
 namespace App\Admin\Controller;
 
-use App\Admin\Model\AdminModel;
-use App\Admin\Model\UserModel;
-use App\Blog\Model\CategoryModel;
-use App\Blog\Model\PostModel;
 use App\Controller\AppController;
-use App\Entity\Category;
-use App\Entity\Post;
+use App\Entities\Category;
+use App\Entities\Post;
+use App\Models\AdminModel;
+use App\Models\CategoryModel;
+use App\Models\PostModel;
+use App\Models\UserModel;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
 use DateTime;
@@ -80,7 +80,6 @@ class PostController extends AppController implements ControllerInterface
                 );
             }
         } catch (ORMException $e) {
-            $message = "Vous n'avez encore écrit aucun article";
             $this->redirection('/admin/accueil');
         }
 
@@ -182,6 +181,7 @@ class PostController extends AppController implements ControllerInterface
             $u_success = false;
             $errorMessage = '';
             $category = new Category();
+            $post = new Post();
 
             if (!empty($_POST) &&
                 isset($_POST['title']) &&

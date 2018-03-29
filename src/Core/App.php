@@ -10,7 +10,9 @@ use Core\Exception\JojotiqueException;
 use Core\Router\Route;
 use Core\Router\Router;
 use Jojotique\ORM\Classes\ORMSelect;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Twig_Environment;
 
 /**
@@ -51,9 +53,8 @@ class App
      * Lance l'application
      *
      * Récupère le Router, lui fait trouver le bon controlleur, l'instancie et lance la vue
-     *
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function run(): void
     {
@@ -115,13 +116,5 @@ class App
             $models,
             new ORMSelect($this->container->get('orm.config'))
         );
-    }
-
-    /**
-     * @return Router
-     */
-    public function getRouter(): Router
-    {
-        return $this->router;
     }
 }

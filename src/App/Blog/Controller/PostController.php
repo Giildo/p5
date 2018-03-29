@@ -2,14 +2,14 @@
 
 namespace App\Blog\Controller;
 
-use App\Admin\Model\AdminModel;
-use App\Admin\Model\UserModel;
-use App\Blog\Model\CategoryModel;
-use App\Blog\Model\CommentModel;
-use App\Blog\Model\PostModel;
-use App\Entity\Comment;
+use App\Models\AdminModel;
+use App\Models\UserModel;
+use App\Models\CategoryModel;
+use App\Models\CommentModel;
+use App\Models\PostModel;
+use App\Entities\Comment;
 use App\Controller\AppController;
-use App\Entity\User;
+use App\Entities\User;
 use App\various\AppHash;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;

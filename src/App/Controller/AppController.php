@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Admin\Model\AdminModel;
-use App\Admin\Model\UserModel;
-use App\Entity\User;
+use App\Entities\User;
+use App\Models\AdminModel;
+use App\Models\UserModel;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Jojotique\ORM\Classes\ORMEntity;
@@ -48,24 +48,6 @@ class AppController extends Controller implements ControllerInterface
         }
 
         return $user;
-    }
-
-    /**
-     * Génère un tableau qui va regrouper les éléments passés en post ou non
-     *
-     * @param array $keys
-     * @param array $posts
-     * @param ORMEntity $entity
-     * @return string[]
-     */
-    protected function createPostWithEntity(array $keys, array $posts, ORMEntity $entity): array
-    {
-        foreach ($keys as $key) {
-            $method = 'get' . ucfirst($key);
-            $posts[$key] = (empty($posts[$key])) ? $entity->$method() : $posts[$key];
-        }
-
-        return $posts;
     }
 
     /**

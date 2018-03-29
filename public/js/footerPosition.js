@@ -4,4 +4,4 @@ $(function () {
             .css('bottom', '0')
             .css('width', '100%');
     }
-})
+});

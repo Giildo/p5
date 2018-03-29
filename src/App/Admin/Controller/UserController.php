@@ -2,9 +2,9 @@
 
 namespace App\Admin\Controller;
 
-use App\Admin\Model\UserModel;
+use App\Models\UserModel;
 use App\Controller\AppController;
-use App\Entity\User;
+use App\Entities\User;
 use Core\Auth\DBAuth;
 use Core\Controller\ControllerInterface;
 use Core\Exception\JojotiqueException;
@@ -45,6 +45,7 @@ class UserController extends AppController implements ControllerInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws ORMException
      */
     public function login(): void
     {
@@ -52,6 +53,7 @@ class UserController extends AppController implements ControllerInterface
         $c_errorCode = 0;
 
         if (!empty($_POST) && isset($_POST['c_pseudo']) && isset($_POST['c_password'])) {
+            $user = new User();
             try {
                 $user = $this->select->select([
                     'users' => ['id', 'pseudo', 'firstName', 'lastName', 'mail', 'phone', 'password', 'admin'],
@@ -276,6 +278,7 @@ class UserController extends AppController implements ControllerInterface
             $u_error = false;
             $u_success = false;
             $errorMessage = '';
+            $user = new User();
 
             if (!empty($_POST) &&
                 isset($_POST['pseudo']) &&

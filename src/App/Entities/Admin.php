@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entities;
 
 use Core\Entity\Entity;
 use Core\Entity\EntityInterface;
 
-class Category extends Entity implements EntityInterface
+class Admin extends Entity implements EntityInterface
 {
     /**
      * @var string
      */
-    protected $tableName = 'categories';
+    protected $tableName = 'admin';
 
     /**
      * @var int
@@ -23,12 +23,7 @@ class Category extends Entity implements EntityInterface
     protected $name;
 
     /**
-     * @var string
-     */
-    protected $slug;
-
-    /**
-     * @return int|
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -44,9 +39,9 @@ class Category extends Entity implements EntityInterface
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -57,21 +52,5 @@ class Category extends Entity implements EntityInterface
     public function setName(string $name): void
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     */
-    public function setSlug(string $slug): void
-    {
-        $this->slug = $slug;
     }
 }
