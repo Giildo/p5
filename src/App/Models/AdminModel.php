@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Model;
+namespace App\Models;
 
 use Core\Model\Model;
 

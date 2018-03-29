@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entities;
 
 use App\various\AppHash;
 use Core\Entity\Entity;

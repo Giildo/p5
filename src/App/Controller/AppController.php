@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Admin\Model\AdminModel;
-use App\Admin\Model\UserModel;
-use App\Entity\User;
+use App\Entities\User;
+use App\Models\AdminModel;
+use App\Models\UserModel;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Jojotique\ORM\Classes\ORMEntity;

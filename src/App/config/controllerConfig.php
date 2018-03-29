@@ -1,10 +1,10 @@
 <?php
 
-use App\Admin\Model\AdminModel;
-use App\Admin\Model\UserModel;
-use App\Blog\Model\CategoryModel;
-use App\Blog\Model\CommentModel;
-use App\Blog\Model\PostModel;
+use App\Models\AdminModel;
+use App\Models\UserModel;
+use App\Models\CategoryModel;
+use App\Models\CommentModel;
+use App\Models\PostModel;
 use function DI\get;
 
 return [

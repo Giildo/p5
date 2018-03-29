@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysis>
+  <link href="https://insight.sensiolabs.com/api/projects/d19bffe0-5b70-4203-8193-3c980be598d2/analyses/1" rel="self" type="application/vnd.com.sensiolabs.insight+xml"/>
+  <link href="https://insight.sensiolabs.com/api/projects/d19bffe0-5b70-4203-8193-3c980be598d2/analyses/1/status" rel="status" type="application/vnd.com.sensiolabs.insight+xml"/>
+  <link href="https://insight.sensiolabs.com/api/projects/d19bffe0-5b70-4203-8193-3c980be598d2" rel="project" type="application/vnd.com.sensiolabs.insight+xml"/>
+  <link href="https://insight.sensiolabs.com/projects/d19bffe0-5b70-4203-8193-3c980be598d2/analyses/1" rel="self" type="text/html"/>
+  <status><![CDATA[]]></status>
+  <violations>
+    <violation severity="minor" category="codestyle" ignored="false">
+      <line>2</line>
+      <resource><![CDATA[.gitignore]]></resource>
+      <title>User specific files should not appear in .gitignore</title>
+      <message><![CDATA[.idea/ is user-specific and should not appear in a project .gitignore. Consider adding it to the user global .gitignore instead.]]></message>
+      <context start-line="1" end-line="5"><![CDATA[vendor/*
+.idea/
+
+composer.lock
+]]></context>
+      <link href="https://insight.sensiolabs.com/projects/d19bffe0-5b70-4203-8193-3c980be598d2/analyses/1?status=new#604054176" rel="self" type="text/html"/>
+    </violation>
+  </violations>
+  <grades>
+    <entry><![CDATA[none]]></entry>
+    <entry><![CDATA[bronze]]></entry>
+    <entry><![CDATA[silver]]></entry>
+    <entry><![CDATA[gold]]></entry>
+    <entry><![CDATA[platinum]]></entry>
+  </grades>
+  <failed>false</failed>
+  <grade><![CDATA[silver]]></grade>
+  <next-grade><![CDATA[gold]]></next-grade>
+  <begin-at><![CDATA[2018-02-17T10:25:49+0100]]></begin-at>
+  <end-at><![CDATA[2018-02-17T10:26:17+0100]]></end-at>
+  <duration>3</duration>
+  <number>1</number>
+  <altered>false</altered>
+  <remediation-cost>0.25</remediation-cost>
+  <nb-violations>1</nb-violations>
+  <reference><![CDATA[2421a7147349d7f39a2a93a8c24fe1a78462b916]]></reference>
+  <launched-by><![CDATA[giildo]]></launched-by>
+  <configuration>
+    <ignored-branches>
+      <branch><![CDATA[gh-pages]]></branch>
+    </ignored-branches>
+    <pre-composer-script/>
+    <post-composer-script/>
+    <working-directory/>
+    <php-version/>
+    <php-ini/>
+    <commit-failure-conditions>
+      <branch><![CDATA[project.severity.critical > 0]]></branch>
+      <branch><![CDATA[project.severity.major > 0]]></branch>
+    </commit-failure-conditions>
+    <global-excluded-dirs>
+      <dir><![CDATA[vendor]]></dir>
+      <dir><![CDATA[vendors]]></dir>
+      <dir><![CDATA[test]]></dir>
+      <dir><![CDATA[tests]]></dir>
+      <dir><![CDATA[Tests]]></dir>
+      <dir><![CDATA[spec]]></dir>
+      <dir><![CDATA[features]]></dir>
+      <dir><![CDATA[Fixtures]]></dir>
+      <dir><![CDATA[DataFixtures]]></dir>
+      <dir><![CDATA[var]]></dir>
+    </global-excluded-dirs>
+    <excluded-patterns>
+      <pattern><![CDATA[app/check.php]]></pattern>
+      <pattern><![CDATA[app/SymfonyRequirements.php]]></pattern>
+      <pattern><![CDATA[public/index.php]]></pattern>
+      <pattern><![CDATA[web/config.php]]></pattern>
+      <pattern><![CDATA[web/app_*.php]]></pattern>
+    </excluded-patterns>
+    <patterns>
+      <file>
+        <pattern><![CDATA[*.php]]></pattern>
+        <pattern><![CDATA[*.twig]]></pattern>
+        <pattern><![CDATA[*.xml]]></pattern>
+        <pattern><![CDATA[*.yml]]></pattern>
+        <pattern><![CDATA[*.yaml]]></pattern>
+        <pattern><![CDATA[*.ini]]></pattern>
+        <pattern><![CDATA[*.dist]]></pattern>
+        <pattern><![CDATA[*.sql]]></pattern>
+        <pattern><![CDATA[*.md]]></pattern>
+        <pattern><![CDATA[*.rst]]></pattern>
+        <pattern><![CDATA[composer.*]]></pattern>
+        <pattern><![CDATA[.gitignore]]></pattern>
+        <pattern><![CDATA[LICENSE]]></pattern>
+        <pattern><![CDATA[README]]></pattern>
+        <pattern><![CDATA[Makefile]]></pattern>
+        <pattern><![CDATA[.htaccess]]></pattern>
+      </file>
+      <php>
+        <pattern><![CDATA[*.php]]></pattern>
+      </php>
+      <twig>
+        <pattern><![CDATA[*.twig]]></pattern>
+      </twig>
+    </patterns>
+    <rules>
+      <rule name="symfony.use_dir_file_constant" enabled="false"/>
+    </rules>
+    <parameters>
+      <parameter name="project_type">6</parameter>
+    </parameters>
+    <env/>
+    <notifications/>
+  </configuration>
+  <previous-analyses-references>
+    <analysis-reference number="1">2421a7147349d7f39a2a93a8c24fe1a78462b916</analysis-reference>
+  </previous-analyses-references>
+  <nb-violations-new>1</nb-violations-new>
+  <nb-violations-existing>0</nb-violations-existing>
+  <nb-violations-fixed>0</nb-violations-fixed>
+  <nb-violations-ignored>0</nb-violations-ignored>
+</analysis>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Blog\Model;
+namespace App\Models;
 
 use Core\Model\Model;
 

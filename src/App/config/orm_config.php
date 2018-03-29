@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'posts'      => \App\Entity\Post::class,
-    'comments'   => \App\Entity\Comment::class,
-    'categories' => \App\Entity\Category::class,
-    'users'      => \App\Entity\User::class,
-    'admin'      => \App\Entity\Admin::class
+    'posts'      => \App\Entities\Post::class,
+    'comments'   => \App\Entities\Comment::class,
+    'categories' => \App\Entities\Category::class,
+    'users'      => \App\Entities\User::class,
+    'admin'      => \App\Entities\Admin::class
 ];

@@ -2,9 +2,9 @@
 
 namespace App\Admin\Controller;
 
-use App\Admin\Model\UserModel;
+use App\Models\UserModel;
 use App\Controller\AppController;
-use App\Entity\User;
+use App\Entities\User;
 use Core\Auth\DBAuth;
 use Core\Controller\ControllerInterface;
 use Core\Exception\JojotiqueException;
