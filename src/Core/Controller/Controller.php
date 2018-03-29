@@ -4,7 +4,7 @@ namespace Core\Controller;
 
 use Core\Auth\DBAuth;
 use Core\Exception\JojotiqueException;
-use Core\ORM\Classes\ORMSelect;
+use Jojotique\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
@@ -88,30 +88,16 @@ class Controller implements ControllerInterface
      *
      * @return void
      */
-    public function render404(): void
-    {
-        header('HTTP/1.0 404 Not Found');
-        header('Location: /404');
-        die();
-    }
-
-    /**
-     * Envoie une vue Twig pour la page 404
-     *
-     * @return void
-     */
     public function renderNotLog(): void
     {
         header('HTTP/1.1 301 Not Found');
         header('Location: /user/login');
-        die();
     }
 
     public function renderErrorNotAdmin()
     {
         header('HTTP/1.1 301 Not Found');
         header('Location: /error/notAdmin');
-        die();
     }
 
     /**
@@ -138,7 +124,6 @@ class Controller implements ControllerInterface
     {
         header('HTTP/1.1 301 Not Found');
         header('Location: ' . $path);
-        die();
     }
 
     /**

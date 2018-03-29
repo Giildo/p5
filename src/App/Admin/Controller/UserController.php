@@ -9,10 +9,10 @@ use Core\Auth\DBAuth;
 use Core\Controller\ControllerInterface;
 use Core\Exception\JojotiqueException;
 use Core\Form\BootstrapForm;
-use Core\ORM\Classes\ORMController;
-use Core\ORM\Classes\ORMException;
-use Core\ORM\Classes\ORMTable;
 use Exception;
+use Jojotique\ORM\Classes\ORMController;
+use Jojotique\ORM\Classes\ORMException;
+use Jojotique\ORM\Classes\ORMTable;
 
 class UserController extends AppController implements ControllerInterface
 {
@@ -149,7 +149,7 @@ class UserController extends AppController implements ControllerInterface
     /**
      * @param array $vars
      * @return void
-     * @throws \Core\ORM\Classes\ORMException
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -192,7 +192,7 @@ class UserController extends AppController implements ControllerInterface
 
     /**
      * @param array $vars
-     * @throws \Core\ORM\Classes\ORMException
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader

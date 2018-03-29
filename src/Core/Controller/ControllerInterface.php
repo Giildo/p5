@@ -3,7 +3,7 @@
 namespace Core\Controller;
 
 use Core\Exception\JojotiqueException;
-use Core\ORM\Classes\ORMSelect;
+use Jojotique\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 
@@ -37,13 +37,6 @@ interface ControllerInterface
      * @throws JojotiqueException
      */
     public function run(string $nameMethod, ?array $vars = []): void;
-
-    /**
-     * Envoie une vue Twig pour la page 404
-     *
-     * @return void
-     */
-    public function render404(): void;
 
     /**
      * Envoie une vue Twig pour la page 404

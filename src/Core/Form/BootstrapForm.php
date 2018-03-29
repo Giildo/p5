@@ -99,6 +99,6 @@ class BootstrapForm extends Form implements FormInterface
     {
         $class .= ' btn btn-primary';
 
-        return parent::submit($text, $type, $class, $line);
+        return parent::submit($text, $type, $class);
     }
 }

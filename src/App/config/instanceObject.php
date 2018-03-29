@@ -1,19 +1,11 @@
 <?php
 
-use App\Admin\Model\UserModel;
-use App\Blog\Controller\CommentController;
-use Core\App;
-use Core\Auth\DBAuth;
 use Core\Database\Database;
-use Core\Form\Form;
-use Core\Model\Model;
-use Core\ORM\Classes\ORMEntity;
-use Core\ORM\Classes\ORMSelect;
 use Core\Router\Router;
 use function DI\get;
 use function DI\object;
+use Jojotique\ORM\Classes\ORMController;
 use Psr\Container\ContainerInterface;
-use Core\ORM\Classes\ORMController;
 
 return [
     Router::class => object()->constructor(

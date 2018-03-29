@@ -2,7 +2,7 @@
 
 namespace Core\Entity;
 
-use Core\ORM\Classes\ORMEntity;
+use Jojotique\ORM\Classes\ORMEntity;
 
 class Entity extends ORMEntity
 {

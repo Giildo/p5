@@ -13,11 +13,11 @@ use App\Entity\User;
 use App\various\AppHash;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
-use Core\ORM\Classes\ORMController;
-use Core\ORM\Classes\ORMException;
-use Core\ORM\Classes\ORMTable;
 use DateTime;
 use Exception;
+use Jojotique\ORM\Classes\ORMController;
+use Jojotique\ORM\Classes\ORMException;
+use Jojotique\ORM\Classes\ORMTable;
 
 class PostController extends AppController implements ControllerInterface
 {
@@ -53,12 +53,12 @@ class PostController extends AppController implements ControllerInterface
      *
      * @param array $vars
      * @return void
-     * @throws \Core\ORM\Classes\ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws ORMException
      */
     public function index(array $vars): void
     {
@@ -80,7 +80,7 @@ class PostController extends AppController implements ControllerInterface
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render('blog/index.twig', compact('posts', 'paginationOptions', 'categories'));
         } else {
-            $this->render404();
+            $this->redirection('/blog/' . $paginationOptions['pageNb']);
         }
     }
 
@@ -89,7 +89,6 @@ class PostController extends AppController implements ControllerInterface
      *
      * @param array $vars
      * @return void
-     * @throws Exception
      * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
@@ -105,18 +104,22 @@ class PostController extends AppController implements ControllerInterface
         $error = false;
         $noComment = false;
 
-        $post = $this->select->select([
-            'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt'],
-            'categories' => ['id', 'name', 'slug'],
-            'users'      => ['id', 'pseudo']
-        ])->from('posts')
-            ->innerJoin('categories', ['posts.category' => 'categories.id'])
-            ->innerJoin('users', ['posts.user' => 'users.id'])
-            ->where(['posts.id' => $vars['id']])
-            ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'oneToOne')
-            ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'oneToOne')
-            ->singleItem()
-            ->execute($this->postModel, $this->categoryModel, $this->userModel);
+        try {
+            $post = $this->select->select([
+                'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt'],
+                'categories' => ['id', 'name', 'slug'],
+                'users'      => ['id', 'pseudo']
+            ])->from('posts')
+                ->innerJoin('categories', ['posts.category' => 'categories.id'])
+                ->innerJoin('users', ['posts.user' => 'users.id'])
+                ->where(['posts.id' => $vars['id']])
+                ->insertEntity(['categories' => 'posts'], ['id' => 'category'], 'oneToOne')
+                ->insertEntity(['users' => 'posts'], ['id' => 'user'], 'oneToOne')
+                ->singleItem()
+                ->execute($this->postModel, $this->categoryModel, $this->userModel);
+        } catch (ORMException $e) {
+            $this->redirection('/blog/1');
+        }
 
         if (isset($_POST['comment'])) {
             try {
@@ -171,14 +174,10 @@ class PostController extends AppController implements ControllerInterface
         }
         $form = $form->submit($submitMessage);
 
-        if ($post) {
-            $this->render(
-                'blog/show.twig',
-                compact('post', 'comments', 'form', 'noComment', 'userConnected', 'tokens')
-            );
-        } else {
-            $this->render404();
-        }
+        $this->render(
+            'blog/show.twig',
+            compact('post', 'comments', 'form', 'noComment', 'userConnected', 'tokens')
+        );
     }
 
     /**
@@ -186,12 +185,12 @@ class PostController extends AppController implements ControllerInterface
      *
      * @param array $vars
      * @return void
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws \Core\ORM\Classes\ORMException
      */
     public function category(array $vars): void
     {
@@ -220,7 +219,7 @@ class PostController extends AppController implements ControllerInterface
                 compact('posts', 'paginationOptions', 'categories')
             );
         } else {
-            $this->render404();
+            $this->redirection('/categories/' . $paginationOptions['pageNb']);
         }
     }
 
@@ -229,12 +228,12 @@ class PostController extends AppController implements ControllerInterface
      *
      * @param array $vars
      * @return void
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     * @throws \Core\ORM\Classes\ORMException
      */
     public function author(array $vars): void
     {
@@ -269,7 +268,7 @@ class PostController extends AppController implements ControllerInterface
                 compact('posts', 'paginationOptions', 'categories')
             );
         } else {
-            $this->render404();
+            $this->redirection('/author/' . $paginationOptions['pageNb']);
         }
     }
 

@@ -7,19 +7,19 @@ use App\Admin\Model\UserModel;
 use App\Entity\User;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
-use Core\ORM\Classes\ORMEntity;
-use Core\ORM\Classes\ORMException;
+use Jojotique\ORM\Classes\ORMEntity;
+use Jojotique\ORM\Classes\ORMException;
 
 class AppController extends Controller implements ControllerInterface
 {
     /**
      * Récupère l'utilisateur connecté dans la BDD
      *
-     * @return mixed
+     * @return User|null
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function findUserConnected(): ?User
+    public function findUserConnected(): ?ORMEntity
     {
         $userModel = $this->container->get(UserModel::class);
         $adminModel = $this->container->get(AdminModel::class);
@@ -85,9 +85,8 @@ class AppController extends Controller implements ControllerInterface
     /**
      * Récupère toutes les catégories pour la gestion des catégories sur les pages du blog
      *
-     * @return \Core\ORM\Classes\ORMEntity|\Core\ORM\Classes\ORMEntity[]
-     * @throws \Core\ORM\Classes\ORMException
      * @return ORMEntity[]
+     * @throws ORMException
      */
     protected function findCategories(): array
     {

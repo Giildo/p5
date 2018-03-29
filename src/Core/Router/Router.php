@@ -2,10 +2,7 @@
 
 namespace Core\Router;
 
-use App\Blog\Model\PostModel;
-use Core\Controller\ControllerInterface;
 use Psr\Container\ContainerInterface;
-use Twig_Environment;
 
 /**
  * Classes Router
@@ -27,11 +24,6 @@ class Router
      * @var ContainerInterface
      */
     private $container;
-
-    /**
-     * @var ContainerInterface
-     */
-    private $controllers = [];
 
     /**
      * Router constructor.
@@ -110,9 +102,9 @@ class Router
 
     /**
      * @param string $uri
-     * @return Route
+     * @return Route|null
      */
-    public function getRoute(string $uri): Route
+    public function getRoute(string $uri): ?Route
     {
         if ($uri === '' || $uri === '/') {
             header('HTTP/1.1 301 Moved Permanently');
@@ -128,5 +120,6 @@ class Router
 
         header('HTTP/1.0 404 Not Found');
         header('Location: /404');
+        return null;
     }
 }

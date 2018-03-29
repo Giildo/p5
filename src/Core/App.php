@@ -3,15 +3,13 @@
 namespace Core;
 
 use App\Controller\AppController;
-use App\Entity\User;
-use App\General\Controller\GeneralController;
 use Core\Auth\DBAuth;
 use Core\Controller\Controller;
 use Core\Controller\ControllerInterface;
 use Core\Exception\JojotiqueException;
-use Core\ORM\Classes\ORMSelect;
 use Core\Router\Route;
 use Core\Router\Router;
+use Jojotique\ORM\Classes\ORMSelect;
 use Psr\Container\ContainerInterface;
 use Twig_Environment;
 

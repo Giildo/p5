@@ -3,8 +3,8 @@
 namespace Core\Model;
 
 use Core\Database\Database;
-use Core\ORM\Interfaces\ORMModelInterface;
-use Core\ORM\Classes\ORMModel;
+use Jojotique\ORM\Classes\ORMModel;
+use Jojotique\ORM\Interfaces\ORMModelInterface;
 
 /**
  * Classes Model
@@ -39,13 +39,5 @@ class Model extends ORMModel implements ORMModelInterface
     public function count(): int
     {
         return $this->pdo->query("SELECT COUNT(id) FROM {$this->table}")->fetchColumn();
-    }
-
-    /**
-     * @return null
-     */
-    public function getTable()
-    {
-        return $this->table;
     }
 }

@@ -16,10 +16,7 @@
     },
     "require": {
         "twig/twig": "^2.4",
-        "php-di/php-di": "^5.4"
-    },
-    "require-dev": {
-        "squizlabs/php_codesniffer": "^3.2",
-        "fzaninotto/faker": "^1.7"
+        "php-di/php-di": "^5.4",
+        "jojotique/orm": "dev-master"
     }
 }

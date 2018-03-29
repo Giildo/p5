@@ -7,9 +7,9 @@ use App\Controller\AppController;
 use App\Entity\Category;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
-use Core\ORM\Classes\ORMController;
-use Core\ORM\Classes\ORMException;
-use Core\ORM\Classes\ORMTable;
+use Jojotique\ORM\Classes\ORMController;
+use Jojotique\ORM\Classes\ORMException;
+use Jojotique\ORM\Classes\ORMTable;
 
 class CategoryController extends AppController implements ControllerInterface
 {
@@ -21,7 +21,7 @@ class CategoryController extends AppController implements ControllerInterface
     /**
      * @param array $vars
      * @return void
-     * @throws \Core\ORM\Classes\ORMException
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
@@ -60,7 +60,7 @@ class CategoryController extends AppController implements ControllerInterface
 
     /**
      * @param array $vars
-     * @throws \Core\ORM\Classes\ORMException
+     * @throws ORMException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader

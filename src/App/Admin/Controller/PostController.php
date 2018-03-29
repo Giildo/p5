@@ -11,12 +11,12 @@ use App\Entity\Category;
 use App\Entity\Post;
 use Core\Controller\ControllerInterface;
 use Core\Form\BootstrapForm;
-use Core\ORM\Classes\ORMController;
-use Core\ORM\Classes\ORMEntity;
-use Core\ORM\Classes\ORMException;
-use Core\ORM\Classes\ORMTable;
 use DateTime;
 use Exception;
+use Jojotique\ORM\Classes\ORMController;
+use Jojotique\ORM\Classes\ORMEntity;
+use Jojotique\ORM\Classes\ORMException;
+use Jojotique\ORM\Classes\ORMTable;
 use stdClass;
 
 class PostController extends AppController implements ControllerInterface
@@ -81,8 +81,7 @@ class PostController extends AppController implements ControllerInterface
             }
         } catch (ORMException $e) {
             $message = "Vous n'avez encore écrit aucun article";
-            $this->render('admin/noElement.twig', compact('message'));
-            die();
+            $this->redirection('/admin/accueil');
         }
 
         $formCode = [];

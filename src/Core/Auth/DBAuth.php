@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\various\AppHash;
 use Core\Database\Database;
 use Core\Exception\JojotiqueException;
-use Core\ORM\Classes\ORMEntity;
+use Jojotique\ORM\Classes\ORMEntity;
 
 /**
  * Sert à la gestion de la connexion. Permet de :

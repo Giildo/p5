@@ -2,17 +2,11 @@
 
 namespace App\Admin\Controller;
 
-use App\Admin\Model\UserModel;
 use App\Controller\AppController;
 use Core\Controller\ControllerInterface;
 
 class AdminController extends AppController implements ControllerInterface
 {
-    /**
-     * @var UserModel
-     */
-    protected $userModel;
-
     /**
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
