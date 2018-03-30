@@ -9,8 +9,8 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous"/>
-    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/comment.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ root }}/public/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ root }}/public/css/comment.css"/>
     <link href="https://fonts.googleapis.com/css?family=Caveat|Crafty+Girls|Raleway" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -18,7 +18,7 @@
 <div class="container-fluid">
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
         <a class="navbar-brand" href="/accueil">
-            <img src="/img/logo.png" alt="Logo représentant une tique techno"/>
+            <img src="{{ root }}/public/img/logo.png" alt="Logo représentant une tique techno"/>
         </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -29,39 +29,39 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/accueil">Accueil</a>
+                    <a class="nav-link" href="{{ root }}/accueil">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/blog/1">Blog</a>
+                    <a class="nav-link" href="{{ root }}/blog/1">Blog</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/cv">CV</a>
+                    <a class="nav-link" href="{{ root }}/cv">CV</a>
                 </li>
 
                 {% if sessionConfirmConnect == true %}
                     <li class="nav-item" id="adminNav">
-                        <a class="nav-link" href="/admin/accueil">Admin</a>
+                        <a class="nav-link" href="{{ root }}/admin/accueil">Admin</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/posts/1">Articles</a>
+                        <a class="nav-link" href="{{ root }}/admin/posts/1">Articles</a>
                     </li>
                 {% endif %}
 
                 {% if sessionAdmin == true %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/categories/1">Catégories</a>
+                        <a class="nav-link" href="{{ root }}/admin/categories/1">Catégories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/users/1">Utilisateurs</a>
+                        <a class="nav-link" href="{{ root }}/admin/users/1">Utilisateurs</a>
                     </li>
                 {% endif %}
             </ul>
         </div>
 
         {% if sessionConfirmConnect == true %}
-            <a href="/user/logout" class="btn btn-outline-info">Déconnexion</a>
+            <a href="{{ root }}/user/logout" class="btn btn-outline-info">Déconnexion</a>
         {% else %}
-            <a href="/user/login" class="btn btn-outline-info">Connexion</a>
+            <a href="{{ root }}/user/login" class="btn btn-outline-info">Connexion</a>
         {% endif %}
     </nav>
 
@@ -69,7 +69,7 @@
 
     <footer class="row">
         <div class="col-sm-8">
-            <img src="/img/logo.png" alt="Logo Jojotique" id="logo"/>
+            <img src="{{ root }}/public/img/logo.png" alt="Logo Jojotique" id="logo"/>
             <address>
                 <p>Jojotique©</p>
                 <p>Strasbourg</p>
@@ -81,16 +81,16 @@
             <div class="row">
                 <div class="btn-group">
                     <a href="https://www.facebook.com/jojotique.fr/" target="_blank">
-                        <img src="/img/reseaux_sociaux/facebook.png" alt="Logo Facebook en 3D">
+                        <img src="{{ root }}/public/img/reseaux_sociaux/facebook.png" alt="Logo Facebook en 3D">
                     </a>
                     <a href="https://twitter.com/JojotiqueFr" target="_blank">
-                        <img src="/img/reseaux_sociaux/twitter.png" alt="Logo Twitter en 3D">
+                        <img src="{{ root }}/public/img/reseaux_sociaux/twitter.png" alt="Logo Twitter en 3D">
                     </a>
                     <a href="https://www.linkedin.com/in/jonathan-marco-giildo" target="_blank">
-                        <img src="/img/reseaux_sociaux/linkedin.png" alt="Logo de LinkedIn">
+                        <img src="{{ root }}/public/img/reseaux_sociaux/linkedin.png" alt="Logo de LinkedIn">
                     </a>
                     <a href="https://github.com/Giildo" target="_blank">
-                        <img src="/img/reseaux_sociaux/github.png" alt="Logo Github représentant Octocat">
+                        <img src="{{ root }}/public/img/reseaux_sociaux/github.png" alt="Logo Github représentant Octocat">
                     </a>
                 </div>
             </div>
@@ -105,6 +105,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
-<script src="/js/footerPosition.js"></script>
+<script src="{{ root }}/public/js/footerPosition.js"></script>
 </body>
 </html>

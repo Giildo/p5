@@ -63,7 +63,7 @@ class PostController extends AppController implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.post');
 
-        $this->paginationMax($paginationOptions, '/admin/posts/');
+        $this->paginationMax($paginationOptions, __ROOT__ . '/admin/posts/');
 
         try {
             if ($this->auth->isAdmin($user)) {
@@ -80,7 +80,7 @@ class PostController extends AppController implements ControllerInterface
                 );
             }
         } catch (ORMException $e) {
-            $this->redirection('/admin/accueil');
+            $this->redirection(__ROOT__ . '/admin/accueil');
         }
 
         $formCode = [];
@@ -228,7 +228,7 @@ class PostController extends AppController implements ControllerInterface
 
             $form = $form->submit('Valider');
 
-            $this->render('/admin/posts/add.twig', compact('form'));
+            $this->render('admin/posts/add.twig', compact('form'));
         } else {
             $this->renderNotLog();
         }

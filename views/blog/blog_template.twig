@@ -12,7 +12,7 @@
                         <div class="card">
                             <h6 class="card-header">{{ post.title }}</h6>
                             <p class="card-body card-text">{{ post.content | excerpt }}</p>
-                            <a href="/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
+                            <a href="{{ root }}/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -30,7 +30,7 @@
                     {% if posts.0.category.slug == category.slug %}
                         <button class="btn btn-primary" disabled>{{ category.name }}</button>
                     {% else %}
-                        <a href="/categorie/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
+                        <a href="{{ root }}/categorie/{{ category.slug }}-1" class="btn btn-outline-primary">{{ category.name }}</a>
                     {% endif %}
                 {% endfor %}
             </div>

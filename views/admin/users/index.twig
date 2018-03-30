@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="offset-sm-2 col-sm-8">
-            <a href="/admin/user/add" class="btn btn-success">Nouvel utilisateur</a>
+            <a href="{{ root }}/admin/user/add" class="btn btn-success">Nouvel utilisateur</a>
             <br /><br />
             <table class="table table-striped col-sm-8">
                 <thead>
@@ -42,8 +42,8 @@
                         </td>
                         <td class="td-admin">{{ user.admin.name }}</td>
                         <td>
-                            <a class="btn btn-info" href="/admin/user/update/{{ user.id }}">Modifier</a>
-                            <form action="/admin/user/delete" method="post" class="btn form-btn">
+                            <a class="btn btn-info" href="{{ root }}/admin/user/update/{{ user.id }}">Modifier</a>
+                            <form action="{{ root }}/admin/user/delete" method="post" class="btn form-btn">
                                 <input type="hidden" id="id" name="id" value="{{ user.id }}" />
                                 <input type="hidden" id="indexId" name="indexId" value="{{ vars.id }}" />
                                 <input type="hidden" id="token" name="token" value="{{ formCode[user.id] }}" />
@@ -61,21 +61,21 @@
         <div class="row">
             <div class="btn-group">
                 {% if paginationOptions.previous != null %}
-                    <a href="/admin/users/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
+                    <a href="{{ root }}/admin/users/{{ paginationOptions.previous }}" class="btn btn-warning"><</a>
                 {% else %}
                     <button class="btn btn-warning" disabled><</button>
                 {% endif %}
 
                 {% for i in 1..paginationOptions.pageNb %}
                     {% if i != paginationOptions.id %}
-                        <a href="/admin/users/{{ i }}" class="btn btn-warning">{{ i }}</a>
+                        <a href="{{ root }}/admin/users/{{ i }}" class="btn btn-warning">{{ i }}</a>
                     {% else %}
                         <button class="btn btn-warning" disabled>{{ i }}</button>
                     {% endif %}
                 {% endfor %}
 
                 {% if paginationOptions.next != null %}
-                    <a href="/admin/users/{{ paginationOptions.next }}" class="btn btn-warning">></a>
+                    <a href="{{ root }}/admin/users/{{ paginationOptions.next }}" class="btn btn-warning">></a>
                 {% else %}
                     <button class="btn btn-warning" disabled>></button>
                 {% endif %}

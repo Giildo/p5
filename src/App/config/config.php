@@ -8,13 +8,15 @@ return [
 
     'orm.config' => __DIR__ . '/orm_config.php',
 
-    'db.name'     => 'app',
-    'db.user'     => 'root',
+    'db.name'     => 'jojotiquac7961',
+    'db.user'     => 'jojotiquac7961',
     'db.password' => 'jOn79613226',
-    'db.host'     => 'localhost',
+    'db.host'     => 'jojotiquac7961.mysql.db',
 
     'twig.pathViews' => dirname(__DIR__, 3) . '/views',
     'twig.options'   => [],
+
+    'root' => '/p5',
 
     'blog.limit.post'      => 9,
     'admin.limit.post'     => 10,

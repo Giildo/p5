@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <routes>
-    <route name="general_accueil" path="^/accueil" controller="general" method="index" />
-    <route name="general_cv" path="^/cv" controller="general" method="cv" />
-    <route name="general_404" path="^/404" controller="general" method="error404" />
-    <route name="general_error_notAdmin" path="^/error/notAdmin" controller="error" method="notAdmin" />
-    <route name="general_error" path="^/error" controller="error" method="error" />
+    <route name="general_accueil" path="^/p5/accueil" controller="general" method="index" />
+    <route name="general_cv" path="^/p5/cv" controller="general" method="cv" />
+    <route name="general_404" path="^/p5/404" controller="general" method="error404" />
+    <route name="general_error_notAdmin" path="^/p5/error/notAdmin" controller="error" method="notAdmin" />
+    <route name="general_error" path="^/p5/error" controller="error" method="error" />
 
-    <route name="blog_post_index" path="^/blog/{id: \d+}" controller="post" method="index" />
-    <route name="blog_post_showCom" path="^/post/{id: \d+}-{commentId: \d+}" controller="post" method="show" />
-    <route name="blog_post_showDeleteCom" path="^/post/delete/{id: \d+}-{deletedCommentId: \d+}" controller="post" method="show" />
-    <route name="blog_post_show" path="^/post/{id: \d+}" controller="post" method="show" />
-    <route name="blog_post_category" path="^/categorie/{slug: \w+}-{id: \d+}" controller="post" method="category" />
-    <route name="blog_post_author" path="^/auteur/{pseudo: \w+}-{id: \d+}" controller="post" method="author" />
+    <route name="blog_post_index" path="^/p5/blog/{id: \d+}" controller="post" method="index" />
+    <route name="blog_post_showCom" path="^/p5/post/{id: \d+}-{commentId: \d+}" controller="post" method="show" />
+    <route name="blog_post_showDeleteCom" path="^/p5/post/delete/{id: \d+}-{deletedCommentId: \d+}" controller="post" method="show" />
+    <route name="blog_post_show" path="^/p5/post/{id: \d+}" controller="post" method="show" />
+    <route name="blog_post_category" path="^/p5/categorie/{slug: \w+}-{id: \d+}" controller="post" method="category" />
+    <route name="blog_post_author" path="^/p5/auteur/{pseudo: \w+}-{id: \d+}" controller="post" method="author" />
 
-    <route name="admin_accueil" path="^/admin/accueil" controller="admin" method="index" />
+    <route name="admin_accueil" path="^/p5/admin/accueil" controller="admin" method="index" />
 
-    <route name="admin_user_login" path="^/user/login" controller="user" method="login" />
-    <route name="admin_user_logout" path="^/user/logout" controller="user" method="logout" />
+    <route name="admin_user_login" path="^/p5/user/login" controller="user" method="login" />
+    <route name="admin_user_logout" path="^/p5/user/logout" controller="user" method="logout" />
 
-    <route name="admin_user_index" path="^/admin/users/{id: \d+}" controller="user" method="index" />
-    <route name="admin_user_update" path="^/admin/user/update/{id: \d+}" controller="user" method="update" />
-    <route name="admin_user_add" path="^/admin/user/add" controller="user" method="add" />
-    <route name="admin_user_delete" path="^/admin/user/delete" controller="user" method="delete" />
+    <route name="admin_user_index" path="^/p5/admin/users/{id: \d+}" controller="user" method="index" />
+    <route name="admin_user_update" path="^/p5/admin/user/update/{id: \d+}" controller="user" method="update" />
+    <route name="admin_user_add" path="^/p5/admin/user/add" controller="user" method="add" />
+    <route name="admin_user_delete" path="^/p5/admin/user/delete" controller="user" method="delete" />
 
-    <route name="admin_post_index" path="^/admin/posts/{id: \d+}" controller="post" method="index" />
-    <route name="admin_post_update" path="^/admin/post/update/{id: \d+}" controller="post" method="update" />
-    <route name="admin_post_add" path="^/admin/post/add" controller="post" method="add" />
-    <route name="admin_post_delete" path="^/admin/post/delete" controller="post" method="delete" />
+    <route name="admin_post_index" path="^/p5/admin/posts/{id: \d+}" controller="post" method="index" />
+    <route name="admin_post_update" path="^/p5/admin/post/update/{id: \d+}" controller="post" method="update" />
+    <route name="admin_post_add" path="^/p5/admin/post/add" controller="post" method="add" />
+    <route name="admin_post_delete" path="^/p5/admin/post/delete" controller="post" method="delete" />
 
-    <route name="admin_category_index" path="^/admin/categories/{id: \d+}" controller="category" method="index" />
-    <route name="admin_category_update" path="^/admin/category/update/{id: \d+}" controller="category" method="update" />
-    <route name="admin_category_add" path="^/admin/category/add" controller="category" method="add" />
-    <route name="admin_category_delete" path="^/admin/category/delete" controller="category" method="delete" />
+    <route name="admin_category_index" path="^/p5/admin/categories/{id: \d+}" controller="category" method="index" />
+    <route name="admin_category_update" path="^/p5/admin/category/update/{id: \d+}" controller="category" method="update" />
+    <route name="admin_category_add" path="^/p5/admin/category/add" controller="category" method="add" />
+    <route name="admin_category_delete" path="^/p5/admin/category/delete" controller="category" method="delete" />
 </routes>

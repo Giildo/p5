@@ -91,13 +91,13 @@ class Controller implements ControllerInterface
     public function renderNotLog(): void
     {
         header('HTTP/1.1 301 Not Found');
-        header('Location: /user/login');
+        header('Location: ' . __ROOT__ . '/user/login');
     }
 
     public function renderErrorNotAdmin()
     {
         header('HTTP/1.1 301 Not Found');
-        header('Location: /error/notAdmin');
+        header('Location: ' . __ROOT__ . '/error/notAdmin');
     }
 
     /**
@@ -112,6 +112,7 @@ class Controller implements ControllerInterface
      */
     protected function render(string $nameView, ?array $twigVariable = []): void
     {
+        $twigVariable['root'] = __ROOT__;
         echo $this->twig->render($nameView, $twigVariable);
     }
 
