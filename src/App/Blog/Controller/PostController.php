@@ -62,7 +62,10 @@ class PostController extends AppController implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $nbPosts = $this->postModel->count();
+        $nbPosts = $this->select
+            ->select(['posts' => ['id']])->from('posts')
+            ->countColumns()
+            ->execute($this->postModel);
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
