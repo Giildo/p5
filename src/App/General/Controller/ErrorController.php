@@ -37,9 +37,17 @@ class ErrorController extends AppController implements ControllerInterface
         $form->input('name', 'Nom/Prénom :');
         $form->input('mail', 'EMail :', '', 'email');
         $form->input('errorMessage', ' :', $messageError, 'hidden');
-        $form->textarea('message', 'Message :', 10, $messageError);
+        $form->textarea('message', 'Message :', 10, 'Décrivez vos actions avant l\'erreur.');
         $form = $form->submit('Envoyer');
 
         $this->render('general/error.twig', compact('messageError', 'form'));
+    }
+
+    /**
+     *
+     */
+    public function error505()
+    {
+
     }
 }

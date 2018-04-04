@@ -5,6 +5,7 @@
     <route name="general_404" path="^/p5/404" controller="general" method="error404" />
     <route name="general_error_notAdmin" path="^/p5/error/notAdmin" controller="error" method="notAdmin" />
     <route name="general_error" path="^/p5/error" controller="error" method="error" />
+    <route name="general_error_505" path="^/p5/error/505" controller="error" method="error505" />
 
     <route name="blog_post_index" path="^/p5/blog/{id: \d+}" controller="post" method="index" />
     <route name="blog_post_showCom" path="^/p5/post/{id: \d+}-{commentId: \d+}" controller="post" method="show" />

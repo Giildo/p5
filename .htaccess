@@ -1,4 +1,6 @@
 RewriteEngine On
 
+ErrorDocument 500 http://www.jojotique.fr/p5/error/505
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ public/index.php [L]

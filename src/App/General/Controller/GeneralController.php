@@ -42,7 +42,7 @@ class GeneralController extends AppController implements ControllerInterface
      */
     public function error404(): void
     {
-        $this->render('general/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
+        $this->render('error/404.twig', ['erreur' => 'La page demandée n\'existe pas.']);
     }
 
     /**
