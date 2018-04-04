@@ -12,6 +12,7 @@
                         <div class="card">
                             <h6 class="card-header">{{ post.title }}</h6>
                             <p class="card-body card-text">{{ post.content | excerpt }}</p>
+                            <p class="date_blog">{{ post.updatedAt | date("d/m/Y à H:m:i") }}</p>
                             <a href="/post/{{ post.id }}" class="btn btn-default card-footer">Afficher l'article</a>
                         </div>
                     </div>

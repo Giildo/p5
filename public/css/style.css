@@ -353,6 +353,16 @@ blockquote {
     background-image: url("/img/cv/achievement/wordpress.jpg");
 }
 
+/** Blog **/
+
+.date_blog {
+    text-align: right;
+    margin-top: -16px;
+    padding-right: 10px;
+    font-size: 0.8em;
+    font-style: italic;
+}
+
 /** Connexion - Form **/
 
 .loginForm fieldset {
