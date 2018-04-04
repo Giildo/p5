@@ -62,7 +62,7 @@ class Category extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
         return $this->slug;
     }

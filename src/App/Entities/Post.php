@@ -86,7 +86,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -102,7 +102,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -118,7 +118,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @return DateTime
      */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
@@ -134,7 +134,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @return DateTime
      */
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
@@ -148,9 +148,9 @@ class Post extends Entity implements EntityInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getCategoryId(): int
+    public function getCategoryId(): ?int
     {
         return $this->categoryId;
     }
@@ -166,7 +166,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @return int
      */
-    public function getUserId(): int
+    public function getUserId(): ?int
     {
         return $this->userId;
     }
@@ -182,7 +182,7 @@ class Post extends Entity implements EntityInterface
     /**
      * @return Comment[]
      */
-    public function getComments(): array
+    public function getComments(): ?array
     {
         return $this->comments;
     }

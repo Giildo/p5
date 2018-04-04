@@ -79,7 +79,7 @@ class User extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getPseudo(): string
+    public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
@@ -95,7 +95,7 @@ class User extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -111,7 +111,7 @@ class User extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -159,7 +159,7 @@ class User extends Entity implements EntityInterface
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -175,7 +175,7 @@ class User extends Entity implements EntityInterface
     /**
      * @return int
      */
-    public function getAdminId(): int
+    public function getAdminId(): ?int
     {
         return $this->adminId;
     }
@@ -191,7 +191,7 @@ class User extends Entity implements EntityInterface
     /**
      * @return Admin
      */
-    public function getAdmin(): Admin
+    public function getAdmin(): ?Admin
     {
         return $this->admin;
     }
