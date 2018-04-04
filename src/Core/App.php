@@ -68,7 +68,7 @@ class App
             $controller->run($route->getNameMethod(), $route->getVars());
         } catch (JojotiqueException $e) {
             $_SESSION['flash'] = $e->getMessage();
-            $controller->redirection('/error');
+            $controller->redirection(__ROOT__ . '/error');
         }
     }
 

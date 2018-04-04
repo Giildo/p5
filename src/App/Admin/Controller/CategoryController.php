@@ -37,7 +37,7 @@ class CategoryController extends AppController implements ControllerInterface
 
             $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.category');
 
-            $this->paginationMax($paginationOptions, '/admin/categories/');
+            $this->paginationMax($paginationOptions, __ROOT__ . '/admin/categories/');
 
             $categories = $this->findCategories();
 
@@ -155,7 +155,7 @@ class CategoryController extends AppController implements ControllerInterface
             $form->input('slug', 'Slug de la catégorie', $category->slug);
             $form = $form->submit('Valider');
 
-            $this->render('/admin/categories/add.twig', compact('form'));
+            $this->render('admin/categories/add.twig', compact('form'));
         } else {
             $this->renderNotLog();
         }

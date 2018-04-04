@@ -62,11 +62,14 @@ class PostController extends AppController implements ControllerInterface
      */
     public function index(array $vars): void
     {
-        $nbPosts = $this->postModel->count();
+        $nbPosts = $this->select
+            ->select(['posts' => ['id']])->from('posts')
+            ->countColumns()
+            ->execute($this->postModel);
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
-        $this->paginationMax($paginationOptions, '/blog/');
+        $this->paginationMax($paginationOptions, __ROOT__ . '/blog/');
 
         $posts = $this->select->select([
             'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt']
@@ -80,7 +83,7 @@ class PostController extends AppController implements ControllerInterface
         if ($paginationOptions['id'] <= $paginationOptions['pageNb']) {
             $this->render('blog/index.twig', compact('posts', 'paginationOptions', 'categories'));
         } else {
-            $this->redirection('/blog/' . $paginationOptions['pageNb']);
+            $this->redirection(__ROOT__ . '/blog/' . $paginationOptions['pageNb']);
         }
     }
 
@@ -118,7 +121,7 @@ class PostController extends AppController implements ControllerInterface
                 ->singleItem()
                 ->execute($this->postModel, $this->categoryModel, $this->userModel);
         } catch (ORMException $e) {
-            $this->redirection('/blog/1');
+            $this->redirection(__ROOT__ . '/blog/1');
         }
 
         if (isset($_POST['comment'])) {
@@ -157,7 +160,7 @@ class PostController extends AppController implements ControllerInterface
             $commentUpdated = $this->findCommentUpdated($vars['commentId'], $vars['id']);
 
             if (is_null($commentUpdated)) {
-                $this->redirection('/post/' . $vars['id']);
+                $this->redirection(__ROOT__ . '/post/' . $vars['id']);
             }
         }
 
@@ -198,7 +201,7 @@ class PostController extends AppController implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
-        $this->paginationMax($paginationOptions, "/categorie/{$vars['slug']}-");
+        $this->paginationMax($paginationOptions, "/p5/categorie/{$vars['slug']}-");
 
         $posts = $this->select->select([
             'posts'      => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
@@ -219,7 +222,7 @@ class PostController extends AppController implements ControllerInterface
                 compact('posts', 'paginationOptions', 'categories')
             );
         } else {
-            $this->redirection('/categories/' . $paginationOptions['pageNb']);
+            $this->redirection(__ROOT__ . '/categories/' . $paginationOptions['pageNb']);
         }
     }
 
@@ -247,7 +250,7 @@ class PostController extends AppController implements ControllerInterface
 
         $paginationOptions = $this->pagination($vars, $nbPosts);
 
-        $this->paginationMax($paginationOptions, "/auteur/{$vars['pseudo']}-");
+        $this->paginationMax($paginationOptions, "/p5/auteur/{$vars['pseudo']}-");
 
         $posts = $this->select->select([
             'posts' => ['id', 'title', 'content', 'createdAt', 'updatedAt', 'user'],
@@ -268,7 +271,7 @@ class PostController extends AppController implements ControllerInterface
                 compact('posts', 'paginationOptions', 'categories')
             );
         } else {
-            $this->redirection('/author/' . $paginationOptions['pageNb']);
+            $this->redirection(__ROOT__ . '/author/' . $paginationOptions['pageNb']);
         }
     }
 
@@ -374,7 +377,7 @@ class PostController extends AppController implements ControllerInterface
                 $ormController = new ORMController();
                 $ormController->save($comment, $this->commentModel);
 
-                $this->redirection('/post/' . $postId);
+                $this->redirection(__ROOT__ . '/post/' . $postId);
             } else {
                 throw new Exception("Une erreur est survenue lors de l'enregistrement du commentaire,
                     veuillez réessayer.");
@@ -419,7 +422,7 @@ class PostController extends AppController implements ControllerInterface
                     ->execute($this->commentModel);
                 $ormController = new ORMController();
                 $ormController->delete($comment, $this->commentModel);
-                $this->redirection('/post/' . $postId);
+                $this->redirection(__ROOT__ . '/post/' . $postId);
             } elseif ($this->auth->isAdmin($user)) {
                 $comment = $this->select->select(['comments' => ['id', 'post']])
                     ->singleItem()
@@ -430,7 +433,7 @@ class PostController extends AppController implements ControllerInterface
                 if ($comment->postId === $postId) {
                     $ormController = new ORMController();
                     $ormController->delete($comment, $this->commentModel);
-                    $this->redirection('/post/' . $postId);
+                    $this->redirection(__ROOT__ . '/post/' . $postId);
                 } else {
                     throw new Exception("Une erreur est survenue lors de la suppression du commentaire.");
                 }
@@ -438,7 +441,7 @@ class PostController extends AppController implements ControllerInterface
                 throw new Exception("Vos droits ne vous permettent pas de supprimer ce commentaire.");
             }
         } else {
-            $this->redirection('/post/' . $postId);
+            $this->redirection(__ROOT__ . '/post/' . $postId);
         }
     }
 }

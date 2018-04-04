@@ -106,10 +106,11 @@ class Router
      */
     public function getRoute(string $uri): ?Route
     {
-        if ($uri === '' || $uri === '/') {
+
+        if ($uri === __ROOT__ . '' || $uri === __ROOT__ . '/') {
             header('HTTP/1.1 301 Moved Permanently');
-            header('Location: /accueil');
-            return $this->routes['blog_show'];
+            header('Location: ' . __ROOT__ . '/accueil');
+            return $this->routes['general_accueil'];
         }
 
         foreach ($this->routes as $route) {
@@ -119,7 +120,7 @@ class Router
         }
 
         header('HTTP/1.0 404 Not Found');
-        header('Location: /404');
+        header('Location: ' . __ROOT__ . '/404');
         return null;
     }
 }

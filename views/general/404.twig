@@ -9,13 +9,13 @@
             <p class="p404title1">{{ erreur }}</p>
             <p class="p404title2">Quelques liens pour vous orienter :</p>
             <ul>
-                <li><a href="/accueil" class="p404list">Accueil</a></li>
-                <li><a href="/blog/1" class="p404list">Blog</a></li>
-                <li><a href="/cv" class="p404list">CV</a></li>
+                <li><a href="{{ root }}/accueil" class="p404list">Accueil</a></li>
+                <li><a href="{{ root }}/blog/1" class="p404list">Blog</a></li>
+                <li><a href="{{ root }}/cv" class="p404list">CV</a></li>
             </ul>
         </div>
         <div class="col-sm-6 p404">
-            <img src="/img/sorry.jpg" alt="Image montrant un post-it où il est écrit sorry" />
+            <img src="{{ root }}/public/img/sorry.jpg" alt="Image montrant un post-it où il est écrit sorry" />
         </div>
     </div>
 {% endblock %}

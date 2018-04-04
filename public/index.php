@@ -13,6 +13,7 @@ $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/controllerConfig.ph
 $builder->addDefinitions(dirname(__DIR__) . '/src/App/config/instanceObject.php');
 $container = $builder->build();
 
+define('__ROOT__', $container->get('root'));
 
 // Initialisation de Twig via le Container
 $twig = $container->get(Twig_Environment::class);

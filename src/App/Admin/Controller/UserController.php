@@ -144,7 +144,7 @@ class UserController extends AppController implements ControllerInterface
 
             $this->render('admin/login.twig', compact('form1', 'form2', 'error'));
         } else {
-            $this->redirection('/admin/accueil');
+            $this->redirection(__ROOT__ . '/admin/accueil');
         }
     }
 
@@ -167,7 +167,7 @@ class UserController extends AppController implements ControllerInterface
 
             $paginationOptions = $this->pagination($vars, $nbPage, 'admin.limit.user');
 
-            $this->paginationMax($paginationOptions, '/admin/users/');
+            $this->paginationMax($paginationOptions, __ROOT__ . '/admin/users/');
 
             $users = $this->select->select([
                     'users' => ['id', 'pseudo', 'firstName', 'lastName', 'mail', 'phone', 'admin'],
@@ -320,7 +320,7 @@ class UserController extends AppController implements ControllerInterface
             $form->select('admin', $adminsOptions, $user->admin->name, 'Statut');
             $form = $form->submit('Valider');
 
-            $this->render('/admin/users/add.twig', compact('form'));
+            $this->render('admin/users/add.twig', compact('form'));
         } else {
             $this->renderErrorNotAdmin();
         }
@@ -391,7 +391,7 @@ class UserController extends AppController implements ControllerInterface
     {
         $this->auth->logout();
 
-        $uri = (isset($_SESSION['paths']['past'])) ? $_SESSION['paths']['past'] : '/accueil';
+        $uri = (isset($_SESSION['paths']['past'])) ? $_SESSION['paths']['past'] : __ROOT__ . '/accueil';
 
         $this->redirection($uri);
     }

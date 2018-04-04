@@ -6,11 +6,11 @@
     <div class="row">
         <div class="offset-sm-2 col-sm-8">
             <h1>{{ post.title }}</h1>
-            <p><em>Catégorie : <a href="/categorie/{{ post.category.slug }}-1">{{ post.category.name }}</a></em></p>
+            <p><em>Catégorie : <a href="{{ root }}/categorie/{{ post.category.slug }}-1">{{ post.category.name }}</a></em></p>
 
             <p>{{ post.content | nl2br }}</p>
 
-            <p class="author"><a href="/auteur/{{ post.user.pseudo }}-1">{{ post.user.pseudo }}</a></p>
+            <p class="author"><a href="{{ root }}/auteur/{{ post.user.pseudo }}-1">{{ post.user.pseudo }}</a></p>
             <p class="date">
                 {% if post.updatedAt > post.createdAt %}
                     Modifié le {{ post.createdAt | date("d/m/Y à H:m:i") }}
@@ -56,11 +56,11 @@
                             <span class="comment">{{ comment.comment }}</span>
                             {% if userConnected.admin.id == '1' or comment.user == userConnected %}
                                 <span class="editComment">
-                                    <form action="/post/{{ post.id }}-{{ comment.id }}" method="post">
+                                    <form action="{{ root }}/post/{{ post.id }}-{{ comment.id }}" method="post">
                                         <input type="hidden" name="token" id="token" value="{{ tokens[comment.id] }}" />
                                         <button type="submit"><span class="material-icons">create</span></button>
                                     </form>
-                                    <form action="/post/delete/{{ post.id }}-{{ comment.id }}" method="post">
+                                    <form action="{{ root }}/post/delete/{{ post.id }}-{{ comment.id }}" method="post">
                                         <input type="hidden" name="token" id="token" value="{{ tokens[comment.id] }}" />
                                         <button type="submit"><span class="material-icons">delete</span></button>
                                     </form>
