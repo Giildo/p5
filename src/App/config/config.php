@@ -14,7 +14,9 @@ return [
     'db.host'     => 'jojotiquac7961.mysql.db',
 
     'twig.pathViews' => dirname(__DIR__, 3) . '/views',
-    'twig.options'   => [],
+    'twig.options'   => [
+        'cache' => dirname(__DIR__, 3) . '/cache'
+    ],
 
     'root' => '/p5',
 

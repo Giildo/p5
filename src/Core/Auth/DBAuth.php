@@ -70,6 +70,10 @@ class DBAuth
             return false;
         }
 
+        if ($user->admin->id === 4) {
+            return false;
+        }
+
         return true;
     }
 

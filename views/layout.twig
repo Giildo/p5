@@ -17,7 +17,7 @@
 <body id="body">
 <div class="container-fluid">
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-        <a class="navbar-brand" href="/accueil">
+        <a class="navbar-brand" href="{{ root }}/accueil">
             <img src="{{ root }}/public/img/logo.png" alt="Logo représentant une tique techno"/>
         </a>
 
@@ -38,7 +38,7 @@
                     <a class="nav-link" href="{{ root }}/cv">CV</a>
                 </li>
 
-                {% if sessionConfirmConnect == true %}
+                {% if sessionConfirmConnect == true and simpleUser == false %}
                     <li class="nav-item" id="adminNav">
                         <a class="nav-link" href="{{ root }}/admin/accueil">Admin</a>
                     </li>
@@ -47,7 +47,7 @@
                     </li>
                 {% endif %}
 
-                {% if sessionAdmin == true %}
+                {% if sessionAdmin == true and simpleUser == false %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ root }}/admin/categories/1">Catégories</a>
                     </li>
@@ -58,7 +58,7 @@
             </ul>
         </div>
 
-        {% if sessionConfirmConnect == true %}
+        {% if sessionConfirmConnect == true or simpleUser == true %}
             <a href="{{ root }}/user/logout" class="btn btn-outline-info">Déconnexion</a>
         {% else %}
             <a href="{{ root }}/user/login" class="btn btn-outline-info">Connexion</a>

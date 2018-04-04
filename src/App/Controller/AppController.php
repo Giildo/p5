@@ -90,7 +90,8 @@ class AppController extends Controller implements ControllerInterface
     {
         $user = $this->findUserConnected();
         $twigVariable['sessionConfirmConnect'] = (!is_null($user)) ? $this->auth->logged($user) : false;
-        $twigVariable['sessionAdmin'] = $this->findUserConnected()->admin->id === 1;
+        $twigVariable['sessionAdmin'] = $user->admin->id === 1;
+        $twigVariable['simpleUser'] = ($user->admin->id === 4) ? true : false;
 
         parent::render($nameView, $twigVariable);
     }

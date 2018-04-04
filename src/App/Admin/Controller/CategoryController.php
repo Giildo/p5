@@ -121,7 +121,7 @@ class CategoryController extends AppController implements ControllerInterface
      */
     public function add(): void
     {
-        if ($this->auth->logged($this->findUserConnected())) {
+        if ($this->auth->logged()) {
             $u_error = false;
             $u_success = false;
             $errorMessage = '';

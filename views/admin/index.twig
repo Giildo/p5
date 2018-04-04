@@ -3,6 +3,11 @@
 {% block title %}Admin accueil{% endblock %}
 
 {% block body %}
-    <h1>Bonjour {{ user.pseudo }}</h1>
-    <h2>Bienvenue sur votre tableau d'administration</h2>
+    {% if simpleUser == true %}
+        <h1>Bienvenue {{ user.pseudo }}</h1>
+        <h2>Un administrateur doit valider votre compte pour continuer sur la partie administration.</h2>
+    {% else %}
+        <h1>Bonjour {{ user.pseudo }}</h1>
+        <h2>Bienvenue sur votre tableau d'administration</h2>
+    {% endif %}
 {% endblock %}
